@@ -8,14 +8,6 @@
   padding: max(var(--space-6), env(safe-area-inset-top)) var(--space-5) var(--space-8);
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-}
-
 .hero {
   display: grid;
   gap: var(--space-3);
@@ -47,6 +39,7 @@
   --cut: var(--chamfer-lg);
   min-width: 0;
   display: grid;
+  grid-template-rows: auto auto 1fr;
   align-content: start;
   gap: var(--space-2);
   padding: var(--space-6);
@@ -71,7 +64,6 @@ a.card:hover {
 }
 
 .cardHint {
-  font-size: var(--font-size-phone-body);
   color: var(--color-text-muted);
 }
 
@@ -88,29 +80,14 @@ a.card:hover {
   width: 100%;
 }
 
+.joinRow input {
+  flex: 1;
+  min-width: 0;
+}
+
 .joinRow button {
   flex: none;
   min-height: calc(var(--size-tap-target) * 1.1);
-}
-
-.code {
-  --cut: var(--chamfer-sm);
-  flex: 1;
-  min-width: 0;
-  min-height: calc(var(--size-tap-target) * 1.1);
-  padding: 0 var(--space-4);
-  border: 0;
-  background: var(--color-surface);
-  color: var(--color-text);
-  font: inherit;
-  font-size: var(--font-size-phone-title);
-  letter-spacing: var(--font-letter-spacing-code);
-  text-transform: uppercase;
-}
-
-.code::placeholder {
-  color: var(--color-text-muted);
-  opacity: var(--opacity-muted);
 }
 
 .how {
@@ -149,8 +126,4 @@ a.card:hover {
 
 a.card:hover .arrow {
   transform: translateX(var(--space-2));
-}
-
-.card {
-  grid-template-rows: auto auto 1fr;
 }

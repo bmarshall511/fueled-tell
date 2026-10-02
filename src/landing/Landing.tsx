@@ -1,8 +1,9 @@
 import { useId, useState } from 'react';
 import { normalizeRoomCode, ROOM_CODE_LENGTH } from '../engine/roomCode';
+import { BrandHeader } from '../ui/components/BrandHeader';
 import { Button } from '../ui/components/Button';
+import { TextInput } from '../ui/components/TextField';
 import { UI_COPY } from '../ui/copy';
-import { BuiltBy, FueledLockup } from '../ui/components/Logo';
 import { useDocumentTitle } from '../ui/hooks/useDocumentTitle';
 import { useInstallPrompt } from '../ui/hooks/useInstallPrompt';
 import styles from './Landing.module.css';
@@ -16,10 +17,7 @@ export default function Landing() {
   useDocumentTitle();
   return (
     <main className={styles.landing}>
-      <header className={styles.header}>
-        <FueledLockup size="page" />
-        <BuiltBy size="page" />
-      </header>
+      <BrandHeader />
 
       <section className={styles.hero}>
         <h1 className={styles.title}>{UI_COPY.appName}</h1>
@@ -34,7 +32,7 @@ export default function Landing() {
       <div className={styles.cards}>
         <a className={`chamfer ${styles.card} ${styles.primary}`} href="/host">
           <span className={styles.cardTitle}>{L.host}</span>
-          <span className={styles.cardHint}>{L.hostHint}</span>
+          <span className={`text-body ${styles.cardHint}`}>{L.hostHint}</span>
           <span className={styles.arrow} aria-hidden="true">
             →
           </span>
@@ -49,11 +47,12 @@ export default function Landing() {
           <label htmlFor={codeId} className={styles.cardTitle}>
             {L.join}
           </label>
-          <span className={styles.cardHint}>{L.joinHint}</span>
+          <span className={`text-body ${styles.cardHint}`}>{L.joinHint}</span>
           <span className={styles.joinRow}>
-            <input
+            <TextInput
               id={codeId}
-              className={`chamfer ${styles.code}`}
+              fieldSize="code"
+              tone="sunken"
               value={code}
               onChange={(e) => setCode(normalizeRoomCode(e.target.value))}
               autoCapitalize="characters"
@@ -68,7 +67,7 @@ export default function Landing() {
         </form>
         <a className={`chamfer ${styles.card}`} href="/demo">
           <span className={styles.cardTitle}>{L.demo}</span>
-          <span className={styles.cardHint}>{L.demoHint}</span>
+          <span className={`text-body ${styles.cardHint}`}>{L.demoHint}</span>
           <span className={styles.arrow} aria-hidden="true">
             →
           </span>

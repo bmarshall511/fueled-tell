@@ -5,14 +5,21 @@ import styles from './TextField.module.css';
 /** `body` for forms; `title` for one big field (a name); `code` for the room code. */
 type FieldSize = 'body' | 'title' | 'code';
 
-type InputProps = InputHTMLAttributes<HTMLInputElement> & { fieldSize?: FieldSize };
-type AreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & { fieldSize?: FieldSize; autoGrow?: boolean; tone?: 'raised' | 'sunken' };
+/** `sunken` for a field that sits on a raised surface (a card). */
+type Tone = 'raised' | 'sunken';
 
-const cls = (size: FieldSize, extra?: string) => `chamfer ${styles.field} ${styles[size]} ${extra ?? ''}`;
+type InputProps = InputHTMLAttributes<HTMLInputElement> & { fieldSize?: FieldSize; tone?: Tone };
+type AreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & { fieldSize?: FieldSize; tone?: Tone; autoGrow?: boolean };
+
+const cls = (size: FieldSize, tone: Tone, extra?: string) =>
+  `chamfer ${styles.field} ${styles[size]} ${tone === 'sunken' ? styles.sunken : ''} ${extra ?? ''}`;
 
 /** The one text input style: raised, chamfered, token-sized; `aria-invalid` shows the error rule. */
-export const TextInput = forwardRef<HTMLInputElement, InputProps>(function TextInput({ fieldSize = 'body', className, ...rest }, ref) {
-  return <input ref={ref} className={cls(fieldSize, className)} {...rest} />;
+export const TextInput = forwardRef<HTMLInputElement, InputProps>(function TextInput(
+  { fieldSize = 'body', tone = 'raised', className, ...rest },
+  ref,
+) {
+  return <input ref={ref} className={cls(fieldSize, tone, className)} {...rest} />;
 });
 
 /** Multi-line twin of TextInput. `autoGrow` fits the content (and re-measures on resize). */
@@ -27,13 +34,6 @@ export const TextArea = forwardRef<HTMLTextAreaElement, AreaProps>(function Text
     else if (forwarded) forwarded.current = el;
   };
   return (
-    <textarea
-      ref={ref}
-      className={cls(
-        fieldSize,
-        `${styles.area} ${autoGrow ? styles.grow : ''} ${tone === 'sunken' ? styles.sunken : ''} ${className ?? ''}`,
-      )}
-      {...rest}
-    />
+    <textarea ref={ref} className={cls(fieldSize, tone, `${styles.area} ${autoGrow ? styles.grow : ''} ${className ?? ''}`)} {...rest} />
   );
 });

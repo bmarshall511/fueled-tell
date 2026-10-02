@@ -6,27 +6,13 @@
   gap: var(--space-6);
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-}
-
 .title {
-  margin: 0 0 var(--space-2);
-  font-weight: inherit;
+  margin-bottom: var(--space-2);
   font-size: clamp(var(--font-size-phone-display), 6vw, var(--font-size-page-display));
-  line-height: var(--font-line-height-tight);
-  letter-spacing: var(--font-letter-spacing-tight);
 }
 
 .lede {
-  margin: 0;
   max-width: 60ch;
-  font-size: var(--font-size-phone-title);
-  color: var(--color-text-muted);
 }
 
 .steps {
@@ -54,25 +40,12 @@
   color: var(--color-accent);
 }
 
-.who {
-  font-size: var(--font-size-phone-label);
-  letter-spacing: var(--font-letter-spacing-label);
-  text-transform: uppercase;
-  color: var(--color-highlight);
-}
-
 .bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: var(--space-3);
-}
-
-.hint {
-  margin: 0;
-  font-size: var(--font-size-phone-body);
-  color: var(--color-text-muted);
 }
 
 .panes {
@@ -87,13 +60,6 @@
   margin: 0;
   display: grid;
   gap: var(--space-2);
-}
-
-.caption {
-  font-size: var(--font-size-phone-label);
-  letter-spacing: var(--font-letter-spacing-label);
-  text-transform: uppercase;
-  color: var(--color-text-muted);
 }
 
 .hostFrame,

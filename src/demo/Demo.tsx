@@ -1,25 +1,27 @@
 import { useEffect, useState } from 'react';
 import { makeRoomCode } from '../engine/roomCode';
 import { sessionKey } from '../host/state/storage';
+import { identityKey } from '../player/identity';
+import { BrandHeader } from '../ui/components/BrandHeader';
 import { Button } from '../ui/components/Button';
 import { UI_COPY } from '../ui/copy';
-import { BuiltBy, FueledLockup } from '../ui/components/Logo';
 import { useDocumentTitle } from '../ui/hooks/useDocumentTitle';
 import styles from './Demo.module.css';
 
 const D = UI_COPY.demo;
 
 /** A fresh room per run, so an old demo tab can never capture the phone. */
+const SEAT = 'demo';
 const srcs = (room: string) => ({
   host: `/host?transport=local&room=${room}&sample=1&bots=1`,
-  phone: `/play?transport=local&room=${room}&seat=demo`,
+  phone: `/play?transport=local&room=${room}&seat=${SEAT}`,
 });
 
 /** Start every demo run fresh: drop the local-demo host session and the demo phone's identity. */
 function resetDemo() {
   try {
     localStorage.removeItem(sessionKey(true));
-    localStorage.removeItem('tell:playerdemo');
+    localStorage.removeItem(identityKey(SEAT));
   } catch {
     /* ignore */
   }
@@ -42,14 +44,11 @@ export default function Demo() {
   useDocumentTitle(D.title);
   return (
     <main className={styles.demo}>
-      <header className={styles.header}>
-        <FueledLockup size="page" />
-        <BuiltBy size="page" />
-      </header>
+      <BrandHeader />
 
       <div className={styles.intro}>
-        <h1 className={styles.title}>{D.title}</h1>
-        <p className={styles.lede}>{D.intro}</p>
+        <h1 className={`text-headline ${styles.title}`}>{D.title}</h1>
+        <p className={`text-lede ${styles.lede}`}>{D.intro}</p>
       </div>
 
       <ol className={styles.steps}>
@@ -58,14 +57,14 @@ export default function Demo() {
             <span className={styles.stepNum} aria-hidden="true">
               {i + 1}
             </span>
-            <span className={styles.who}>{s.who}</span>
+            <span className="text-label text-ok">{s.who}</span>
             <span>{s.what}</span>
           </li>
         ))}
       </ol>
 
       <div className={styles.bar}>
-        <p className={styles.hint}>{D.hint}</p>
+        <p className="text-body text-muted">{D.hint}</p>
         <Button
           variant="secondary"
           onClick={() => {
@@ -80,13 +79,13 @@ export default function Demo() {
       {ready && (
         <div className={styles.panes} key={run}>
           <figure className={styles.hostPane}>
-            <figcaption className={styles.caption}>{D.host}</figcaption>
+            <figcaption className="text-label">{D.host}</figcaption>
             <div className={`chamfer ${styles.hostFrame}`}>
               <iframe title={D.host} src={src.host} allow="fullscreen; screen-wake-lock" />
             </div>
           </figure>
           <figure className={styles.phonePane}>
-            <figcaption className={styles.caption}>{D.phone}</figcaption>
+            <figcaption className="text-label">{D.phone}</figcaption>
             <div className={`chamfer ${styles.phoneFrame}`}>
               <iframe title={D.phone} src={src.phone} />
             </div>
