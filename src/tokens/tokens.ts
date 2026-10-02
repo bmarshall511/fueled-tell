@@ -58,7 +58,8 @@ export const tokens = {
     },
     "letterSpacing": {
       "tight": "-0.02em",
-      "label": "0.06em"
+      "label": "0.06em",
+      "code": "0.4em"
     }
   },
   "space": {

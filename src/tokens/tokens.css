@@ -41,6 +41,7 @@
   --font-line-height-base: 1.25;
   --font-letter-spacing-tight: -0.02em;
   --font-letter-spacing-label: 0.06em;
+  --font-letter-spacing-code: 0.4em;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
