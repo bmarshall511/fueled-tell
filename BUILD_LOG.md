@@ -572,3 +572,17 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **The gradient drift speed:** it should feel alive, not distracting.
 
 **Approximate time:** about 60 min of wall-clock AI time (≈15:00–16:00 CT).
+
+## 2026-10-02 (Fri): Session 1l, background glow actually animates
+
+**Goal:** the background was supposed to drift, but it never moved (reported).
+
+**Root cause:** `.backdrop i` (specificity 0,1,1) used the `animation` shorthand, which resets `animation-name` to `none`. That overrode each blob's `animation-name` (`.pink` and the others, specificity 0,1,0). Screenshots couldn't show it. `.backdrop i` now sets longhands only, and the blob rules are `.backdrop .pink` and so on. Also removed an `undefined` class from the vivid tone.
+
+**Verification done by the AI:**
+
+- In a live page, each blob has one running animation (`document.getAnimations()`), and its transform changes over 3 s.
+- The gradient text `shimmer` animations run too.
+- `npm run check` passes.
+
+**Approximate time:** about 10 min.

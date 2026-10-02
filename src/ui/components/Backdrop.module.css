@@ -15,11 +15,15 @@
   filter: blur(var(--blur-glow));
   opacity: var(--opacity-glow);
   transition: opacity var(--duration-slow) var(--easing-standard);
-  animation: var(--duration-drift) var(--easing-standard) infinite alternate;
+  /* Longhands only: each blob sets its own name and duration below. */
+  animation-duration: var(--duration-drift);
+  animation-timing-function: var(--easing-standard);
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
 
 /* Sized off the larger side, rising from the bottom like the site's orb. */
-.pink {
+.backdrop .pink {
   width: 70vmax;
   left: -15vmax;
   bottom: -42vmax;
@@ -27,7 +31,7 @@
   animation-name: drift-pink;
 }
 
-.violet {
+.backdrop .violet {
   width: 80vmax;
   right: -25vmax;
   bottom: -50vmax;
@@ -36,7 +40,7 @@
   animation-duration: calc(var(--duration-drift) * 1.25);
 }
 
-.lilac {
+.backdrop .lilac {
   width: 55vmax;
   left: 30%;
   bottom: -40vmax;

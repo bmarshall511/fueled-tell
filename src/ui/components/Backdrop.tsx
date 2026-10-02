@@ -11,7 +11,7 @@ export function Backdrop({ tone = 'vivid' }: { tone?: 'vivid' | 'calm' }) {
   const visible = usePageVisible();
   const still = usePrefersReducedMotion();
   return (
-    <div className={`${styles.backdrop} ${styles[tone]} ${still || !visible ? styles.still : ''}`} aria-hidden="true">
+    <div className={`${styles.backdrop} ${tone === 'calm' ? styles.calm : ''} ${still || !visible ? styles.still : ''}`} aria-hidden="true">
       <i className={styles.pink} />
       <i className={styles.violet} />
       <i className={styles.lilac} />
