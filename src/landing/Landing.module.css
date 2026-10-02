@@ -112,9 +112,9 @@ a.card:hover {
 }
 
 .stepNum {
+  justify-self: start;
   font-size: var(--font-size-phone-display);
   line-height: 1;
-  color: var(--color-accent);
 }
 
 .install {

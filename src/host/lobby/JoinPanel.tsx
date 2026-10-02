@@ -17,7 +17,7 @@ export function JoinPanel({ code, prompt, status }: { code: string; prompt: stri
         <h1 tabIndex={-1} className={`t-label ${styles.joinAt}`}>
           {L.joinAt} <span className={styles.url}>{shown}</span>
         </h1>
-        <CodeChip code={code} size="host" />
+        <CodeChip code={code} size="hero" />
         <p className={`t-body ${styles.prompt}`}>{prompt}</p>
         {status}
       </div>

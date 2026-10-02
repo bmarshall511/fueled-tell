@@ -483,3 +483,41 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **axe-core:** 0 violations in the lobby states.
 
 **Approximate time:** about 10 min.
+
+## 2026-10-02 (Fri): Session 1j, full UI/UX audit and polish
+
+**Goal:** a complete audit of every screen and state, then polish to finish the UI/UX.
+
+**Audit:** 51 screenshots (every host state at 1920, 1280 and portrait; every phone state on phone and desktop; landing, setup and demo on desktop and mobile). Each was reviewed as a contact sheet. No blocking issues; these rough edges were fixed:
+
+- **Phone waiting indicator:** was a dull dark-blue dot that looked broken. It's now a breathing glow orb (the glow gradient with a soft halo).
+- **Setup:** invalid entry rows used a thick yellow left border, which looked like a bracket on rounded rows. They now get a rounded Nova hairline ring.
+- **Lobby room code:** the most important thing on the screen was title-sized. A new `CodeChip` `hero` size makes it display-sized, with a floor on phones.
+- **Code fields:** the phone's code field now shows an example code. The placeholder moved into copy (`UI_COPY.codePlaceholder`) and is shared with the landing page.
+- **Host-only tally:** native square checkboxes became round check badges, and unticked chips got a hairline.
+- **Host menu:** opens with a soft scale-in over a blurred backdrop.
+- **Last 5 seconds:** the countdown number pulses (host and phone), and the host's timer bar turns Nova.
+- **Landing steps:** the numbers use gradient text.
+- **Selection and scrollbars:** brand-colored text selection; thin, dark scrollbars.
+- **Hover and press feedback:** pack cards lift on hover and press in; the phone's name-claim tiles press in.
+- **Lobby:** "Waiting for players…" breathes gently.
+- **Reduced motion:** looping animations now run once instead of flickering at 1ms. This also fixes the boot screen's loops.
+
+**Checked and not a bug:** the drumroll screenshot showed the owner's name blurred on the card. That was the name's blur-in after the drumroll had ended; the footer already showed the result.
+
+**Verification done by the AI**
+
+- `npm run check`: 45/45 tests.
+- `vite build` is clean.
+- **axe-core:** 0 violations on every page at phone and desktop sizes, and in every live game state.
+- **Full 8-round game:** passes.
+- **Overflow probe:** 41/41 clean.
+- **Before/after contact sheets** of the changed screens.
+- `docs/screens/` refreshed.
+
+**What you need to verify by hand**
+
+- **On a real phone:** the breathing orb and countdown pulse, and the tap feedback.
+- **On the host:** the menu animation and the bigger lobby code on a real screen share.
+
+**Approximate time:** about 45 min of wall-clock AI time (≈14:50–15:35 CT).

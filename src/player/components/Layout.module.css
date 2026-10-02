@@ -68,18 +68,20 @@
   letter-spacing: var(--font-letter-spacing-tight);
 }
 
+/* "Waiting on others": a small glow orb that breathes. */
 .pulse {
+  width: var(--space-7);
+  height: var(--space-7);
   border-radius: var(--radius-pill);
-  width: var(--space-8);
-  height: var(--space-8);
-  background: var(--color-highlight);
-  animation: pulse var(--duration-entrance) var(--easing-standard) infinite alternate;
+  background: var(--gradient-glow);
+  box-shadow: 0 0 var(--space-6) color-mix(in srgb, var(--color-fueled-solar) 55%, transparent);
+  animation: breathe calc(var(--duration-entrance) * 2) var(--easing-standard) infinite alternate;
 }
 
-@keyframes pulse {
-  to {
-    opacity: var(--opacity-dim);
-    transform: scale(0.8);
+@keyframes breathe {
+  from {
+    transform: scale(0.82);
+    box-shadow: 0 0 var(--space-3) color-mix(in srgb, var(--color-fueled-nebula) 40%, transparent);
   }
 }
 

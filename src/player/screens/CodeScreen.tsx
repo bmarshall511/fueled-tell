@@ -37,6 +37,7 @@ export function CodeScreen({ onSubmit }: { onSubmit: (code: string) => void }) {
           inputMode="text"
           enterKeyHint="go"
           aria-describedby={ids.hint}
+          placeholder={UI_COPY.codePlaceholder}
           autoFocus
         />
         <span id={ids.hint} className="text-hint">

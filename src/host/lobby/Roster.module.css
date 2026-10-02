@@ -39,6 +39,13 @@
 .waiting {
   align-self: center;
   color: var(--color-text-muted);
+  animation: waiting calc(var(--duration-entrance) * 2) var(--easing-standard) infinite alternate;
+}
+
+@keyframes waiting {
+  to {
+    opacity: var(--opacity-dim);
+  }
 }
 
 .chip {

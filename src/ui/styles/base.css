@@ -56,6 +56,17 @@ a {
   color: inherit;
 }
 
+::selection {
+  background: var(--color-accent);
+  color: var(--color-text);
+}
+
+/* Thin, dark scrollbars for the few scrolling areas (setup, long rosters, the finale on small windows). */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) transparent;
+}
+
 :focus-visible {
   outline: var(--border-width-strong) solid var(--color-highlight);
   outline-offset: var(--border-width-strong);
@@ -177,6 +188,8 @@ label:has(> input:focus-visible) {
   *::before,
   *::after {
     animation-duration: 1ms !important;
+    /* Looping effects (breathing orb, countdown tick) would flicker at 1ms: run once and stop. */
+    animation-iteration-count: 1 !important;
     transition-duration: 1ms !important;
   }
 }

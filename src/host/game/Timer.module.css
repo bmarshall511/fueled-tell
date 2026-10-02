@@ -15,6 +15,17 @@
 
 .urgent {
   color: var(--color-fueled-nova);
+  animation: tick var(--duration-slow) var(--easing-standard) infinite alternate;
+}
+
+.timer:has(.urgent) .fill {
+  background: var(--color-fueled-nova);
+}
+
+@keyframes tick {
+  to {
+    transform: scale(1.08);
+  }
 }
 
 .track {

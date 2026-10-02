@@ -60,7 +60,7 @@ export default function Landing() {
               autoCapitalize="characters"
               autoComplete="off"
               spellCheck={false}
-              placeholder="K7QF"
+              placeholder={UI_COPY.codePlaceholder}
             />
             <Button type="submit" disabled={code.length !== ROOM_CODE_LENGTH}>
               {UI_COPY.play.go}
@@ -79,7 +79,7 @@ export default function Landing() {
       <ol className={styles.how}>
         {L.how.map((step, i) => (
           <li key={step} className={styles.step}>
-            <span className={styles.stepNum} aria-hidden="true">
+            <span className={`text-glow ${styles.stepNum}`} aria-hidden="true">
               {i + 1}
             </span>
             {step}

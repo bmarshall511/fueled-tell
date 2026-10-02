@@ -110,6 +110,8 @@ export const UI_COPY = {
   },
 
   roomCode: 'Room code',
+  /** Example code shown in empty code fields. */
+  codePlaceholder: 'K7QF',
   more: 'more',
 
   lobby: {

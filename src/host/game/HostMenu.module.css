@@ -14,11 +14,20 @@
 
 .menu[open] {
   display: grid;
+  animation: menu-in var(--duration-base) var(--easing-emphasized);
 }
 
 .menu::backdrop {
-  background: var(--color-bg);
-  opacity: var(--opacity-muted);
+  background: color-mix(in srgb, var(--color-bg) 60%, transparent);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(var(--space-3));
+  }
 }
 
 .menu button {

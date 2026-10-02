@@ -14,11 +14,18 @@
   -webkit-backdrop-filter: blur(var(--blur-glass));
   backdrop-filter: blur(var(--blur-glass));
   cursor: pointer;
-  transition: background-color var(--duration-fast) var(--easing-standard);
+  transition:
+    background-color var(--duration-fast) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard);
 }
 
 .pack:hover {
   background: var(--color-border);
+  transform: translateY(calc(var(--space-1) * -1));
+}
+
+.pack:active {
+  transform: scale(0.98);
 }
 
 .pack:has(input:checked) {

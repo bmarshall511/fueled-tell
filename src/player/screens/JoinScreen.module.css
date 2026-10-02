@@ -19,10 +19,18 @@
   font-size: var(--font-size-phone-body);
   text-align: left;
   cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard);
+  box-shadow: inset 0 0 0 var(--border-width-hairline) var(--color-border);
 }
 
 .claim:hover {
   background: var(--color-border);
+}
+
+.claim:active {
+  transform: scale(0.97);
 }
 
 /* Reserve the line so the button doesn't jump when an error appears. */

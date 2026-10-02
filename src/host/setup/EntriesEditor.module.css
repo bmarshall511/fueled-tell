@@ -41,5 +41,7 @@
   background: none;
   color: var(--color-highlight);
   text-decoration: underline;
+  text-decoration-thickness: var(--border-width-hairline);
+  text-underline-offset: 0.25em;
   cursor: pointer;
 }
