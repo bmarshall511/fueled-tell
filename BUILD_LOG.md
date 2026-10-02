@@ -257,4 +257,4 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **VoiceOver / NVDA** passes.
 - **Font licence:** you decided to publish the Aeonik files in a public repo, so check the CoType EULA permits that distribution.
 
-**Approximate time:** about 1 h of wall-clock AI time (≈12:00–13:00 CT), including the parallel QA agent (about 27 min).
+**Approximate time:** about 50 min of wall-clock AI time (≈11:52–12:43 CT), including the parallel QA agent (about 27 min).
