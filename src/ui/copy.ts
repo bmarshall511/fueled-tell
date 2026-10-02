@@ -2,7 +2,7 @@
 export const UI_COPY = {
   /** The app's name. One place to rename it. */
   appName: 'Tell',
-  tagline: 'The party game where everyone tells, and nobody tells.',
+  tagline: 'Everyone has a story. Can you tell whose?',
   loading: 'Shuffling the deck',
   guesses: 'guesses in',
   guessedRight: 'guessed right',
