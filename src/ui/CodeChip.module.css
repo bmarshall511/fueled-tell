@@ -1,0 +1,25 @@
+.code {
+  display: inline-flex;
+  gap: var(--space-2);
+}
+
+.tile {
+  display: inline-grid;
+  place-items: center;
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.phone .tile {
+  width: calc(var(--size-tap-target) * 1.1);
+  height: calc(var(--size-tap-target) * 1.3);
+  font-size: var(--font-size-phone-title);
+}
+
+.host .tile {
+  width: calc(var(--font-size-host-title) * 1.2 * var(--stage));
+  height: calc(var(--font-size-host-title) * 1.5 * var(--stage));
+  font-size: calc(var(--font-size-host-title) * var(--stage));
+  --cut: calc(var(--chamfer-md) * var(--stage));
+}

@@ -1,0 +1,19 @@
+/* Text sits on a Perfect White card, so flip the text tokens locally. */
+.front {
+  --color-text: var(--color-text-inverse);
+}
+
+.back {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+.back p {
+  margin: 0;
+}
+
+.back :global(.t-label) {
+  color: var(--color-text);
+  opacity: var(--opacity-muted);
+}

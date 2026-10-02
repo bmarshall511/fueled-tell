@@ -1,0 +1,32 @@
+.timer {
+  display: grid;
+  justify-items: end;
+  gap: calc(var(--space-2) * var(--stage));
+  min-width: calc(var(--font-size-host-title) * 4 * var(--stage));
+}
+
+.idle {
+  opacity: var(--opacity-dim);
+}
+
+.seconds {
+  font-variant-numeric: tabular-nums;
+}
+
+.urgent {
+  color: var(--color-fueled-nova);
+}
+
+.track {
+  width: 100%;
+  height: calc(var(--space-2) * var(--stage));
+  background: var(--color-border);
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  background: var(--color-highlight);
+  transform-origin: left;
+  transition: transform 250ms linear;
+}

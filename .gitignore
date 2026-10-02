@@ -5,9 +5,6 @@ dist-ssr/
 *.tsbuildinfo
 .vite/
 
-# generated from tokens/tokens.json by scripts/build-tokens.ts
-src/tokens/tokens.css
-src/tokens/tokens.ts
 
 # env & local
 .env

@@ -1,0 +1,54 @@
+.host {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.top,
+.bottom,
+.controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding: 0 calc(var(--space-8) * var(--stage));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.top {
+  top: calc(var(--space-7) * var(--stage));
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: calc(var(--space-6) * var(--stage));
+}
+
+.progress {
+  color: var(--color-text-muted);
+  margin-top: calc(var(--space-2) * var(--stage));
+}
+
+.bottom {
+  bottom: calc(var(--space-9) * 1.1 * var(--stage));
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: calc(var(--space-6) * var(--stage));
+}
+
+.question {
+  margin: 0;
+  color: var(--color-accent);
+}
+
+.controls {
+  bottom: calc(var(--space-5) * var(--stage));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.controls button {
+  pointer-events: auto;
+}

@@ -1,0 +1,30 @@
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  translate: 0 calc(var(--size-item-offset-y) * var(--stage));
+}
+
+.overlay > * {
+  grid-area: 1 / 1;
+}
+
+/* Shared entrance / exit helpers for overlay content. */
+:global(.fade-in) {
+  animation: fade-in var(--duration-slow) var(--easing-standard) both;
+}
+
+:global(.fade-out) {
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--easing-standard);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--space-4) * var(--stage)));
+    filter: blur(calc(var(--space-2) * var(--stage)));
+  }
+}

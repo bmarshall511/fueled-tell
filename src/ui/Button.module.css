@@ -1,0 +1,56 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  border: 0;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--easing-standard),
+    transform var(--duration-fast) var(--easing-standard);
+}
+
+.button:active {
+  transform: translateY(var(--border-width-base));
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: var(--opacity-dim);
+}
+
+.primary {
+  background: var(--color-accent);
+  color: var(--color-text);
+}
+
+.secondary {
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+}
+
+.secondary:hover:not(:disabled) {
+  background: var(--color-border);
+}
+
+.phone {
+  min-height: var(--size-tap-target);
+  padding: 0 var(--space-5);
+  font-size: var(--font-size-phone-body);
+  --cut: var(--chamfer-sm);
+}
+
+.host {
+  min-height: calc(var(--size-tap-target) * 1.25 * var(--stage));
+  padding: 0 calc(var(--space-5) * var(--stage));
+  font-size: calc(var(--font-size-host-label) * 0.75 * var(--stage));
+  --cut: calc(var(--chamfer-md) * var(--stage));
+}
+
+.kbd {
+  font: inherit;
+  font-size: 0.75em;
+  padding: 0 var(--space-2);
+  border: var(--border-width-base) solid currentColor;
+  opacity: var(--opacity-muted);
+}

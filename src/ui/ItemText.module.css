@@ -1,0 +1,15 @@
+.item {
+  margin: 0;
+  max-width: calc(var(--size-item-width) * var(--stage));
+}
+
+.label {
+  margin-bottom: calc(var(--space-4) * var(--stage));
+  color: var(--color-accent);
+}
+
+.text {
+  margin: 0;
+  color: var(--color-text);
+  text-wrap: balance;
+}

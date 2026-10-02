@@ -1,0 +1,116 @@
+@font-face {
+  font-family: 'Aeonik';
+  src:
+    url('../../assets/fonts/Aeonik-Medium.woff2') format('woff2'),
+    url('../../assets/fonts/Aeonik-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-base);
+  line-height: var(--font-line-height-base);
+  -webkit-font-smoothing: antialiased;
+  /* Host routes set --stage (viewport / reference stage); phones keep 1. */
+  --stage: 1;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: var(--border-width-strong) solid var(--color-highlight);
+  outline-offset: var(--border-width-strong);
+}
+
+/* DOM lab chamfer motif: cut top-left and bottom-right corners. Set --cut to size. */
+.chamfer {
+  --cut: var(--chamfer-md);
+  clip-path: polygon(
+    var(--cut) 0,
+    100% 0,
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    0 100%,
+    0 var(--cut)
+  );
+}
+
+.chamfer-all {
+  --cut: var(--chamfer-sm);
+  clip-path: polygon(
+    var(--cut) 0,
+    calc(100% - var(--cut)) 0,
+    100% var(--cut),
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    var(--cut) 100%,
+    0 calc(100% - var(--cut)),
+    0 var(--cut)
+  );
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Host type scale: reference px sizes multiplied by the stage scale. */
+.t-hero {
+  font-size: calc(var(--font-size-host-hero) * var(--stage));
+  line-height: var(--font-line-height-tight);
+  letter-spacing: var(--font-letter-spacing-tight);
+}
+.t-display {
+  font-size: calc(var(--font-size-host-display) * var(--stage));
+  line-height: var(--font-line-height-tight);
+  letter-spacing: var(--font-letter-spacing-tight);
+}
+.t-title {
+  font-size: calc(var(--font-size-host-title) * var(--stage));
+  line-height: var(--font-line-height-tight);
+}
+.t-body {
+  font-size: calc(var(--font-size-host-body) * var(--stage));
+}
+.t-label {
+  font-size: calc(var(--font-size-host-label) * var(--stage));
+  letter-spacing: var(--font-letter-spacing-label);
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}

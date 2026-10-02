@@ -1,0 +1,25 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  background: var(--color-surface-raised);
+  white-space: nowrap;
+}
+
+.host {
+  font-size: calc(var(--font-size-host-label) * var(--stage));
+  padding: calc(var(--space-2) * var(--stage)) calc(var(--space-4) * var(--stage));
+  --cut: calc(var(--chamfer-sm) * var(--stage));
+}
+
+.phone {
+  font-size: var(--font-size-phone-body);
+  padding: var(--space-2) var(--space-3);
+  --cut: var(--chamfer-sm);
+}
+
+.dot {
+  width: 0.6em;
+  height: 0.6em;
+  flex: none;
+}

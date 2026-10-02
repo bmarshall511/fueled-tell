@@ -1,0 +1,102 @@
+import { useCallback, useEffect, useMemo, useReducer } from 'react';
+import { createRound, currentEntryId, roundReducer, type RoundAction } from '../engine/round';
+import type { Entry, Guess, RoundPhase, RoundState } from '../engine/types';
+import { MOCK_ENTRIES, MOCK_PACK, MOCK_PLAYERS } from './data';
+import { seeded, shuffle } from './random';
+
+/** Mock pacing (behavior, not design). `?timer=20` overrides the pack timer. */
+const MOCK = {
+  showingMs: 3500,
+  autoLockDelayMs: 900,
+  /** Simulated guesses land between these fractions of the timer. */
+  guessWindow: [0.06, 0.5] as const,
+  correctChance: 0.45,
+};
+
+function timerMs(): number {
+  const override = Number(new URLSearchParams(window.location.search).get('timer'));
+  return (override > 0 ? override : MOCK_PACK.timerSec) * 1000;
+}
+
+/** Deterministic simulated guesses for an entry: who guesses whom, and when (ms into guessing). */
+function simulateGuesses(entry: Entry, index: number, durationMs: number): { guess: Guess; at: number }[] {
+  const rand = seeded(index + 11);
+  const [from, to] = MOCK.guessWindow;
+  return MOCK_PLAYERS.filter((p) => p.id !== entry.ownerId).map((p) => {
+    const correct = rand() < MOCK.correctChance;
+    const decoys = MOCK_PLAYERS.filter((d) => d.id !== p.id && d.id !== entry.ownerId);
+    const ownerId = correct ? entry.ownerId : (decoys[Math.floor(rand() * decoys.length)]?.id ?? entry.ownerId);
+    return { guess: { playerId: p.id, entryId: entry.id, ownerId }, at: durationMs * (from + rand() * (to - from)) };
+  });
+}
+
+/** `?at=guessing|locked|reveal&item=3` deep-links into a phase (for reviews and screenshots). */
+function initialState(reducer: (s: RoundState, a: RoundAction) => RoundState, durationMs: number): RoundState {
+  const params = new URLSearchParams(window.location.search);
+  let state = createRound(shuffle(MOCK_ENTRIES.map((e) => e.id), seeded(7)));
+  state = { ...state, index: Math.max(0, Math.min(state.order.length - 1, Number(params.get('item') ?? 1) - 1)) };
+  const at = params.get('at') as RoundPhase | null;
+  if (!at || at === 'showing') return state;
+  const entry = MOCK_ENTRIES.find((e) => e.id === currentEntryId(state)) as Entry;
+  state = reducer(state, { type: 'beginGuessing', now: Date.now(), durationMs });
+  if (at === 'guessing') return state;
+  simulateGuesses(entry, state.index, durationMs).forEach(({ guess }) => (state = reducer(state, { type: 'guess', guess })));
+  state = reducer(state, { type: 'lock' });
+  return at === 'reveal' ? reducer(state, { type: 'reveal' }) : state;
+}
+
+/** Drives the pure round reducer with timers and simulated players guessing. */
+export function useMockRound() {
+  const reducer = useMemo(() => roundReducer(MOCK_ENTRIES), []);
+  const durationMs = useMemo(timerMs, []);
+  const [state, dispatch] = useReducer(reducer, undefined, () => initialState(reducer, durationMs));
+  const entry = MOCK_ENTRIES.find((e) => e.id === currentEntryId(state)) as Entry;
+  const expectedGuesses = MOCK_PLAYERS.length - 1; // the owner can't guess
+
+  // showing -> guessing after the entrance moment
+  useEffect(() => {
+    if (state.phase !== 'showing') return;
+    const id = window.setTimeout(
+      () => dispatch({ type: 'beginGuessing', now: Date.now(), durationMs }),
+      MOCK.showingMs,
+    );
+    return () => window.clearTimeout(id);
+  }, [state.phase, state.index, durationMs]);
+
+  // guessing: simulated guesses trickle in, timer locks at the deadline
+  useEffect(() => {
+    if (state.phase !== 'guessing') return;
+    const timeouts = simulateGuesses(entry, state.index, durationMs).map(({ guess, at }) =>
+      window.setTimeout(() => dispatch({ type: 'guess', guess }), at),
+    );
+    timeouts.push(window.setTimeout(() => dispatch({ type: 'lock' }), durationMs));
+    return () => timeouts.forEach((id) => window.clearTimeout(id));
+  }, [state.phase, state.index, entry, durationMs]);
+
+  // everyone's in: lock early
+  const allIn = state.phase === 'guessing' && state.guesses.length >= expectedGuesses;
+  useEffect(() => {
+    if (!allIn) return;
+    const id = window.setTimeout(() => dispatch({ type: 'lock' }), MOCK.autoLockDelayMs);
+    return () => window.clearTimeout(id);
+  }, [allIn]);
+
+  /** One key for the whole loop (Space): whatever the next step is. */
+  const advance = useCallback(() => {
+    switch (state.phase) {
+      case 'showing':
+        return dispatch({ type: 'beginGuessing', now: Date.now(), durationMs });
+      case 'guessing':
+        return dispatch({ type: 'lock' });
+      case 'locked':
+        return dispatch({ type: 'reveal' });
+      case 'reveal':
+        return dispatch({ type: 'next' });
+    }
+  }, [state.phase, durationMs]);
+
+  const reveal = useCallback(() => dispatch({ type: 'reveal' }), []);
+  const lock = useCallback(() => dispatch({ type: 'lock' }), []);
+
+  return { state, entry, durationMs, expectedGuesses, advance, lock, reveal };
+}

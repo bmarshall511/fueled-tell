@@ -1,0 +1,37 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.cell {
+  --cut: var(--chamfer-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: calc(var(--size-tap-target) * 1.4);
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  background: var(--color-surface-raised);
+  font-size: var(--font-size-phone-body);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--easing-standard);
+}
+
+.cell:disabled {
+  opacity: var(--opacity-dim);
+  cursor: not-allowed;
+}
+
+.swatch {
+  width: var(--space-3);
+  align-self: stretch;
+  flex: none;
+  background: var(--player);
+}
+
+.selected {
+  background: var(--color-text);
+  color: var(--color-text-inverse);
+}

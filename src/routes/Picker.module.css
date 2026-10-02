@@ -1,0 +1,77 @@
+.picker {
+  max-width: calc(var(--size-item-width) * 0.9);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+}
+
+.title {
+  margin: var(--space-9) 0 var(--space-3);
+  font-weight: inherit;
+  font-size: var(--font-size-host-display);
+  line-height: var(--font-line-height-tight);
+  letter-spacing: var(--font-letter-spacing-tight);
+}
+
+.sub {
+  margin: 0 0 var(--space-8);
+  font-size: var(--font-size-phone-title);
+  color: var(--color-text-muted);
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-4);
+}
+
+.card {
+  --cut: var(--chamfer-lg);
+  display: grid;
+  gap: var(--space-3);
+  height: 100%;
+  padding: var(--space-6);
+  background: var(--color-surface-raised);
+  text-decoration: none;
+  transition: background-color var(--duration-fast) var(--easing-standard);
+}
+
+.card:hover {
+  background: var(--color-accent);
+}
+
+.name {
+  font-size: var(--font-size-host-label);
+}
+
+.blurb {
+  font-size: var(--font-size-phone-body);
+  color: var(--color-text-muted);
+}
+
+.card:hover .blurb {
+  color: var(--color-text);
+}
+
+.path {
+  align-self: end;
+  font-size: var(--font-size-phone-label);
+  letter-spacing: var(--font-letter-spacing-label);
+  color: var(--color-text-muted);
+}
+
+.hint {
+  margin-top: var(--space-8);
+  font-size: var(--font-size-phone-label);
+  color: var(--color-text-muted);
+}

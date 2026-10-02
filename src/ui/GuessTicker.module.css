@@ -1,0 +1,30 @@
+.ticker {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--space-5) * var(--stage));
+}
+
+.count {
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.slots {
+  display: flex;
+  gap: calc(var(--space-3) * var(--stage));
+}
+
+.slot {
+  --cut: calc(var(--chamfer-sm) * var(--stage));
+  width: calc(var(--font-size-host-label) * 1.25 * var(--stage));
+  height: calc(var(--font-size-host-label) * 1.25 * var(--stage));
+  background: var(--color-surface-raised);
+  transition:
+    background-color var(--duration-base) var(--easing-standard),
+    transform var(--duration-base) var(--easing-emphasized);
+}
+
+.filled {
+  background: var(--color-highlight);
+  transform: scale(1.15);
+}

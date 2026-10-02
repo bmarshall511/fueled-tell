@@ -1,0 +1,41 @@
+.panel {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: calc(var(--space-7) * var(--stage));
+  width: 100%;
+}
+
+.lead {
+  margin: 0 0 calc(var(--space-2) * var(--stage));
+  color: var(--color-text-muted);
+}
+
+.name {
+  margin: 0;
+  color: var(--color-highlight);
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--space-5) * var(--stage));
+  margin-left: auto;
+}
+
+.pct {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.pct :global(.t-label) {
+  color: var(--color-text-muted);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: calc(var(--space-2) * var(--stage));
+  max-width: calc(var(--size-stage-width) * 0.62 * var(--stage));
+}
