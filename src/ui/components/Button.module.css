@@ -57,6 +57,7 @@
   padding: 0 max(var(--space-4), calc(var(--space-5) * var(--stage)));
   font-size: max(var(--font-size-phone-label), calc(var(--font-size-host-label) * 0.75 * var(--stage)));
   --cut: calc(var(--chamfer-md) * var(--stage));
+  white-space: nowrap;
 }
 
 .kbd {

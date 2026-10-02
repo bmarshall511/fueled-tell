@@ -1,12 +1,13 @@
+/* Fills the space above the controls dock (see GameScreen `.ended`); scrolls only if it truly can't fit. */
 .finale {
-  position: absolute;
-  inset: 0;
+  position: relative;
   z-index: 2;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: calc(var(--space-6) * var(--stage));
-  padding: calc(var(--space-8) * var(--stage)) calc(var(--space-8) * var(--stage)) calc(var(--size-tap-target) * 2 + var(--space-6));
+  padding: calc(var(--space-8) * var(--stage)) calc(var(--space-8) * var(--stage)) calc(var(--space-4) * var(--stage));
   background: var(--color-bg);
   overflow: auto;
 }
@@ -61,6 +62,7 @@
 
 .step {
   --cut: calc(var(--chamfer-lg) * var(--stage));
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -96,9 +98,10 @@
   color: var(--color-accent);
 }
 
-.name {
+/* Long names shrink to the card so whole words fit (about 18 characters a line); longer ones still wrap. */
+.step .name {
+  font-size: min(max(var(--font-size-phone-body), calc(var(--font-size-host-title) * var(--stage))), 10cqi);
   overflow-wrap: break-word;
-  hyphens: auto;
 }
 
 .score {
@@ -182,7 +185,7 @@
 
 /* Portrait: compact podium, single-column rows. */
 [data-orientation='portrait'] .finale {
-  padding: var(--space-6) var(--space-4) calc(var(--size-tap-target) * 2 + var(--space-7));
+  padding: var(--space-6) var(--space-4) var(--space-3);
 }
 
 [data-orientation='portrait'] .rest {
@@ -197,8 +200,8 @@
   padding: var(--space-3);
 }
 
-[data-orientation='portrait'] .name {
-  font-size: max(var(--font-size-phone-body), calc(var(--font-size-host-label) * var(--stage)));
+[data-orientation='portrait'] .step .name {
+  font-size: min(max(var(--font-size-phone-body), calc(var(--font-size-host-label) * var(--stage))), 14cqi);
 }
 
 [data-orientation='portrait'] .step {

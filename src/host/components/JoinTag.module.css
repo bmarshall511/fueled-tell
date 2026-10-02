@@ -2,7 +2,8 @@
   margin: 0;
   display: inline-flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  white-space: nowrap;
   gap: calc(var(--space-3) * var(--stage));
   min-width: 0;
   color: var(--color-text-muted);

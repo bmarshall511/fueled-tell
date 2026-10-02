@@ -57,3 +57,43 @@
 .nobody {
   color: var(--color-text-muted);
 }
+
+.chips > span {
+  min-width: 0;
+  max-width: 14em;
+}
+
+.more {
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.narrowOnly {
+  display: none;
+}
+
+[data-orientation='portrait'] .wideOnly {
+  display: none;
+}
+
+[data-orientation='portrait'] .narrowOnly {
+  display: inline;
+}
+
+[data-orientation='portrait'] .chips {
+  flex-wrap: nowrap;
+}
+
+@media (max-height: 520px) {
+  .wideOnly {
+    display: none;
+  }
+
+  .narrowOnly {
+    display: inline;
+  }
+
+  .chips {
+    flex-wrap: nowrap;
+  }
+}

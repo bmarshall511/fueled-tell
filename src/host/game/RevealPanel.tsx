@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import type { PlayerId } from '../../engine/types';
 import { PlayerChip } from '../../ui/components/PlayerChip';
+import { UI_COPY } from '../../ui/copy';
 import type { SeatedPlayer } from '../../ui/lib/types';
 import styles from './RevealPanel.module.css';
 
@@ -44,11 +45,38 @@ export function RevealPanel({
             (correctPlayers.length === 0 ? (
               <span className={`t-label ${styles.nobody}`}>{nobodyLabel}</span>
             ) : (
-              correctPlayers.map((p) => <PlayerChip key={p.id} player={p} />)
+              <CorrectList players={correctPlayers} />
             ))}
         </div>
       </div>
     </section>
+  );
+}
+
+/** Shown in full on a big screen; small screens (portrait, short windows) keep one tidy row. */
+const SHOWN = { wide: 5, narrow: 1 };
+
+/** Who got it right: the first few chips, then "+N more" (the percentage already tells the story). */
+function CorrectList({ players }: { players: readonly SeatedPlayer[] }) {
+  const more = (shown: number) => players.length - shown;
+  return (
+    <>
+      {players.slice(0, SHOWN.wide).map((p, i) => (
+        <span key={p.id} className={i >= SHOWN.narrow ? styles.wideOnly : undefined}>
+          <PlayerChip player={p} truncate />
+        </span>
+      ))}
+      {more(SHOWN.wide) > 0 && (
+        <span className={`t-label ${styles.more} ${styles.wideOnly}`}>
+          +{more(SHOWN.wide)} {UI_COPY.more}
+        </span>
+      )}
+      {more(SHOWN.narrow) > 0 && (
+        <span className={`t-label ${styles.more} ${styles.narrowOnly}`}>
+          +{more(SHOWN.narrow)} {UI_COPY.more}
+        </span>
+      )}
+    </>
   );
 }
 

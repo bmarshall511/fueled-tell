@@ -2,6 +2,19 @@
   overflow: hidden;
 }
 
+/* Finale: standings above, controls dock below, both in flow. */
+.ended {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+
+.ended .dock {
+  position: static;
+  width: min(100%, var(--stage-w));
+  margin: 0 auto;
+  padding-bottom: max(calc(var(--space-5) * var(--stage)), env(safe-area-inset-bottom));
+}
+
 /* HUD layers over the scene, centered on the reference stage (ultrawide screens don't stretch it). */
 .hud {
   position: absolute;
@@ -16,16 +29,18 @@
   top: max(calc(var(--space-7) * var(--stage)), env(safe-area-inset-top));
 }
 
+/* Bottom dock: round info, then the controls bar. */
+.dock {
+  bottom: max(calc(var(--space-5) * var(--stage)), env(safe-area-inset-bottom));
+  display: grid;
+  gap: max(var(--space-3), calc(var(--space-6) * var(--stage)));
+}
+
 .bottom {
-  bottom: calc(var(--space-9) * 1.25 * var(--stage));
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: calc(var(--space-6) * var(--stage));
-}
-
-.controls {
-  bottom: max(calc(var(--space-5) * var(--stage)), env(safe-area-inset-bottom));
 }
 
 .linkLost {
@@ -36,13 +51,12 @@
   z-index: 4;
 }
 
-/* Portrait: the bottom HUD stacks and clears the stacked controls (tap-target-sized buttons). */
+/* Portrait: the round info stacks and centers. */
 [data-orientation='portrait'] .bottom {
   flex-direction: column;
   align-items: center;
   gap: var(--space-3);
   text-align: center;
-  bottom: calc(var(--size-tap-target) + var(--space-8) + env(safe-area-inset-bottom));
 }
 
 [data-orientation='portrait'] .bottom :global(.t-title) {

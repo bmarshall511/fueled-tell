@@ -110,6 +110,7 @@ export const UI_COPY = {
   },
 
   roomCode: 'Room code',
+  more: 'more',
 
   lobby: {
     joinAt: 'Join at',

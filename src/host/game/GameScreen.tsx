@@ -89,7 +89,7 @@ export function GameScreen({ host }: { host: HostGame }) {
   }[s.phase];
 
   return (
-    <HostStage className={styles.screen} busy={!scene.ready && !finale}>
+    <HostStage className={`${styles.screen} ${finale ? styles.ended : ''}`} busy={!scene.ready && !finale}>
       <SceneReadyContext.Provider value={scene.onReady}>
         {scene.Scene && sceneProps && !finale && <scene.Scene {...sceneProps} />}
       </SceneReadyContext.Provider>
@@ -101,11 +101,21 @@ export function GameScreen({ host }: { host: HostGame }) {
       {finale ? (
         <Finale standings={standings} players={s.players} copy={copy} scored={s.settings.scoring === 'competitive'} />
       ) : (
-        <>
-          <div className={`${styles.hud} ${styles.top}`}>
-            <RoundHeader progress={progress} deadline={s.deadline} durationMs={s.settings.timerSec * 1000} />
-          </div>
-          <footer className={`${styles.hud} ${styles.bottom}`}>
+        <div className={`${styles.hud} ${styles.top}`}>
+          <RoundHeader progress={progress} deadline={s.deadline} durationMs={s.settings.timerSec * 1000} />
+        </div>
+      )}
+
+      {!finale && host.link === 'error' && !s.settings.hostOnly && (
+        <Notice role="status" className={styles.linkLost}>
+          {UI_COPY.game.linkLost}
+        </Notice>
+      )}
+
+      {/* Round info sits above the controls in normal flow, so they can never overlap. */}
+      <div className={`${styles.hud} ${styles.dock}`}>
+        {!finale && (
+          <footer className={styles.bottom}>
             <RoundFooter
               state={s}
               copy={copy}
@@ -115,44 +125,45 @@ export function GameScreen({ host }: { host: HostGame }) {
               onToggleTally={toggleTally}
             />
           </footer>
-        </>
-      )}
-
-      {!finale && host.link === 'error' && !s.settings.hostOnly && (
-        <Notice role="status" className={styles.linkLost}>
-          {UI_COPY.game.linkLost}
-        </Notice>
-      )}
-
-      <HostControls className={`${styles.hud} ${styles.controls}`} roomCode={joinCode}>
-        <Button size="host" variant="secondary" onClick={() => menu.current?.showModal()} aria-haspopup="dialog">
-          {UI_COPY.menu}
-        </Button>
-        <Button size="host" variant="secondary" onClick={toggleMute} aria-pressed={!muted} aria-keyshortcuts="M" shortcut="M" data-optional>
-          {muted ? UI_COPY.soundOff : UI_COPY.soundOn}
-        </Button>
-        <Button
-          size="host"
-          variant="secondary"
-          onClick={toggleFullscreen}
-          aria-pressed={fullscreen}
-          aria-keyshortcuts="F"
-          shortcut="F"
-          data-optional
-          data-desktop-only
-        >
-          {fullscreen ? UI_COPY.exitFullscreen : UI_COPY.fullscreen}
-        </Button>
-        {finale ? (
-          <Button size="host" onClick={() => host.dispatch({ type: 'restart' })}>
-            {nextLabel}
-          </Button>
-        ) : (
-          <Button size="host" variant="secondary" onClick={host.advance} shortcut="Space" aria-keyshortcuts="Space">
-            {nextLabel}
-          </Button>
         )}
-      </HostControls>
+        <HostControls roomCode={joinCode}>
+          <Button size="host" variant="secondary" onClick={() => menu.current?.showModal()} aria-haspopup="dialog">
+            {UI_COPY.menu}
+          </Button>
+          <Button
+            size="host"
+            variant="secondary"
+            onClick={toggleMute}
+            aria-pressed={!muted}
+            aria-keyshortcuts="M"
+            shortcut="M"
+            data-optional
+          >
+            {muted ? UI_COPY.soundOff : UI_COPY.soundOn}
+          </Button>
+          <Button
+            size="host"
+            variant="secondary"
+            onClick={toggleFullscreen}
+            aria-pressed={fullscreen}
+            aria-keyshortcuts="F"
+            shortcut="F"
+            data-optional
+            data-desktop-only
+          >
+            {fullscreen ? UI_COPY.exitFullscreen : UI_COPY.fullscreen}
+          </Button>
+          {finale ? (
+            <Button size="host" onClick={() => host.dispatch({ type: 'restart' })}>
+              {nextLabel}
+            </Button>
+          ) : (
+            <Button size="host" variant="secondary" onClick={host.advance} shortcut="Space" aria-keyshortcuts="Space">
+              {nextLabel}
+            </Button>
+          )}
+        </HostControls>
+      </div>
 
       <HostMenu
         ref={menu}

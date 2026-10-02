@@ -370,3 +370,42 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **Redeploy, then on your phone:** the lobby with a long name, the host menu, and the bottom-bar join line during a round.
 
 **Approximate time:** about 25 min of wall-clock AI time.
+
+## 2026-10-02 (Fri): Session 1g, host layout at in-between sizes
+
+**Goal:** fix the shared screen's bottom bar at in-between window sizes. In the reported ~900px window, the labels wrapped and the bar overlapped "Whose story is it?". Fix any similar overlaps elsewhere.
+
+**What got done**
+
+- **Bottom dock:** the round info and the controls bar now stack in one dock in normal flow, so they can't overlap at any height. This replaces two absolutely positioned layers with magic offsets.
+- **Controls bar:**
+  - Host button labels never wrap.
+  - The bar stays on one row using container queries: under 1100px the key hints hide, and under 860px Sound and Full screen hide (both are still in the menu).
+- **Finale:** standings and the dock sit in a two-row grid, so standings can never slide under the bar; they scroll only if the window truly can't fit them.
+  - Podium names shrink to the card (`10cqi`), so whole words fit instead of breaking mid-letter.
+- **Reveal:** the list of who guessed right shows truncated chips, at most 5 on a big screen and 1 on portrait or short windows, then "+N more".
+- **Layout probe** (a scratch harness): host states × 11 window sizes from 360×640 to 1920×1080, including short laptop windows. It checks for overlapping text, wrapped button labels, and content past the edges.
+
+**Decisions the AI made on its own**
+
+- **Reveal names:** small screens show one name plus "+N more". The percentage carries the result, so this protects the card.
+- **Narrow bar:** it drops the key hints, then the duplicated buttons, rather than shrinking the type.
+
+**Verification done by the AI**
+
+- `npm run check`: 45/45 tests.
+- `vite build` is clean.
+- **axe-core:** 0 violations.
+- **Full 8-round local game:** passes.
+- **Overflow probe:** 41/41 clean.
+- **Layout probe:** clean except for false positives, checked against screenshots: the 3D card's front and back text layers, the boot screen mid-wipe, and the finale's scrolled-off rows.
+
+**What you need to verify by hand**
+
+- **Resize a desktop window** from full screen down to ~800px on the round, reveal and finale screens.
+
+**Known leftover**
+
+- **Portrait reveal:** the 3D guess tokens sit just behind the "100%" line. This will be handled in the retheme layout pass.
+
+**Approximate time:** about 35 min of wall-clock AI time.
