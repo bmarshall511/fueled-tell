@@ -1,0 +1,14 @@
+.join {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: calc(var(--space-3) * var(--stage));
+  min-width: 0;
+  color: var(--color-text-muted);
+}
+
+.url {
+  color: var(--color-text);
+  text-transform: none;
+}

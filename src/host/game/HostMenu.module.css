@@ -40,3 +40,33 @@
   font-size: inherit;
   color: var(--color-text-muted);
 }
+
+.join {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
+  min-width: 0;
+}
+
+.qr {
+  flex: none;
+  display: block;
+  width: calc(var(--size-tap-target) * 2.5);
+  aspect-ratio: 1;
+}
+
+.joinText {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.joinText .hint {
+  margin: 0;
+}
+
+.url {
+  color: var(--color-text);
+}

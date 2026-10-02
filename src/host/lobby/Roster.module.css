@@ -18,6 +18,8 @@
 }
 
 .item {
+  min-width: 0;
+  max-width: 100%;
   animation: pop var(--duration-slow) var(--easing-emphasized) both;
 }
 
@@ -40,9 +42,22 @@
   gap: calc(var(--space-3) * var(--stage));
   min-height: max(var(--size-tap-target), calc(var(--font-size-host-label) * 1.7 * var(--stage)));
   padding-left: calc(var(--space-4) * var(--stage));
+  max-width: 100%;
   background: var(--color-surface-raised);
   font-size: max(var(--font-size-phone-body), calc(var(--font-size-host-label) * var(--stage)));
-  white-space: nowrap;
+}
+
+.text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 calc(var(--space-3) * var(--stage));
+  min-width: 0;
+  padding: var(--space-1) 0;
+}
+
+.name {
+  min-width: 0;
 }
 
 .dot {
@@ -57,6 +72,8 @@
 }
 
 .tag {
+  flex: none;
+  white-space: nowrap;
   font-size: max(var(--font-size-phone-label), calc(var(--font-size-host-label) * 0.7 * var(--stage)));
   letter-spacing: var(--font-letter-spacing-label);
   text-transform: uppercase;
@@ -68,6 +85,7 @@
 }
 
 .remove {
+  flex: none;
   align-self: stretch;
   display: grid;
   place-items: center;

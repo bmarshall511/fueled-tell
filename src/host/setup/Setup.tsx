@@ -5,6 +5,7 @@ import { packById } from '../../packs';
 import { BrandHeader } from '../../ui/components/BrandHeader';
 import { Button } from '../../ui/components/Button';
 import { Notice } from '../../ui/components/Notice';
+import { RoomTag } from '../../ui/components/RoomTag';
 import { Segmented } from '../../ui/components/Segmented';
 import { Switch } from '../../ui/components/Switch';
 import { UI_COPY } from '../../ui/copy';
@@ -58,6 +59,11 @@ export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void })
     <main className={styles.setup}>
       <BrandHeader />
       <h1 className={`text-headline ${styles.title}`}>{editing ? S.save : S.title}</h1>
+      {editing && host.roomCode && !host.state?.settings.hostOnly && (
+        <p className={`text-label ${styles.room}`}>
+          {UI_COPY.roomCode} <RoomTag code={host.roomCode} />
+        </p>
+      )}
       <p className={`text-lede ${styles.intro}`}>{S.intro}</p>
       <Notice className={styles.warning}>{S.shareWarning}</Notice>
 

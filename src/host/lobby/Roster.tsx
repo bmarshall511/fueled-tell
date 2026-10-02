@@ -54,9 +54,12 @@ function RosterChip({ player, away, status, entry, onRemove }: RosterChipProps) 
   return (
     <span className={`chamfer ${styles.chip} ${away ? styles.away : ''}`}>
       <span className={styles.dot} style={{ background: playerColorVar(player.colorIndex) }} aria-hidden="true" />
-      <span className={styles.name}>{player.name}</span>
-      {status && <span className={styles.tag}>{status}</span>}
-      {entry !== undefined && <span className={`${styles.tag} ${entry ? styles.tagOn : ''}`}>{entry ? L.submitted : L.noEntry}</span>}
+      {/* Name and status tags wrap as a group, so the chip always fits the screen. */}
+      <span className={styles.text}>
+        <span className={styles.name}>{player.name}</span>
+        {status && <span className={styles.tag}>{status}</span>}
+        {entry !== undefined && <span className={`${styles.tag} ${entry ? styles.tagOn : ''}`}>{entry ? L.submitted : L.noEntry}</span>}
+      </span>
       <button
         type="button"
         className={styles.remove}

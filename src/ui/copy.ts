@@ -109,6 +109,8 @@ export const UI_COPY = {
     },
   },
 
+  roomCode: 'Room code',
+
   lobby: {
     joinAt: 'Join at',
     scan: 'or scan',

@@ -55,6 +55,8 @@ export function GameScreen({ host }: { host: HostGame }) {
   const progress = `${copy.item} ${s.index + 1} ${UI_COPY.of} ${s.order.length}`;
   useDocumentTitle(finale ? copy.finale : progress);
 
+  const joinCode = s.settings.hostOnly ? null : host.roomCode;
+
   const lock = useCallback(() => host.dispatch({ type: 'lock' }), [host]);
   const doReveal = useCallback(() => host.dispatch({ type: 'reveal', now: Date.now() }), [host]);
   useKeyboardShortcuts({ Space: host.advance, l: lock, r: doReveal, m: toggleMute, f: toggleFullscreen }, unlock);
@@ -122,7 +124,7 @@ export function GameScreen({ host }: { host: HostGame }) {
         </Notice>
       )}
 
-      <HostControls className={`${styles.hud} ${styles.controls}`}>
+      <HostControls className={`${styles.hud} ${styles.controls}`} roomCode={joinCode}>
         <Button size="host" variant="secondary" onClick={() => menu.current?.showModal()} aria-haspopup="dialog">
           {UI_COPY.menu}
         </Button>
@@ -161,6 +163,7 @@ export function GameScreen({ host }: { host: HostGame }) {
         onBackup={() => host.session && downloadJson(`tell-${host.roomCode}.json`, host.session)}
         finale={finale}
         onEnd={host.end}
+        roomCode={joinCode}
       />
 
       {!finale && <BootScreen ready={scene.ready} />}

@@ -1,6 +1,9 @@
 import { forwardRef } from 'react';
 import { Button } from '../../ui/components/Button';
+import { CodeChip } from '../../ui/components/CodeChip';
+import { QrCode } from '../../ui/components/qr/QrCode';
 import { UI_COPY } from '../../ui/copy';
+import { displayUrl, joinUrl } from '../joinUrl';
 import styles from './HostMenu.module.css';
 
 interface HostMenuProps {
@@ -12,11 +15,13 @@ interface HostMenuProps {
   /** End the game (asks first) or, after the finale, start a new one. */
   finale: boolean;
   onEnd: () => void;
+  /** The room to show for latecomers (null in host-only games). */
+  roomCode?: string | null;
 }
 
 /** The host's menu dialog: sound, full screen, backup, end game. Opened with `ref.current.showModal()`. */
 export const HostMenu = forwardRef<HTMLDialogElement, HostMenuProps>(function HostMenu(
-  { muted, onToggleMute, fullscreen, onToggleFullscreen, onBackup, finale, onEnd },
+  { muted, onToggleMute, fullscreen, onToggleFullscreen, onBackup, finale, onEnd, roomCode },
   ref,
 ) {
   const close = (e: { currentTarget: HTMLElement }) => e.currentTarget.closest('dialog')?.close();
@@ -31,6 +36,7 @@ export const HostMenu = forwardRef<HTMLDialogElement, HostMenuProps>(function Ho
     >
       <h2 className={styles.title}>{UI_COPY.menu}</h2>
       <p className={styles.hint}>{UI_COPY.shortcuts}</p>
+      {roomCode && <JoinInfo code={roomCode} />}
       <Button size="host" variant="outline" onClick={onToggleMute} aria-pressed={!muted}>
         {muted ? UI_COPY.soundOff : UI_COPY.soundOn}
       </Button>
@@ -49,3 +55,22 @@ export const HostMenu = forwardRef<HTMLDialogElement, HostMenuProps>(function Ho
     </dialog>
   );
 });
+
+/** The room code, link and QR, so someone who missed the lobby can still join. */
+function JoinInfo({ code }: { code: string }) {
+  const url = joinUrl(code);
+  const shown = displayUrl(url);
+  return (
+    <section className={styles.join} aria-label={UI_COPY.roomCode}>
+      <span className={`chamfer ${styles.qr}`}>
+        <QrCode value={url} label={`${UI_COPY.lobby.scan}: ${shown}`} />
+      </span>
+      <span className={styles.joinText}>
+        <span className={styles.hint}>
+          {UI_COPY.lobby.joinAt} <span className={styles.url}>{shown}</span>
+        </span>
+        <CodeChip code={code} />
+      </span>
+    </section>
+  );
+}

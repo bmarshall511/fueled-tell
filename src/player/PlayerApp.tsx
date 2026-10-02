@@ -57,7 +57,7 @@ export default function PlayerApp() {
     <PlayerShell
       screenKey={shownKey}
       me={view?.players.find((p) => p.id === view.me)}
-      room={view ? identity.room : null}
+      room={identity.room}
       reconnecting={game.status === 'reconnecting' && !!view}
     >
       {renderScreen()}

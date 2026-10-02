@@ -54,7 +54,7 @@ function Standings({ view }: { view: PlayerView }) {
           return (
             <li key={s.playerId} className={`${styles.row} ${s.playerId === view.me ? styles.me : ''}`}>
               <span className={styles.place}>{ordinal(s.place)}</span>
-              <PlayerChip player={p} size="phone" />
+              <PlayerChip player={p} size="phone" truncate />
               <span className={styles.score}>
                 {formatScore(s.score)} {UI_COPY.points}
               </span>

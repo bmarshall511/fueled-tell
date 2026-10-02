@@ -41,17 +41,7 @@
 
 /* Long names get clipped rather than pushing the bar off-screen. */
 .who > :first-child {
-  min-width: 0;
   max-width: 45vw;
-  overflow: hidden;
-}
-
-.room {
-  padding: var(--space-1) var(--space-3);
-  background: var(--color-surface-raised);
-  font-size: var(--font-size-phone-body);
-  letter-spacing: var(--font-letter-spacing-label);
-  font-variant-numeric: tabular-nums;
 }
 
 .notice {

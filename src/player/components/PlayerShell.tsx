@@ -3,6 +3,7 @@ import type { PublicPlayer } from '../../engine/redact';
 import { BuiltBy, FueledWordmark } from '../../ui/components/Logo';
 import { Notice } from '../../ui/components/Notice';
 import { PlayerChip } from '../../ui/components/PlayerChip';
+import { RoomTag } from '../../ui/components/RoomTag';
 import { UI_COPY } from '../../ui/copy';
 import styles from './PlayerShell.module.css';
 
@@ -27,12 +28,8 @@ export function PlayerShell({ screenKey, me, room, reconnecting, children }: Pla
           <span className={styles.appName}>{UI_COPY.appName}</span>
         </a>
         <span className={styles.who}>
-          {me && <PlayerChip player={me} size="phone" />}
-          {room && (
-            <span className={`chamfer-all ${styles.room}`} aria-label={`${UI_COPY.lobby.joinAt} ${room.split('').join(' ')}`}>
-              {room}
-            </span>
-          )}
+          {me && <PlayerChip player={me} size="phone" truncate />}
+          {room && <RoomTag code={room} />}
         </span>
       </header>
       {reconnecting && (

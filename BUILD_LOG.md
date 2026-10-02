@@ -329,3 +329,44 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **A quick play-through on a real phone,** to confirm that screen transitions and haptics feel the same.
 
 **Approximate time:** about 30 min of wall-clock AI time (≈12:45–13:15 CT).
+
+## 2026-10-02 (Fri): Session 1f, no sideways scrolling + room code everywhere
+
+**Goal:** no horizontal scrolling on any page at phone widths (reported on the lobby with a long name). Show the room code everywhere in the app.
+
+**What got done**
+
+- **Overflow probe** (a scratch harness): loads every page and game state with 32-character names and a long unbroken word. It checks host and phone at 320×640 and 360×740, and the host also in phone landscape (740×360). It flags any element past the screen edge or any scrolling container. 41 combinations; before the fix, 11 failed:
+  - **Host lobby roster:** chips didn't wrap, and the lobby grid grew to fit the widest chip. Now names wrap inside the chip, name and status tags wrap as a group, and the grid track is `minmax(0, 1fr)`.
+  - **Phone player chips:** lobby, waiting and standings. Chips now cap at the container width and names wrap. The phone bar and the standings truncate with an ellipsis, with the full name in the tooltip.
+  - **Guess grid:** the columns could not shrink below a long name. They're now `minmax(0, 1fr)`.
+  - **Host timer:** the fill could draw past a full bar after a clock skew. It's now clamped.
+  - **Globally:** `overflow-wrap: break-word` on `body`, so long unbroken words wrap instead of widening a layout.
+- **Room code everywhere:**
+  - A new shared `RoomTag`.
+  - Host bottom bar on every round and the finale: "Join at …/play [CODE]" (new `JoinTag`).
+  - The host menu shows the code, link and QR for latecomers.
+  - Setup shows the room while you edit an open lobby.
+  - The phone bar shows the code as soon as a room is entered, including connecting and not-found.
+  - Host-only games skip all of this, since there are no phones.
+  - `joinUrl.ts` moved to `src/host/`, now that lobby and game both use it.
+
+**Decisions the AI made on its own**
+
+- **Truncation vs wrapping:** names truncate only in tight one-line spots (phone bar, phone standings rows). Everywhere else they wrap, so the host can always read the full name.
+- **Where the code appears:** in the bottom bar, not the header, so it's on the finale too and never competes with the progress label and timer.
+
+**Verification done by the AI**
+
+- **Overflow probe:** 41/41 clean (it was 30/41).
+- `npm run check`: 45/45 tests; the /play graph is still free of Three.js.
+- `vite build` is clean.
+- **axe-core:** 0 violations across the game states.
+- **Full 8-round local game:** passes.
+- **Screenshots** reviewed at 320, 360 and 1280 px wide.
+
+**What you need to verify by hand**
+
+- **Redeploy, then on your phone:** the lobby with a long name, the host menu, and the bottom-bar join line during a round.
+
+**Approximate time:** about 25 min of wall-clock AI time.

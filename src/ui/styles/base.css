@@ -38,6 +38,8 @@ body {
   overscroll-behavior: none;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  /* Long unbroken names or words wrap rather than widen the layout. */
+  overflow-wrap: break-word;
   /* Host routes set --stage (viewport / reference stage); phones keep 1. */
   --stage: 1;
 }

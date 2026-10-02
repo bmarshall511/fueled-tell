@@ -2,7 +2,18 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
+  min-width: 0;
+  max-width: 100%;
   background: var(--color-surface-raised);
+}
+
+.name {
+  min-width: 0;
+}
+
+.truncate .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 

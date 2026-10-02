@@ -5,6 +5,14 @@
   gap: calc(var(--space-4) * var(--stage));
 }
 
+.info {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: calc(var(--space-3) * var(--stage)) calc(var(--space-6) * var(--stage));
+  min-width: 0;
+}
+
 .buttons {
   display: flex;
   gap: calc(var(--space-3) * var(--stage));
@@ -17,6 +25,10 @@
 
 /* Portrait (phones): stacked, full-width buttons; only the essentials; no key hints. */
 [data-orientation='portrait'] .controls {
+  flex-direction: column-reverse;
+}
+
+[data-orientation='portrait'] .info {
   flex-direction: column-reverse;
 }
 

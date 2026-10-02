@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { CodeChip } from '../../ui/components/CodeChip';
 import { QrCode } from '../../ui/components/qr/QrCode';
 import { UI_COPY } from '../../ui/copy';
-import { displayUrl, joinUrl } from './joinUrl';
+import { displayUrl, joinUrl } from '../joinUrl';
 import styles from './JoinPanel.module.css';
 
 const L = UI_COPY.lobby;

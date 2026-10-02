@@ -11,7 +11,7 @@ export function Timer({ deadline, durationMs }: TimerProps) {
   const now = useNow(250, deadline !== null);
   const remainingMs = deadline === null ? durationMs : Math.max(0, deadline - now);
   const seconds = Math.ceil(remainingMs / 1000);
-  const ratio = durationMs > 0 ? remainingMs / durationMs : 0;
+  const ratio = durationMs > 0 ? Math.min(1, remainingMs / durationMs) : 0;
   const urgent = deadline !== null && seconds <= 5;
   return (
     <div className={`${styles.timer} ${deadline === null ? styles.idle : ''}`} role="timer" aria-live="off">
