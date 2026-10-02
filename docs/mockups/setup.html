@@ -178,6 +178,106 @@
     .aurora i, .btn.primary { translate: none; }
   }
   .try { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 99px; font-size: 15px; }
+
+  /* ---------- Button states (proposal) ---------- */
+  @property --ang { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+  .b { --ease: cubic-bezier(.2, .8, .2, 1); --spring: cubic-bezier(.34, 1.56, .64, 1);
+    position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 52px; padding: 0 26px; border: 0; border-radius: 999px; font: inherit; font-size: 16px; color: var(--white);
+    white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent;
+    transition: transform .35s var(--spring), background-color .25s var(--ease), box-shadow .3s var(--ease), color .25s; }
+  .b .fx { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; z-index: -1; pointer-events: none; }
+  .b .bl { display: inline-flex; align-items: center; gap: 10px; transition: opacity .2s, transform .3s var(--spring); }
+  /* rotating gradient ring (hover / focus) */
+  .b::before { content: ''; position: absolute; inset: -3px; border-radius: inherit; padding: 2px; z-index: -2; opacity: 0;
+    background: conic-gradient(from var(--ang), var(--solar), var(--nebula), var(--cryo), var(--lilac), var(--solar));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: spin 3.2s linear infinite; transition: opacity .3s var(--ease); }
+  /* soft colored glow under the button */
+  .b::after { content: ''; position: absolute; inset: 8px 12px -6px; border-radius: inherit; z-index: -3; opacity: 0; filter: blur(18px);
+    background: linear-gradient(90deg, var(--solar), var(--nebula)); transition: opacity .35s var(--ease); }
+  @keyframes spin { to { --ang: 360deg; } }
+  /* light sweep */
+  .b .fx::before { content: ''; position: absolute; inset: 0; transform: translateX(-130%);
+    background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.55) 50%, transparent 70%); }
+  .b.p { background: var(--white); color: #000; }
+  .b.p .fx::before { background: linear-gradient(110deg, transparent 30%, rgba(102,82,255,.22) 50%, transparent 70%); }
+  .b.g { background: var(--glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); box-shadow: inset 0 0 0 1px var(--line); }
+  .b kbd { font: inherit; font-size: 12px; padding: 2px 8px; border-radius: 99px; background: #000; color: var(--white); transition: transform .3s var(--spring); }
+  .b.g kbd { background: rgba(255,255,255,.12); color: var(--muted); }
+
+  /* hover */
+  .b.p:hover, .b.p.is-hover { transform: translateY(-2px); }
+  .b.p:hover::before, .b.p.is-hover::before, .b.p:hover::after, .b.p.is-hover::after { opacity: 1; }
+  .b.p:hover::after, .b.p.is-hover::after { opacity: .55; }
+  .b:hover .fx::before, .b.is-hover .fx::before { transform: translateX(130%); transition: transform .9s var(--ease); }
+  .b:hover kbd, .b.is-hover kbd { transform: translateX(2px); }
+  .b.g:hover, .b.g.is-hover { transform: translateY(-2px); background: rgba(40,40,52,.75); box-shadow: inset 0 0 0 1px var(--line-strong), 0 10px 30px -12px rgba(0,0,0,.8); }
+  /* active */
+  .b:active, .b.is-active { transform: scale(.96); transition-duration: .12s; }
+  .b.p:active, .b.p.is-active { box-shadow: inset 0 2px 8px rgba(0,0,0,.18); }
+  .b.p:active::after, .b.p.is-active::after { opacity: .25; }
+  .b.g:active, .b.g.is-active { background: rgba(14,14,18,.8); }
+  /* focus */
+  .b:focus-visible, .b.is-focus { outline: none; }
+  .b:focus-visible::before, .b.is-focus::before { opacity: 1; inset: -5px; padding: 3px; }
+  /* disabled */
+  .b:disabled, .b.is-disabled { opacity: .35; cursor: not-allowed; transform: none; }
+  .b:disabled::before, .b:disabled::after, .b.is-disabled::before, .b.is-disabled::after { opacity: 0; }
+  /* loading */
+  .b .spin { position: absolute; width: 22px; height: 22px; border-radius: 50%; opacity: 0; transform: scale(.6);
+    background: conic-gradient(from 0deg, transparent 10%, currentColor); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px)); mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+    animation: rot .8s linear infinite; transition: opacity .2s, transform .3s var(--spring); }
+  @keyframes rot { to { rotate: 1turn; } }
+  .b.is-loading { cursor: progress; }
+  .b.is-loading .bl { opacity: 0; transform: translateY(6px); }
+  .b.is-loading .spin { opacity: 1; transform: scale(1); }
+  /* success */
+  .b.is-done { color: var(--white); background: var(--grad-glow); background-size: 200% 200%; animation: shimmer 3s ease-in-out infinite alternate; }
+  .b .ok { position: absolute; opacity: 0; transform: scale(.4) rotate(-20deg); transition: opacity .2s, transform .45s var(--spring); }
+  .b.is-done .bl { opacity: 0; transform: scale(.8); }
+  .b.is-done .ok { opacity: 1; transform: none; }
+  /* ripple */
+  .ripple { position: absolute; border-radius: 50%; width: 20px; height: 20px; margin: -10px 0 0 -10px; pointer-events: none;
+    background: currentColor; opacity: .28; transform: scale(0); animation: ripple .6s var(--ease, ease) forwards; }
+  @keyframes ripple { to { transform: scale(18); opacity: 0; } }
+
+  /* icon button + tooltip */
+  .ib { width: 52px; padding: 0; }
+  .ib svg { transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
+  .ib:hover svg, .ib.is-hover svg { transform: scale(1.15); }
+  .ib:active svg, .ib.is-active svg { transform: scale(.85); }
+  .tip { position: absolute; bottom: calc(100% + 10px); left: 50%; translate: -50% 6px; padding: 6px 10px; border-radius: 10px; font-size: 12px;
+    background: var(--white); color: #000; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .2s, translate .3s cubic-bezier(.34,1.56,.64,1); }
+  .tip kbd { font: inherit; font-size: 11px; margin-left: 6px; padding: 1px 6px; border-radius: 99px; background: rgba(0,0,0,.08); }
+  .ib:hover .tip, .ib.is-hover .tip, .ib:focus-visible .tip { opacity: 1; translate: -50% 0; }
+
+  /* sliding segmented */
+  .seg2 { position: relative; display: inline-flex; padding: 4px; border-radius: 999px; background: var(--glass); box-shadow: inset 0 0 0 1px var(--line); backdrop-filter: blur(24px); }
+  .seg2 button { position: relative; z-index: 1; border: 0; background: none; font: inherit; font-size: 15px; color: var(--muted); padding: 10px 18px; border-radius: 999px; cursor: pointer; transition: color .25s; }
+  .seg2 button:hover { color: var(--white); }
+  .seg2 button.on { color: #000; }
+  .seg2 .thumb { position: absolute; top: 4px; bottom: 4px; left: 0; border-radius: 999px; background: var(--white); box-shadow: 0 4px 18px -6px rgba(102,82,255,.7);
+    transition: translate .45s cubic-bezier(.34,1.4,.64,1), width .45s cubic-bezier(.34,1.4,.64,1); }
+  /* spring switch */
+  .sw2 { width: 58px; height: 34px; border-radius: 99px; border: 0; padding: 0; background: rgba(255,255,255,.12); position: relative; cursor: pointer; transition: background-color .3s; box-shadow: inset 0 0 0 1px var(--line); }
+  .sw2::after { content: ''; position: absolute; top: 4px; left: 4px; width: 26px; height: 26px; border-radius: 50%; background: var(--muted);
+    transition: translate .5s cubic-bezier(.34,1.56,.64,1), width .25s, background-color .3s; }
+  .sw2:active::after { width: 32px; }
+  .sw2[aria-checked='true'] { background: var(--nebula); }
+  .sw2[aria-checked='true']::after { translate: 24px; background: var(--white); }
+  .sw2[aria-checked='true']:active::after { translate: 18px; }
+
+  .states { border-radius: 32px; padding: 28px; display: grid; gap: 26px; position: relative; overflow: hidden; isolation: isolate; }
+  .states .grid { display: grid; grid-template-columns: 150px repeat(6, auto); gap: 40px 22px; align-items: center; justify-content: start; }
+  .states .h { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .try-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+  @media (prefers-reduced-motion: reduce) {
+    .b, .b .label, .b kbd, .ib svg, .tip, .seg2 .thumb, .sw2::after { transition-duration: .01s !important; }
+    .b::before, .b .spin, .b.is-done { animation: none; }
+    .b:hover, .b.is-hover, .b:active, .b.is-active { transform: none; }
+    .ripple { display: none; }
+  }
 </style>
 </head>
 <body>
@@ -198,6 +298,7 @@
       <div class="glass"><h3>One action, always visible</h3><p>A readiness meter ("6 of 8 ready") and a big "Open lobby" pill. Nothing to scroll down to.</p></div>
       <div class="glass"><h3>A calmer privacy note</h3><p>A small pill in the top bar ("Private · don't share your screen yet") replaces the long yellow banner.</p></div>
       <div class="glass"><h3>Reacts to your cursor</h3><p>The glow trails the pointer, the blobs shift in parallax, glass cards and buttons light up under the cursor, and the main action leans toward it. Off on touch devices and with reduced motion.</p></div>
+      <div class="glass"><h3>Livelier buttons</h3><p>Hover: a lift, a light sweep and a rotating gradient ring. Press: a squeeze with a ripple. Busy: a spinner. Done: a gradient check. Option toggles slide a pill, and switches spring.</p></div>
       <div class="glass"><h3>A friendlier empty state</h3><p>Three big choices to start (Paste a list, Add one by one, Players add their own), plus "Try sample stories".</p></div>
     </div>
   </section>
@@ -224,8 +325,8 @@
           </div>
           <aside class="panel glass">
             <div class="preview glow-preview"><div class="aurora"><i></i><i></i><i></i><span class="follow"></span></div><div class="mini"><div class="top"><span>Story 1 of 8</span><span>45</span></div><div class="card"><b>Story 1</b>Your stories will appear here, one at a time, on the shared screen.</div><div class="q glow-text">Whose story is it?</div></div></div>
-            <div class="setting"><div class="line"><span class="label">Guess timer</span></div><div class="seg glass"><span>20s</span><span>30s</span><span class="on">45s</span><span>60s</span><span>90s</span></div></div>
-            <div class="setting"><div class="line"><span class="label">Scoring</span></div><div class="seg glass"><span class="on">Points &amp; places</span><span>Just for fun</span></div></div>
+            <div class="setting"><div class="line"><span class="bl">Guess timer</span></div><div class="seg glass"><span>20s</span><span>30s</span><span class="on">45s</span><span>60s</span><span>90s</span></div></div>
+            <div class="setting"><div class="line"><span class="bl">Scoring</span></div><div class="seg glass"><span class="on">Points &amp; places</span><span>Just for fun</span></div></div>
             <div class="setting"><div class="line"><span><span style="display:block">Host-only mode</span><span class="muted" style="font-size:13px">Nobody joins; you tick who got it</span></span><span class="switch"></span></div></div>
             <div class="divider"></div>
             <div class="meter"><div class="line"><span>0 ready</span><span class="muted">3 needed</span></div><div class="bar"><span style="width:0%"></span></div></div>
@@ -272,8 +373,8 @@
           </div>
           <aside class="panel glass">
             <div class="preview"><div class="aurora"><i></i><i></i><i></i><span class="follow"></span></div><div class="mini"><div class="top"><span>Story 1 of 6</span><span>45</span></div><div class="card"><b>Story 1</b>I once got locked inside a bakery after closing. I didn't call anyone for an hour…</div><div class="q glow-text">Whose story is it?</div></div></div>
-            <div class="setting"><span class="label">Guess timer</span><div class="seg glass"><span>20s</span><span>30s</span><span class="on">45s</span><span>60s</span><span>90s</span></div></div>
-            <div class="setting"><span class="label">Scoring</span><div class="seg glass"><span class="on">Points &amp; places</span><span>Just for fun</span></div></div>
+            <div class="setting"><span class="bl">Guess timer</span><div class="seg glass"><span>20s</span><span>30s</span><span class="on">45s</span><span>60s</span><span>90s</span></div></div>
+            <div class="setting"><span class="bl">Scoring</span><div class="seg glass"><span class="on">Points &amp; places</span><span>Just for fun</span></div></div>
             <div class="setting"><div class="line"><span><span style="display:block">Host-only mode</span><span class="muted" style="font-size:13px">Nobody joins; you tick who got it</span></span><span class="switch"></span></div></div>
             <div class="divider"></div>
             <div class="meter"><div class="line"><span>5 of 6 ready</span><span style="color:var(--nova)">Fix Gus's story</span></div><div class="bar"><span style="width:83%"></span></div></div>
@@ -302,7 +403,7 @@
 Bo | Fun fact: I ate a bee by accident.
 Cy
 I can whistle in two keys at once.</textarea>
-            <div style="display:grid; gap:10px; align-content:start"><span class="label">Preview · 3 people</span>
+            <div style="display:grid; gap:10px; align-content:start"><span class="bl">Preview · 3 people</span>
               <div class="prow"><span class="avatar" style="width:30px;height:30px;font-size:13px;background:var(--cryo)">A</span><b>Ada Lovelace</b><span class="muted">I once taught a goose to code.</span></div>
               <div class="prow"><span class="avatar" style="width:30px;height:30px;font-size:13px;background:var(--solar)">B</span><b>Bo</b><span class="muted">Fun fact: I ate a bee by accident.</span></div>
               <div class="prow"><span class="avatar" style="width:30px;height:30px;font-size:13px;background:var(--nova)">C</span><b>Cy</b><span class="muted">I can whistle in two keys at once.</span></div>
@@ -344,6 +445,29 @@ I can whistle in two keys at once.</textarea>
     </div>
   </section>
 
+
+  <section class="block">
+    <header><p class="kicker">Proposal · try them</p><h2>Button states</h2><p class="note">Every state is shown frozen in the grid, and the row below is live: hover, press and Tab through it. "Open lobby" demos busy then done. The same states apply to the host's screen and the phones.</p></header>
+    <div class="states glass">
+      <div class="aurora"><i></i><i></i><i></i><span class="follow"></span></div>
+      <div class="grid">
+        <span></span><span class="h">Rest</span><span class="h">Hover</span><span class="h">Pressed</span><span class="h">Focus</span><span class="h">Busy</span><span class="h">Done / disabled</span>
+        <span class="muted">Main action</span><button class="b p " ><span class="fx"></span><span class="bl">Open lobby</span><span class="spin"></span><svg class="i ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><button class="b p is-hover" ><span class="fx"></span><span class="bl">Open lobby</span><span class="spin"></span><svg class="i ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><button class="b p is-active" ><span class="fx"></span><span class="bl">Open lobby</span><span class="spin"></span><svg class="i ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><button class="b p is-focus" ><span class="fx"></span><span class="bl">Open lobby</span><span class="spin"></span><svg class="i ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><button class="b p is-loading" ><span class="fx"></span><span class="bl">Open lobby</span><span class="spin"></span><svg class="i ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><button class="b p is-done" ><span class="fx"></span><span class="bl">Open lobby</span><span class="spin"></span><svg class="i ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+        <span class="muted">Glass</span><button class="b g "><span class="fx"></span><span class="bl">Back to setup</span><span class="spin"></span><svg class="i ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><button class="b g is-hover"><span class="fx"></span><span class="bl">Back to setup</span><span class="spin"></span><svg class="i ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><button class="b g is-active"><span class="fx"></span><span class="bl">Back to setup</span><span class="spin"></span><svg class="i ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><button class="b g is-focus"><span class="fx"></span><span class="bl">Back to setup</span><span class="spin"></span><svg class="i ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><button class="b g is-loading"><span class="fx"></span><span class="bl">Back to setup</span><span class="spin"></span><svg class="i ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button><button class="b g is-disabled"><span class="fx"></span><span class="bl">Back to setup</span><span class="spin"></span><svg class="i ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+        <span class="muted">Icon + tooltip</span><button class="b g ib " aria-label="Sound"><span class="fx"></span><span class="bl"><svg class="i" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Zm4.5 3.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/></svg></span><span class="tip">Sound<kbd>M</kbd></span></button><button class="b g ib is-hover" aria-label="Sound"><span class="fx"></span><span class="bl"><svg class="i" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Zm4.5 3.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/></svg></span><span class="tip">Sound<kbd>M</kbd></span></button><button class="b g ib is-active" aria-label="Sound"><span class="fx"></span><span class="bl"><svg class="i" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Zm4.5 3.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/></svg></span><span class="tip">Sound<kbd>M</kbd></span></button><button class="b g ib is-focus" aria-label="Sound"><span class="fx"></span><span class="bl"><svg class="i" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Zm4.5 3.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/></svg></span><span class="tip">Sound<kbd>M</kbd></span></button><span></span><span></span>
+      </div>
+      <div class="divider"></div>
+      <div class="try-row">
+        <span class="label" style="margin-right:8px">Live</span>
+        <button class="b p demo-async"><span class="fx"></span><span class="bl">Open lobby <kbd>Space</kbd></span><span class="spin"></span><svg class="i ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+        <button class="b g"><span class="fx"></span><span class="bl">Back to setup</span><span class="spin"></span><svg class="i ok" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></button>
+        <button class="b g ib" aria-label="Menu"><span class="fx"></span><span class="bl"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></span><span class="tip">Menu</span></button>
+        <button class="b g ib " aria-label="Sound"><span class="fx"></span><span class="bl"><svg class="i" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Zm4.5 3.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/></svg></span><span class="tip">Sound<kbd>M</kbd></span></button>
+        <div class="seg2" role="radiogroup" aria-label="Guess timer"><span class="thumb"></span><button role="radio">20s</button><button role="radio">30s</button><button role="radio" class="on">45s</button><button role="radio">60s</button><button role="radio">90s</button></div>
+        <button class="sw2" role="switch" aria-checked="false" aria-label="Host-only mode"></button>
+      </div>
+    </div>
+  </section>
   <section class="intro">
     <p class="kicker">If approved</p>
     <p>Setup is rebuilt around these pieces: <code>SetupShell</code> (top bar and privacy pill), <code>StartChoices</code> (empty state), <code>Composer</code>, <code>PersonCard</code> (inline edit and issues), <code>SetupPanel</code> (preview, settings, meter, action) and a <code>PasteSheet</code> dialog. The parsing, validation, drafts and editing an open lobby all stay as they are. Then the same accessibility, overflow and responsive checks run at every size.</p>
@@ -395,6 +519,29 @@ I can whistle in two keys at once.</textarea>
       vp.addEventListener('pointerleave', () => { vp.classList.remove('live'); vp.querySelectorAll('.btn.primary').forEach((b) => { b.style.setProperty('--tx', '0px'); b.style.setProperty('--ty', '0px'); }); });
     });
   }
+
+  // ---------- Button behaviours (prototype of the shared Button) ----------
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.try-row .b, .studio .btn, .composer .btn').forEach((b) => b.addEventListener('pointerdown', (e) => {
+    if (still) return;
+    const fx = b.querySelector('.fx'); if (!fx) return;
+    const r = b.getBoundingClientRect(); const k = b.offsetWidth / r.width || 1;
+    const dot = document.createElement('span'); dot.className = 'ripple';
+    dot.style.left = (e.clientX - r.left) * k + 'px'; dot.style.top = (e.clientY - r.top) * k + 'px';
+    fx.appendChild(dot); dot.addEventListener('animationend', () => dot.remove());
+  }));
+  document.querySelectorAll('.demo-async').forEach((b) => b.addEventListener('click', () => {
+    if (b.classList.contains('is-loading') || b.classList.contains('is-done')) return;
+    b.classList.add('is-loading');
+    setTimeout(() => { b.classList.replace('is-loading', 'is-done'); setTimeout(() => b.classList.remove('is-done'), 1600); }, 1400);
+  }));
+  document.querySelectorAll('.seg2').forEach((seg) => {
+    const thumb = seg.querySelector('.thumb');
+    const place = () => { const on = seg.querySelector('.on'); thumb.style.width = on.offsetWidth + 'px'; thumb.style.translate = on.offsetLeft + 'px'; };
+    seg.querySelectorAll('button').forEach((btn) => btn.addEventListener('click', () => { seg.querySelector('.on')?.classList.remove('on'); btn.classList.add('on'); place(); }));
+    requestAnimationFrame(place); addEventListener('load', place);
+  });
+  document.querySelectorAll('.sw2').forEach((sw) => sw.addEventListener('click', () => sw.setAttribute('aria-checked', String(sw.getAttribute('aria-checked') !== 'true'))));
 </script>
 </body>
 </html>
