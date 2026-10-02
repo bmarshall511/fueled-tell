@@ -42,12 +42,34 @@ describe('parseEntries', () => {
     ]);
   });
 
+  it('splits "Name | entry" runs inside a blank-line paste instead of merging them', () => {
+    const rows = parseEntries('Ann | story a\nBob | story b\n\nCat\nstory c', 100);
+    expect(rows.map((r) => [r.name, r.text])).toEqual([
+      ['Ann', 'story a'],
+      ['Bob', 'story b'],
+      ['Cat', 'story c'],
+    ]);
+  });
+
+  it('joins an entry that wrapped onto the next line', () => {
+    const rows = parseEntries('Ann: first line\nsecond line\nBob: other', 100);
+    expect(rows.map((r) => [r.name, r.text])).toEqual([
+      ['Ann', 'first line second line'],
+      ['Bob', 'other'],
+    ]);
+  });
+
+  it('drops Slack timestamps from names', () => {
+    const rows = parseEntries('Ann  10:42 AM\nI ate a bee.\n\nBob [9:05]\nI am Bob.', 100);
+    expect(rows.map((r) => r.name)).toEqual(['Ann', 'Bob']);
+  });
+
   it('keeps unparseable lines as rows with issues instead of dropping them', () => {
-    const rows = parseEntries('Ada | ok\nthis line has no name at all.\nBo | ' + 'x'.repeat(20) + '\nada | dupe', 10);
+    const rows = parseEntries('this line has no name at all.\nAda | ok\nBo | ' + 'x'.repeat(20) + '\nada | dupe', 10);
     expect(rows).toHaveLength(4);
-    expect(rows[1]?.issues).toContain('missingName');
+    expect(rows[0]?.issues).toContain('missingName');
     expect(rows[2]?.issues).toContain('tooLong');
-    expect(rows[0]?.issues).toContain('duplicateName');
+    expect(rows[1]?.issues).toContain('duplicateName');
     expect(rows[3]?.issues).toContain('duplicateName');
   });
 });

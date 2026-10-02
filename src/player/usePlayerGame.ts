@@ -13,19 +13,26 @@ interface Identity {
   name: string;
   /** The room this identity has actually joined; the saved name only auto-rejoins that room. */
   joinedRoom?: string | null;
+  /** Secret proving this phone owns its seat (sent only to the host). */
+  key?: string;
 }
 
 /** `?seat=2` gives a separate identity per tab (demo / testing several phones in one browser). */
 const storageKey = () => `tell:player${new URLSearchParams(window.location.search).get('seat') ?? ''}`;
 
+const newKey = () => (typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `${makeId('k')}${makeId('k')}`);
+
 function loadIdentity(): Identity {
   try {
     const raw = localStorage.getItem(storageKey());
-    if (raw) return JSON.parse(raw) as Identity;
+    if (raw) {
+      const id = JSON.parse(raw) as Identity;
+      return id.key ? id : { ...id, key: newKey() };
+    }
   } catch {
     /* fall through */
   }
-  return { playerId: makeId('u'), room: null, name: '' };
+  return { playerId: makeId('u'), room: null, name: '', key: newKey() };
 }
 
 function saveIdentity(id: Identity) {
@@ -71,11 +78,11 @@ export function usePlayerGame() {
       t = tr;
       transport.current = tr;
       const hello = () => {
-        const { playerId, name, joinedRoom } = identityRef.current;
+        const { playerId, name, joinedRoom, key } = identityRef.current;
         // Re-joining the same room after a refresh: send the name so the host can restore us.
         // A new room: never auto-join with an old name (it would skip "tap your name").
         const rejoin = joinedRoom === room && name;
-        tr.send({ type: 'hello', playerId, ...(rejoin ? { name } : {}) } satisfies ClientMsg);
+        tr.send({ type: 'hello', playerId, key, ...(rejoin ? { name } : {}) } satisfies ClientMsg);
       };
       tr.onStatus((s) => {
         setStatus(s);
@@ -118,9 +125,9 @@ export function usePlayerGame() {
     (name: string, claimId?: PlayerId) => {
       setError(null);
       setIdentity((i) => ({ ...i, name: name.trim() }));
-      send({ type: 'hello', playerId: identity.playerId, name: name.trim(), ...(claimId ? { claimId } : {}) });
+      send({ type: 'hello', playerId: identity.playerId, key: identity.key, name: name.trim(), ...(claimId ? { claimId } : {}) });
     },
-    [identity.playerId, send],
+    [identity.playerId, identity.key, send],
   );
 
   const submit = useCallback((text: string) => send({ type: 'submit', text }), [send]);

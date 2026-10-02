@@ -12,6 +12,11 @@ export interface Player {
   connected: boolean;
   /** A phone has ever joined as this player (false for host-imported names nobody has claimed yet). */
   claimed: boolean;
+  /**
+   * Secret the claiming phone holds (generated on the phone, never sent to other phones).
+   * A re-join must present it, so nobody can take over someone else's seat.
+   */
+  key?: string;
 }
 
 /** One submission (a story, a fave show, ...). */

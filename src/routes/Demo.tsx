@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { makeRoomCode } from '../engine/roomCode';
 import { sessionKey } from '../host/storage';
 import { tokens } from '../tokens/tokens';
 import { Button } from '../ui/Button';
@@ -9,9 +10,11 @@ import styles from './Demo.module.css';
 
 const D = UI_COPY.demo;
 
-const ROOM = 'K7QF';
-const HOST_SRC = `/host?transport=local&room=${ROOM}&sample=1&bots=1`;
-const PHONE_SRC = `/play?transport=local&room=${ROOM}&seat=demo`;
+/** A fresh room per run, so an old demo tab can never capture the phone. */
+const srcs = (room: string) => ({
+  host: `/host?transport=local&room=${room}&sample=1&bots=1`,
+  phone: `/play?transport=local&room=${room}&seat=demo`,
+});
 
 /** Start every demo run fresh: drop the local-demo host session and the demo phone's identity. */
 function resetDemo() {
@@ -30,10 +33,13 @@ function resetDemo() {
 export default function Demo() {
   const [run, setRun] = useState(0);
   const [ready, setReady] = useState(false);
+  const [room, setRoom] = useState(makeRoomCode);
   useEffect(() => {
     resetDemo();
+    setRoom(makeRoomCode());
     setReady(true);
   }, [run]);
+  const src = srcs(room);
   useDocumentTitle(`${D.title} · ${UI_COPY.appName}`);
   return (
     <main className={styles.demo}>
@@ -77,13 +83,13 @@ export default function Demo() {
           <figure className={styles.hostPane}>
             <figcaption className={styles.caption}>{D.host}</figcaption>
             <div className={`chamfer ${styles.hostFrame}`}>
-              <iframe title={D.host} src={HOST_SRC} allow="fullscreen; screen-wake-lock" />
+              <iframe title={D.host} src={src.host} allow="fullscreen; screen-wake-lock" />
             </div>
           </figure>
           <figure className={styles.phonePane}>
             <figcaption className={styles.caption}>{D.phone}</figcaption>
             <div className={`chamfer ${styles.phoneFrame}`}>
-              <iframe title={D.phone} src={PHONE_SRC} />
+              <iframe title={D.phone} src={src.phone} />
             </div>
           </figure>
         </div>

@@ -5,7 +5,7 @@ import type { EntryId, PlayerId } from '../engine/types';
 /** Phone -> host. */
 export type ClientMsg =
   /** Sent on every (re)connect. With a name (or claimId) it's a join request. */
-  | { type: 'hello'; playerId: PlayerId; name?: string; claimId?: PlayerId }
+  | { type: 'hello'; playerId: PlayerId; name?: string; claimId?: PlayerId; key?: string }
   | { type: 'submit'; text: string }
   | { type: 'guess'; entryId: EntryId; ownerId: PlayerId };
 
@@ -31,6 +31,7 @@ export function parseClientMsg(v: unknown): ClientMsg | null {
       playerId: v.playerId,
       name: typeof v.name === 'string' ? v.name.slice(0, 64) : undefined,
       claimId: typeof v.claimId === 'string' ? v.claimId : undefined,
+      key: typeof v.key === 'string' ? v.key.slice(0, 64) : undefined,
     };
   }
   if (v.type === 'submit' && typeof v.text === 'string') return { type: 'submit', text: v.text.slice(0, 2000) };

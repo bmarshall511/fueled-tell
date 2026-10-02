@@ -31,6 +31,12 @@ export const UI_COPY = {
   shortcuts: 'Space next · L lock · R reveal · M sound · F full screen',
   drumroll: 'Revealing in',
 
+  crash: {
+    title: 'Something went wrong',
+    body: 'Your game is safe. Reload to pick up where you left off.',
+    reload: 'Reload',
+  },
+
   landing: {
     host: 'Host a game',
     hostHint: 'On the laptop you’ll share on the call.',
@@ -86,7 +92,6 @@ export const UI_COPY = {
     addRows: 'Add these',
     replaceRows: 'Replace all',
     cancel: 'Cancel',
-    importFile: 'Import a file',
     sample: 'Fill with sample entries',
     clear: 'Clear all',
     clearConfirm: 'Remove every entry?',
@@ -94,7 +99,7 @@ export const UI_COPY = {
     people: ['person', 'people'] as const,
     needsFix: ['needs a fix', 'need a fix'] as const,
     jump: 'Show me',
-    empty: 'No entries yet. Add people one by one, paste a list, or import a file.',
+    empty: 'No entries yet. Add people one by one, or paste a list.',
     counter: 'characters',
     issues: {
       missingName: 'Add a name',
@@ -153,7 +158,11 @@ export const UI_COPY = {
     orNew: 'Not listed? Type your name',
     yourName: 'Your name',
     joinBtn: 'Join',
-    errors: { nameRequired: 'Type your name to join.', nameTaken: 'Someone already joined with that name. Add an initial?' },
+    errors: {
+      nameRequired: 'Type your name to join.',
+      nameTaken: 'Someone already joined with that name. Add an initial?',
+      notYou: 'That seat belongs to another phone. Join with your own name.',
+    },
     youreIn: 'You’re in.',
     lobbyWait: 'Watch the big screen. The host starts the game.',
     yourEntry: 'Your entry',

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { currentEntry, expectedGuessers, isLastEntry } from '../engine/game';
+import { currentEntry, expectedGuessers, guessersForReveal, isLastEntry } from '../engine/game';
 import { computeStandings, summarizeReveal } from '../engine/scoring';
 import type { PlayerId } from '../engine/types';
 import { pickScene, SCENES } from '../scenes/registry';
@@ -105,7 +105,7 @@ export function GameScreen({ host }: { host: HostGame }) {
   const holdReveal = reveal && !drum.done;
   const sceneProps = toSceneProps(s, copy, reducedMotion, holdReveal);
   const entry = currentEntry(s);
-  const summary = reveal && entry ? summarizeReveal(entry, s.guesses) : null;
+  const summary = reveal && entry ? summarizeReveal(entry, s.guesses, guessersForReveal(s)) : null;
   const owner = s.players.find((p) => p.id === summary?.ownerId);
   const hostOnly = s.settings.hostOnly;
 

@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { canStart, createGame, currentEntry, expectedGuessers, gameReducer, validateJoin } from './game';
+import {
+  canStart,
+  createGame,
+  currentEntry,
+  expectedGuessers,
+  gameReducer,
+  guessersForReveal,
+  markAllDisconnected,
+  validateJoin,
+} from './game';
 import { lobbyWithFour, run, TEST_PACK } from './testing';
 
 const started = () => run(lobbyWithFour(), { type: 'start', seed: 1 });
@@ -64,6 +73,30 @@ describe('lobby', () => {
     const s = run(lobbyWithFour(), { type: 'removePlayer', playerId: 'a' });
     expect(s.players.map((p) => p.id)).toEqual(['b', 'c', 'd']);
     expect(s.entries.some((e) => e.ownerId === 'a')).toBe(false);
+  });
+});
+
+describe('roster edits and seats', () => {
+  it('editing the roster in live mode never duplicates entries', () => {
+    let s = lobbyWithFour();
+    const rows = s.entries.map((e) => ({ name: s.players.find((p) => p.id === e.ownerId)!.name, text: e.text }));
+    s = run(s, { type: 'setRoster', rows, ids: rows.map((_, i) => `p_${i}`) });
+    expect(s.entries).toHaveLength(4);
+    expect(new Set(s.entries.map((e) => e.id)).size).toBe(4);
+    expect(new Set(s.entries.map((e) => e.ownerId)).size).toBe(4);
+  });
+
+  it('a seat with a key can only be re-joined by the same phone', () => {
+    let s = run(createGame(TEST_PACK), { type: 'join', playerId: 'a', name: 'Ada', key: 'k1' });
+    expect(validateJoin(s, 'a', '', undefined, 'other')).toBe('notYou');
+    expect(validateJoin(s, 'a', '', undefined, 'k1')).toBeNull();
+    s = run(s, { type: 'disconnect', playerId: 'a' }, { type: 'join', playerId: 'a', name: '', key: 'nope' });
+    expect(s.players[0]?.connected).toBe(false);
+  });
+
+  it('after a host reload nobody counts as connected until their phone returns', () => {
+    const s = markAllDisconnected(lobbyWithFour());
+    expect(s.players.every((p) => !p.connected)).toBe(true);
   });
 });
 
@@ -151,5 +184,7 @@ describe('host-only mode', () => {
     expect(run(s, { type: 'guess', playerId: others[0]!, entryId: entry.id, ownerId: entry.ownerId }).guesses).toHaveLength(0);
     s = run(s, { type: 'lock' }, { type: 'tally', playerIds: [others[0]!, entry.ownerId, others[0]!] });
     expect(s.guesses).toEqual([{ playerId: others[0], entryId: entry.id, ownerId: entry.ownerId }]);
+    // 1 of 3 possible guessers got it: the percentage is out of everyone, not just those ticked.
+    expect(guessersForReveal(s)).toBe(3);
   });
 });

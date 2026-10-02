@@ -14,9 +14,14 @@ type Frame =
   | { k: 'msg'; from: string; data: unknown }
   | { k: 'to'; to: string; data: unknown }
   | { k: 'close'; from: string }
-  | { k: 'beat'; from: string };
+  | { k: 'beat'; from: string }
+  /** Host is (re)listening: phones that aren't connected should say hello again now. */
+  | { k: 'host-up' }
+  /** Host is going away (reload/close): phones should reconnect right away. */
+  | { k: 'host-down' };
 
 const channelName = (code: string) => `tell:room:${code}`;
+const FAST_RETRY_MS = 500;
 const randomId = () => Math.random().toString(36).slice(2, 10);
 
 export async function hostLocal(code: string): Promise<HostTransport> {
@@ -73,6 +78,9 @@ export async function hostLocal(code: string): Promise<HostTransport> {
     if (f.k === 'close') drop(f.from);
   };
 
+  const bye = () => ch.postMessage({ k: 'host-down' } satisfies Frame);
+  window.addEventListener('pagehide', bye);
+  ch.postMessage({ k: 'host-up' } satisfies Frame);
   const sweep = window.setInterval(() => {
     const now = Date.now();
     for (const [id, c] of conns) if (now - c.seen > LINK_TIMEOUT_MS) drop(id);
@@ -83,6 +91,8 @@ export async function hostLocal(code: string): Promise<HostTransport> {
     onConnection: (cb) => onConn.on(cb),
     close: () => {
       window.clearInterval(sweep);
+      window.removeEventListener('pagehide', bye);
+      bye();
       [...conns.keys()].forEach(drop);
       ch.close();
     },
@@ -106,9 +116,18 @@ export async function joinLocal(code: string): Promise<ClientTransport> {
 
   ch.onmessage = (e: MessageEvent<Frame>) => {
     const f = e.data;
+    // A (new) host instance is listening: any old link is dead, so always reconnect.
+    if (f.k === 'host-up') return open();
+    if (f.k === 'host-down') {
+      setStatus('reconnecting');
+      window.setTimeout(open, FAST_RETRY_MS);
+      return;
+    }
     if (f.k === 'welcome' && f.to === me) {
       lastSeen = Date.now();
-      setStatus('open');
+      // Re-announce "open" even if we thought we were connected, so the app says hello to this host.
+      state = 'open';
+      status.emit('open');
     } else if (f.k === 'to' && f.to === me) {
       lastSeen = Date.now();
       if (state !== 'open') setStatus('open');
@@ -118,6 +137,11 @@ export async function joinLocal(code: string): Promise<ClientTransport> {
 
   const open = () => ch.postMessage({ k: 'open', from: me } satisfies Frame);
   open();
+  // Until the host answers, ask again quickly (it may still be checking the room is free).
+  const fast = window.setInterval(() => {
+    if (state === 'open' || closed) return window.clearInterval(fast);
+    open();
+  }, FAST_RETRY_MS);
   const timer = window.setInterval(() => {
     if (closed) return;
     ch.postMessage({ k: 'beat', from: me } satisfies Frame);
@@ -138,6 +162,7 @@ export async function joinLocal(code: string): Promise<ClientTransport> {
     close: () => {
       closed = true;
       window.clearInterval(timer);
+      window.clearInterval(fast);
       window.removeEventListener('pagehide', onHide);
       onHide();
       ch.close();

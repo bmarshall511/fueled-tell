@@ -1,5 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createGame, expectedGuessers, gameReducer, validateJoin, type GameAction, type RosterRow } from '../engine/game';
+import {
+  createGame,
+  expectedGuessers,
+  gameReducer,
+  markAllDisconnected,
+  validateJoin,
+  type GameAction,
+  type RosterRow,
+} from '../engine/game';
 import { makeId, seeded } from '../engine/random';
 import { redactFor } from '../engine/redact';
 import { isRoomCode, makeRoomCode } from '../engine/roomCode';
@@ -22,14 +30,22 @@ const botsEnabled = () => params().has('bots');
  * runs the timers, opens the room, and turns phone messages into reducer actions.
  */
 export function useHostGame() {
-  const [session, setSession] = useState<HostSession | null>(loadSession);
+  // After a reload nobody is connected until their phone reconnects (or they'd block auto-lock forever).
+  const [session, setSession] = useState<HostSession | null>(() => {
+    const s = loadSession();
+    return s ? { ...s, state: markAllDisconnected(s.state) } : null;
+  });
   const [link, setLink] = useState<LinkStatus>('idle');
   const [linkError, setLinkError] = useState<string | null>(null);
   const state = session?.state ?? null;
   const stateRef = useRef(state);
   stateRef.current = state;
 
-  useEffect(() => saveSession(session), [session]);
+  // A tab that found its room already hosted elsewhere must not overwrite that game's saved session.
+  const savingBlocked = useRef(false);
+  useEffect(() => {
+    if (!savingBlocked.current) saveSession(session);
+  }, [session]);
 
   const dispatch = useCallback((action: GameAction) => {
     setSession((s) => (s ? { ...s, state: gameReducer(s.state, action) } : s));
@@ -79,15 +95,16 @@ export function useHostGame() {
             const s = stateRef.current;
             if (!msg || !s) return;
             if (msg.type === 'hello') {
-              const known = s.players.some((p) => p.id === msg.playerId);
+              const known = s.players.find((p) => p.id === msg.playerId);
+              if (known && known.key && known.key !== msg.key) return conn.send({ type: 'error', code: 'notYou' } satisfies HostMsg);
               if (!known && !msg.name && !msg.claimId) {
                 entry.playerId = msg.playerId; // not joined yet: gets the pre-join view (names to claim)
                 return sendView(entry, s);
               }
-              const err = validateJoin(s, msg.playerId, msg.name ?? '', msg.claimId);
+              const err = validateJoin(s, msg.playerId, msg.name ?? '', msg.claimId, msg.key);
               if (err) return conn.send({ type: 'error', code: err } satisfies HostMsg);
               entry.playerId = msg.playerId;
-              dispatch({ type: 'join', playerId: msg.playerId, name: msg.name ?? '', claimId: msg.claimId });
+              dispatch({ type: 'join', playerId: msg.playerId, name: msg.name ?? '', claimId: msg.claimId, key: msg.key });
               return;
             }
             if (!entry.playerId) return;
@@ -106,6 +123,7 @@ export function useHostGame() {
         if (cancelled) return;
         setLink('error');
         setLinkError(err instanceof RoomTakenError ? 'taken' : 'network');
+        if (err instanceof RoomTakenError) savingBlocked.current = true;
       });
     const beat = window.setInterval(() => {
       for (const c of conns.current.values()) c.conn.send({ type: 'beat' } satisfies HostMsg);
@@ -127,7 +145,10 @@ export function useHostGame() {
   }, [state, sendView]);
 
   /** If the room code is taken (another tab or a stale host), pick a fresh one. */
-  const newRoomCode = useCallback(() => setSession((s) => (s ? { ...s, roomCode: makeRoomCode() } : s)), []);
+  const newRoomCode = useCallback(() => {
+    savingBlocked.current = false; // this tab now owns a game of its own
+    setSession((s) => (s ? { ...s, roomCode: makeRoomCode() } : s));
+  }, []);
 
   // ---------- Timers ----------
   const phase = state?.phase;
@@ -205,11 +226,13 @@ export type HostGame = ReturnType<typeof useHostGame>;
 function useBots(state: GameState | null, dispatch: (a: GameAction) => void) {
   const on = botsEnabled();
   const phase = state?.phase;
-  const unclaimed = state?.players.filter((p) => !p.claimed).length ?? 0;
+  // Bots are the host-imported players (ids start with p_): (re)connect any that aren't, e.g. after a reload.
+  const idle = state?.players.filter((p) => p.id.startsWith('p_') && !p.connected).length ?? 0;
   useEffect(() => {
-    if (!on || !state || phase !== 'lobby' || !unclaimed) return;
-    for (const p of state.players.filter((x) => !x.claimed)) dispatch({ type: 'join', playerId: p.id, name: p.name });
-  }, [on, phase, unclaimed]);
+    if (!on || !state || !idle) return;
+    for (const p of state.players.filter((x) => x.id.startsWith('p_') && !x.connected))
+      dispatch({ type: 'join', playerId: p.id, name: p.name });
+  }, [on, idle]);
 
   const index = state?.index;
   useEffect(() => {

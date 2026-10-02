@@ -14,7 +14,7 @@ No accounts, no servers, no cost. The host's browser runs the game; phones conne
 1. Ask everyone for a short true story (1–3 sentences, weird or funny). DMs are fine.
 2. Open **`/host`** on the laptop you'll share. **Don't share your screen yet**: setup shows who wrote what.
 3. Pick a pack (True Story, Comfort Watch, Two Truths).
-4. Add entries, any of these ways:
+4. Add entries, either way:
    - Type them in, one row per person (Enter jumps to the entry; Cmd/Ctrl+Enter adds the next row).
    - **Paste a list** from Slack, a doc or a spreadsheet: `Name | story`, `Name: story`, `Name - story`, two spreadsheet columns, or a name on its own line with the story underneath. You'll see a preview of every row before anything is added, and rows that need a fix are highlighted, never dropped.
    - Or choose **Players type them on their phones** and they'll write their entry in the lobby.
@@ -35,7 +35,8 @@ No accounts, no servers, no cost. The host's browser runs the game; phones conne
 Some corporate or hotel networks block peer-to-peer connections. In the lobby use **Switch to host-only**: no phones needed. Read each story, let people shout, and after the reveal tick who got it right. Scoring still works.
 
 ### If something goes wrong
-- **Refresh is safe.** The game is saved in this browser and resumes; phones reconnect on their own.
+- **Refresh is safe.** The game is saved in this browser and resumes; phones reconnect on their own (give it up to ~10 seconds: the connection service briefly holds the old room after a refresh).
+- **Keep one host tab per game.** A second tab on the same room shows "in use" and won't overwrite the first tab's game.
 - **"Room code in use"**: another tab is hosting it. Close it, or use *Get a new code*.
 - Players who refresh rejoin as themselves automatically.
 

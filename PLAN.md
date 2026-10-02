@@ -87,7 +87,7 @@ src/
   "entry": { "type": "text", "maxLength": 280 },
   "guess": "owner",                 // who does this belong to
   "timerSec": 45,
-  "scoring": "light",               // light | competitive | none
+  "scoring": "competitive",         // competitive | none
   "copy": { "reveal": "It was…", "yours": "This one's yours. Act natural." }
 }
 ```
@@ -105,10 +105,9 @@ src/
 - A correct guess scores **100**; an owner scores **50** for every player their entry fools. Points are per pack (`points` in the pack JSON).
 - Places use standard competition ranking: equal scores share a place (1, 2, 2, 4); within a tie, more correct guesses list first.
 - Scoring modes (per game, set in setup):
-  - `competitive` ("Points & places", the default): podium, full standings with points, winner, plus awards.
-  - `light` ("Awards only"): no podium, standings or winner on the big screen; just the awards (phones still show your place).
-  - `none` ("Just for fun"): no points shown.
-- Awards on every finale: *Best Detective* (most correct), *Most Mysterious* (owner of the entry the fewest people guessed), *Fooled the Room* (owner who fooled the most guessers).
+  - `competitive` ("Points & places", the default): podium, full standings with points, and the winner.
+  - `none` ("Just for fun"): no points; the finale just thanks everyone who played.
+- Host-only mode: the host ticks who guessed right after each reveal, so only correct guesses score (there's no record of wrong guesses to award "fooled" points).
 - Each reveal shows the % who guessed right; phones show "You got it" / "Not this time", and the owner sees how many they fooled.
 - You can't guess your own entry, or name yourself.
 
@@ -145,12 +144,12 @@ src/
 | Fri Oct 2 | **1–3 built in one go** (foundation, networking + intake, polish) | ✅ Built; see BUILD_LOG.md |
 | Mon Oct 5 | **1. Foundation:** token pipeline, engine + tests, packs, local transport, host and play routes working across two browser tabs | A full game plays end to end in two tabs |
 | Tue Oct 6 | **2. Networking + intake:** PeerJS adapter, room code + QR join, phone UI, host import + live submit, JSON export/import. Deploy a Vercel preview | 3 real phones on different networks join and play |
-| Wed Oct 7 | **3. Polish:** port the winning scene into `scenes/`, flat fallback, finale awards, PWA, perf + a11y pass, README for other pods. **Load the stories at EOD** | Lighthouse looks good, the README lets another EM run it cold |
+| Wed Oct 7 | **3. Polish:** port the winning scene into `scenes/`, flat fallback, finale podium, PWA, perf + a11y pass, README for other pods. **Load the stories at EOD** | Lighthouse looks good, the README lets another EM run it cold |
 | Thu Oct 8 AM | **Dry run:** a full game with a laptop + 2 phones, with host-only mode ready as a backup | Confident |
 | Thu Oct 8 | **Play it** | 🎉 |
 | After | **v2 ideas:** more packs (photo entries, fave show), other scenes as selectable themes, optional PartyKit transport, share it in the guild | |
 
-If a day slips, the cut order is: (1) live submit, (2) PWA, (3) awards. **Never cut host-only mode.**
+If a day slips, the cut order is: (1) live submit, (2) PWA. **Never cut host-only mode.**
 
 ## 7. For the guild write-up
 
@@ -167,4 +166,4 @@ If a day slips, the cut order is: (1) live submit, (2) PWA, (3) awards. **Never 
 > Read `PLAN.md`. Do Phase 2: PeerJS adapter behind `Transport`, room codes (4 chars, no ambiguous letters) + a QR code on the host lobby, the phone join/guess/waiting/yours screens, host import (paste `Name | story` or CSV), live lobby submit, and session JSON export/import to localStorage. Add host-only mode (manual tally) as a toggle. Keep `/play` free of Three.js and report its gzipped size. Give me a checklist for testing on real phones, then update `BUILD_LOG.md`.
 
 **Phase 3:**
-> Read `PLAN.md`. Do Phase 3: port the **[concept]** scene into `scenes/` against the shared `Scene` interface (lazy-loaded), wire reduced-motion to the flat scene, build the finale awards, add `vite-plugin-pwa`, and do a performance + accessibility pass against section 5 (report numbers). Write a `README.md` aimed at another engineering manager running this with their pod for the first time. Update `BUILD_LOG.md` with a summary of the whole build.
+> Read `PLAN.md`. Do Phase 3: port the **[concept]** scene into `scenes/` against the shared `Scene` interface (lazy-loaded), wire reduced-motion to the flat scene, build the finale podium, add `vite-plugin-pwa`, and do a performance + accessibility pass against section 5 (report numbers). Write a `README.md` aimed at another engineering manager running this with their pod for the first time. Update `BUILD_LOG.md` with a summary of the whole build.

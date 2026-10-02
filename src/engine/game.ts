@@ -9,7 +9,7 @@ export interface RosterRow {
 
 export type GameAction =
   /** A phone joins (or re-joins) as `playerId`; may claim a host-imported name. */
-  | { type: 'join'; playerId: PlayerId; name: string; claimId?: PlayerId }
+  | { type: 'join'; playerId: PlayerId; name: string; claimId?: PlayerId; key?: string }
   | { type: 'disconnect'; playerId: PlayerId }
   /** Live intake: a player submits (or replaces) their entry from the lobby. */
   | { type: 'submit'; playerId: PlayerId; text: string }
@@ -73,11 +73,12 @@ export function expectedGuessers(s: GameState): Player[] {
 export const normalizeName = (name: string): string => name.trim().replace(/\s+/g, ' ').slice(0, RULES.maxNameLength);
 const sameName = (a: string, b: string) => normalizeName(a).toLowerCase() === normalizeName(b).toLowerCase();
 
-export type JoinError = 'nameRequired' | 'nameTaken';
+export type JoinError = 'nameRequired' | 'nameTaken' | 'notYou';
 
 /** Validate a join before dispatching it (so the host can tell the phone why). */
-export function validateJoin(s: GameState, playerId: PlayerId, name: string, claimId?: PlayerId): JoinError | null {
-  if (s.players.some((p) => p.id === playerId)) return null; // re-join
+export function validateJoin(s: GameState, playerId: PlayerId, name: string, claimId?: PlayerId, key?: string): JoinError | null {
+  const existing = s.players.find((p) => p.id === playerId);
+  if (existing) return existing.key && existing.key !== key ? 'notYou' : null; // re-join needs the same phone
   const claim = playerById(s, claimId);
   if (claim && !claim.claimed) return null;
   if (!normalizeName(name)) return 'nameRequired';
@@ -85,6 +86,15 @@ export function validateJoin(s: GameState, playerId: PlayerId, name: string, cla
   if (clash?.claimed) return 'nameTaken';
   return null;
 }
+
+/** Everyone who could have guessed the current entry (host-only mode: every player but the owner). */
+export function guessersForReveal(s: GameState): number {
+  const owner = currentEntry(s)?.ownerId;
+  return s.settings.hostOnly ? s.players.filter((p) => p.id !== owner).length : s.guesses.length;
+}
+
+/** Players are only "connected" while a phone is attached: after a host reload, nobody is until they reconnect. */
+export const markAllDisconnected = (s: GameState): GameState => ({ ...s, players: s.players.map((p) => ({ ...p, connected: false })) });
 
 // ---------- Reducer ----------
 
@@ -117,12 +127,12 @@ function setPlayer(s: GameState, id: PlayerId, patch: Partial<Player>): GameStat
 export function gameReducer(s: GameState, a: GameAction): GameState {
   switch (a.type) {
     case 'join': {
-      if (validateJoin(s, a.playerId, a.name, a.claimId)) return s;
+      if (validateJoin(s, a.playerId, a.name, a.claimId, a.key)) return s;
       const existing = playerById(s, a.playerId);
-      if (existing) return setPlayer(s, a.playerId, { connected: true, claimed: true });
+      if (existing) return setPlayer(s, a.playerId, { connected: true, claimed: true, ...(a.key && !existing.key ? { key: a.key } : {}) });
       const claim = playerById(s, a.claimId) ?? s.players.find((p) => !p.claimed && sameName(p.name, a.name));
       if (claim && !claim.claimed) {
-        return setPlayer(rekey(s, claim.id, a.playerId), a.playerId, { connected: true, claimed: true });
+        return setPlayer(rekey(s, claim.id, a.playerId), a.playerId, { connected: true, claimed: true, ...(a.key ? { key: a.key } : {}) });
       }
       const player: Player = {
         id: a.playerId,
@@ -130,6 +140,7 @@ export function gameReducer(s: GameState, a: GameAction): GameState {
         colorIndex: nextColor(s.players),
         connected: true,
         claimed: true,
+        ...(a.key ? { key: a.key } : {}),
       };
       return { ...s, players: [...s.players, player] };
     }
@@ -147,20 +158,23 @@ export function gameReducer(s: GameState, a: GameAction): GameState {
 
     case 'setRoster': {
       if (s.phase !== 'lobby') return s;
-      // Keep phones that joined on their own; replace every host-imported row.
-      const live = s.players.filter((p) => p.claimed);
-      const players: Player[] = [...live];
-      const entries: Entry[] = s.entries.filter((e) => live.some((p) => p.id === e.ownerId && s.settings.intake === 'live'));
+      // Phones that joined on their own stay; every host-imported (unclaimed) name is replaced by the rows.
+      const players: Player[] = s.players.filter((p) => p.claimed);
+      const byOwner = new Map<PlayerId, Entry>();
+      // Live submissions survive only for people the rows don't mention (the rows win: they're what the host just saved).
+      const rowNames = new Set(a.rows.map((r) => normalizeName(r.name).toLowerCase()));
+      for (const e of s.entries) {
+        const owner = players.find((p) => p.id === e.ownerId);
+        if (owner && s.settings.intake === 'live' && !rowNames.has(owner.name.toLowerCase())) byOwner.set(owner.id, e);
+      }
       a.rows.forEach((row, i) => {
         const id = a.ids[i] ?? `p_import_${i}`;
         const match = players.find((p) => sameName(p.name, row.name));
         const ownerId = match?.id ?? id;
-        if (!match) {
-          players.push({ id, name: normalizeName(row.name), colorIndex: nextColor(players), connected: false, claimed: false });
-        }
-        entries.push({ id: `e_${ownerId}`, ownerId, text: row.text.trim() });
+        if (!match) players.push({ id, name: normalizeName(row.name), colorIndex: nextColor(players), connected: false, claimed: false });
+        byOwner.set(ownerId, { id: `e_${ownerId}`, ownerId, text: row.text.trim() }); // one entry per person
       });
-      return { ...s, players, entries };
+      return { ...s, players, entries: [...byOwner.values()] };
     }
 
     case 'removePlayer':

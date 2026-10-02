@@ -590,3 +590,8 @@
     min-height: calc(var(--size-tap-target) * 1.5);
   }
 }
+
+/* Taps during a screen transition go to the real page, never the snapshot. */
+:global(::view-transition) {
+  pointer-events: none;
+}

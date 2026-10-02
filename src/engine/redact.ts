@@ -1,4 +1,4 @@
-import { currentEntry, expectedGuessers } from './game';
+import { currentEntry, expectedGuessers, guessersForReveal } from './game';
 import { computeStandings, summarizeReveal, type RevealSummary, type Standing } from './scoring';
 import type { EntryId, GameState, Phase, PlayerId, Settings } from './types';
 
@@ -64,7 +64,7 @@ export function redactFor(s: GameState, me: PlayerId, now: number, points?: { co
     expectedCount: entry ? expectedGuessers(s).length : 0,
     remainingMs: s.deadline === null ? null : Math.max(0, s.deadline - now),
     revealElapsedMs: s.revealedAt === null ? null : Math.max(0, now - s.revealedAt),
-    reveal: revealed && entry ? summarizeReveal(entry, s.guesses) : null,
+    reveal: revealed && entry ? summarizeReveal(entry, s.guesses, guessersForReveal(s)) : null,
     standings:
       s.phase === 'finale'
         ? computeStandings(

@@ -2,6 +2,7 @@ import { lazy, StrictMode, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import './tokens/tokens.css';
 import './ui/base.css';
+import { ErrorBoundary } from './ui/ErrorBoundary';
 
 const Landing = lazy(() => import('./routes/Landing'));
 const Host = lazy(() => import('./routes/Host'));
@@ -19,8 +20,10 @@ function Route() {
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
-    <Suspense fallback={null}>
-      <Route />
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense fallback={null}>
+        <Route />
+      </Suspense>
+    </ErrorBoundary>
   </StrictMode>,
 );

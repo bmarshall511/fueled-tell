@@ -7,13 +7,18 @@ export interface RevealSummary {
   ratioCorrect: number;
 }
 
-export function summarizeReveal(entry: Entry, guesses: readonly Guess[]): RevealSummary {
+/**
+ * `outOf`: how many could have guessed. Defaults to the number who did; host-only mode passes
+ * everyone but the owner, because the host only ticks who got it right.
+ */
+export function summarizeReveal(entry: Entry, guesses: readonly Guess[], outOf?: number): RevealSummary {
   const forEntry = guesses.filter((g) => g.entryId === entry.id);
   const correctPlayerIds = forEntry.filter((g) => g.ownerId === entry.ownerId).map((g) => g.playerId);
+  const total = outOf ?? forEntry.length;
   return {
     ownerId: entry.ownerId,
     correctPlayerIds,
-    ratioCorrect: forEntry.length === 0 ? 0 : correctPlayerIds.length / forEntry.length,
+    ratioCorrect: total === 0 ? 0 : correctPlayerIds.length / total,
   };
 }
 

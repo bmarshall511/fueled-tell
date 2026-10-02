@@ -37,6 +37,21 @@ export function Lobby({ host, onEdit }: { host: HostGame; onEdit: () => void }) 
   const joined = s.players.filter((p) => p.claimed && p.connected).length;
   useDocumentTitle(`${code} · ${UI_COPY.appName}`);
 
+  // Space starts the game (the button shows the hint), unless focus is in a control.
+  const canGo = canStart(s);
+  const advance = host.advance;
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.code !== 'Space' || e.metaKey || e.ctrlKey || e.altKey) return;
+      const t = e.target instanceof Element ? e.target : null;
+      if (t?.closest('input, textarea, select, button, a, dialog')) return;
+      e.preventDefault();
+      if (canGo) advance();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [canGo, advance]);
+
   // A soft chime when someone joins.
   const prev = useRef(joined);
   useEffect(() => {

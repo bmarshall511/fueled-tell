@@ -37,7 +37,6 @@ export function EntriesEditor({ rows, onChange, maxLength, itemNoun }: EntriesEd
   const [pasting, setPasting] = useState<string | null>(null);
   const focusKey = useRef<string | null>(null);
   const listRef = useRef<HTMLOListElement>(null);
-  const fileId = useId();
 
   useEffect(() => {
     if (!focusKey.current) return;
@@ -66,28 +65,12 @@ export function EntriesEditor({ rows, onChange, maxLength, itemNoun }: EntriesEd
     }
   };
 
-  const importFile = async (file: File) => setPasting(await file.text());
-
   return (
     <div className={styles.editor}>
       <div className={styles.toolbar}>
         <Button variant="secondary" onClick={() => setPasting('')}>
           {E.paste}
         </Button>
-        <label className={`chamfer ${styles.fileBtn}`} htmlFor={fileId}>
-          {E.importFile}
-          <input
-            id={fileId}
-            type="file"
-            accept=".csv,.tsv,.txt,text/plain,text/csv"
-            className="visually-hidden"
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) void importFile(f);
-              e.target.value = '';
-            }}
-          />
-        </label>
         <Button
           variant="secondary"
           onClick={() =>

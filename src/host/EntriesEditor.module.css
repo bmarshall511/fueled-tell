@@ -16,21 +16,6 @@
   justify-content: space-between;
 }
 
-.fileBtn {
-  --cut: var(--chamfer-sm);
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--size-tap-target);
-  padding: 0 var(--space-5);
-  background: var(--color-surface-raised);
-  font-size: var(--font-size-phone-body);
-  cursor: pointer;
-}
-
-.fileBtn:hover {
-  background: var(--color-border);
-}
-
 .empty {
   margin: 0;
   padding: var(--space-6);

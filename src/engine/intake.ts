@@ -18,6 +18,9 @@ export interface ParsedRow {
   issues: RowIssue[];
 }
 
+/** Slack and chat pastes put a time after the name ("Ann  10:42 AM"): drop it. */
+const cleanName = (name: string) => name.replace(/\s+\[?\d{1,2}:\d{2}(?:\s?[AaPp][Mm])?\]?\s*$/, '').trim();
+
 /** A name is short: up to 5 words, no sentence punctuation at the end. */
 const looksLikeName = (s: string) => {
   const t = s.trim();
@@ -109,8 +112,14 @@ export function parseEntries(input: string, maxLength: number): ParsedRow[] {
       if (!block.length) return;
       const [first = '', ...rest] = block;
       const inline = splitInline(first);
-      if (rest.length && looksLikeName(first)) raw.push({ line: start, name: first, text: rest.join(' ') });
-      else if (inline) raw.push({ line: start, name: inline[0], text: [inline[1], ...rest].join(' ') });
+      if (inline && rest.every((l) => splitInline(l))) {
+        // A run of "Name | entry" lines inside a blank-line-separated paste: one row per line.
+        block.forEach((l, i) => {
+          const [name, text] = splitInline(l) ?? ['', l];
+          raw.push({ line: start + i, name, text });
+        });
+      } else if (inline) raw.push({ line: start, name: inline[0], text: [inline[1], ...rest].join(' ') });
+      else if (rest.length && looksLikeName(cleanName(first))) raw.push({ line: start, name: first, text: rest.join(' ') });
       else raw.push({ line: start, name: '', text: block.join(' ') });
       block = [];
     };
@@ -126,8 +135,12 @@ export function parseEntries(input: string, maxLength: number): ParsedRow[] {
       const split = splitInline(l);
       // A stray spreadsheet row ("Name","entry") in a mostly line-based paste.
       const csv = !split && /^\s*"[^"]{1,40}"\s*,/.test(l) ? parseCsv(l)[0]?.cells : undefined;
+      const prev = raw[raw.length - 1];
+      const continues = !split && !csv && prev && prev.name && lines[i - 1]?.trim();
       if (split) raw.push({ line: i + 1, name: split[0], text: split[1] });
       else if (csv) raw.push({ line: i + 1, name: csv[0] ?? '', text: csv.slice(1).join(',') });
+      else if (continues)
+        prev.text = `${prev.text} ${l.trim()}`; // an entry that wrapped onto a second line
       else raw.push({ line: i + 1, name: '', text: l.trim() });
     });
   }
@@ -135,7 +148,7 @@ export function parseEntries(input: string, maxLength: number): ParsedRow[] {
   /** Unwrap "quoted" values from non-CSV pastes (CSV quotes are already handled). */
   const unquote = (v: string) => (format !== 'csv' && /^".*"$/s.test(v.trim()) ? v.trim().slice(1, -1) : v.trim());
   const rows = raw
-    .map((r) => ({ ...r, name: unquote(r.name), text: unquote(r.text) }))
+    .map((r) => ({ ...r, name: cleanName(unquote(r.name)), text: unquote(r.text).replace(/^[|:\-–—]\s*/, '') }))
     .filter((r, i) => !(i === 0 && isHeader(r.name, r.text)));
   return validateRows(rows, maxLength);
 }

@@ -1,0 +1,33 @@
+.crash {
+  min-height: 100dvh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  font-weight: inherit;
+  font-size: var(--font-size-phone-display);
+}
+
+.body {
+  margin: 0;
+  max-width: 36ch;
+  font-size: var(--font-size-phone-body);
+  color: var(--color-text-muted);
+}
+
+.button {
+  --cut: var(--chamfer-sm);
+  min-height: var(--size-tap-target);
+  padding: 0 var(--space-6);
+  border: 0;
+  background: var(--color-accent);
+  color: var(--color-text);
+  font-size: var(--font-size-phone-body);
+  cursor: pointer;
+}

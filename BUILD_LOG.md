@@ -182,3 +182,79 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **The GitHub repo:** `bmarshall511/fueled-tell` is **public**, and this repo contains the licensed Aeonik files, so **nothing has been pushed**. Decide: make the repo private, or keep the fonts out of git.
 
 **Approximate time:** about 31 min of wall-clock AI time (11:17–11:48 CT), including the parallel QR sub-agent.
+
+---
+
+## 2026-10-02 (Fri): Session 1d, production hardening
+
+**Goal:**
+- The repo goes public (github.com/bmarshall511/fueled-tell) with everything the app needs, fonts included.
+- Fix the roster "×" ambiguity.
+- A full visual audit for alignment and padding.
+- Fix "my name doesn't show on the shared screen" in /demo.
+- Remove awards (never requested).
+- Remove file import (never requested).
+- A better tagline.
+- An end-to-end audit so it's production-ready.
+
+**What the AI did**
+- **Removed** awards (engine, finale, pack copy, tests) and the "Awards only" scoring mode. Scoring is now *Points & places* or *Just for fun*. Also removed the editor's "Import a file".
+- **Visual audit:** a CDP harness seeds every game state through the real engine and screenshots host and phone at 1920×1080, 1280×720, 1440×900, 2560×1080 and 390×844 (about 45 states). Every capture was reviewed and fixed:
+  - **Lobby:** the remove "×" is now a divided segment inside each name chip.
+  - **Buttons:** the outline variant is used where secondary buttons vanished (room-in-use banner, paste helper, menu).
+  - **Focus ring:** no longer outlines whole containers.
+  - **Reveal:** stats are baseline-aligned, and the host-only tally is merged into the stats row.
+  - **Finale:** the podium has one shared height with rank as a step, and the standings rows show full names in aligned columns.
+  - **Portrait host:** only Menu plus the main action; sound and full screen are in the menu, and the menu scales with the stage.
+  - **Lobby on phones:** sticky controls.
+  - **Phone:** the header fits at 390 px; actions come first on phones; "tap your name" comes first on join; the countdown has its own row.
+  - **Editor:** textareas re-measure on resize; grammar fixed for counts ("1 entry", "1 needs a fix").
+  - **Landing:** the card arrows, the join row, and the overflow.
+- **Functional QA:** a background QA agent tested 18 scenarios against the running app and reported 8 bugs. All were fixed and re-verified with its own repro scripts:
+  - **/demo name not showing:** every run used a fixed room, so an older demo tab could capture the phone. Each run now gets a fresh room. Also fixed:
+    - The first phone connect attempt could arrive during the host's room check and wasn't retried for 3 s. The client now retries every 0.5 s, and the host announces itself when up.
+    - View transitions swallowed taps.
+    - Phones weren't told when the host reloaded. The host now says goodbye on unload, and a new host instance makes every phone reconnect.
+  - **Duplicate entries:** editing the lobby in live-intake mode duplicated every phone's entry (`setRoster` now keeps one entry per person).
+  - **Host reload:** players stayed "connected" forever after a host reload. Everyone now starts disconnected until their phone returns.
+  - **Host-only percentage:** it always showed 100%. It's now out of everyone who could have guessed.
+  - **Space in the lobby:** it didn't start the game.
+  - **Two host tabs:** a tab that finds its room taken no longer overwrites the other tab's saved game.
+  - **Paste parser:** it merged mixed pastes, split an entry's wrapped second line into its own row, and kept Slack timestamps in names.
+  - **Seat takeover:** any phone could take over another seat. Each phone now holds a secret key for its seat, sent only to the host.
+  - **Crash recovery:** an app-wide error boundary now shows "Something went wrong / Reload" instead of a blank page.
+  - **A bug the audit itself found:** the phone's "no game with that code" screen rendered blank (a screen-key bug).
+  - **Another:** a saved name used to auto-join new rooms. It now only auto-rejoins the same room.
+- **Production:**
+  - `vercel.json`: SPA rewrites so `/host`, `/play` and `/demo` survive a refresh, plus caching headers.
+  - Production build smoke-tested with `vite preview`: every route returns 200, the service worker registers, the manifest is valid, and Aeonik loads.
+  - CLAUDE.md and the README updated (public repo, deploy steps).
+- **New tagline:** "Everyone has a story. Can you tell whose?"
+- **Screenshots** refreshed in `docs/screens/`.
+
+**Decisions the AI made on its own**
+- **Host-only scoring:** only correct guesses score, because the host just ticks who got it right, so there are no "fooled" points. Written into PLAN.md.
+- **"Load a saved game" stays:** it restores a backup download, and backups are in PLAN.md. Only the entries "Import a file" was removed.
+- **Imported players who never join** still appear in standings and can earn "fooled" points. Their story was played, so they're part of the game.
+- **One host tab per game** is the supported model. A second tab shows "in use".
+
+**Verification done by the AI**
+- `npm run check`: `tsc`, the rule checks, and 40/40 tests (6 new: roster dedupe, seat keys, reload disconnect, host-only ratio, 3 parser cases).
+- **axe-core** (WCAG 2.2 AA): 0 violations on every route and in every live host and phone state.
+- **Full 8-round local game:** to the finale, with the phone's place shown.
+- **PeerJS (real broker) game:** fresh and resumed sessions both worked (join, story, guess counted).
+- **The QA agent's repro scripts** re-run after the fixes, confirming each fix:
+  - **Demo:** a stale demo tab plus a slow join gives 9 joined on the right screen.
+  - **Live edit:** stays at 3 entries.
+  - **Host reload:** all phones reconnect and guesses count.
+  - **Host-only:** 14% / 29%.
+  - **Paste formats:** all parse.
+  - **Wrong code:** shows "not found" within 4 s.
+
+**What you need to verify by hand**
+- **Real phones on cellular and Wi-Fi** against the Vercel deploy, including a host refresh mid-round. The connection service can hold an old room for about 10 s after a refresh.
+- **Feel at a real frame rate,** and sound levels on a Meet tab share.
+- **VoiceOver / NVDA** passes.
+- **Font licence:** you decided to publish the Aeonik files in a public repo, so check the CoType EULA permits that distribution.
+
+**Approximate time:** about 1 h of wall-clock AI time (≈12:00–13:00 CT), including the parallel QA agent (about 27 min).
