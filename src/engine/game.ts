@@ -57,12 +57,10 @@ export const currentEntry = (s: GameState): Entry | undefined => s.entries.find(
 
 export const isLastEntry = (s: GameState): boolean => s.index >= s.order.length - 1;
 
-export const playerById = (s: GameState, id: PlayerId | null | undefined): Player | undefined =>
-  s.players.find((p) => p.id === id);
+export const playerById = (s: GameState, id: PlayerId | null | undefined): Player | undefined => s.players.find((p) => p.id === id);
 
 /** Entries whose owner is still in the game. */
-export const playableEntries = (s: GameState): Entry[] =>
-  s.entries.filter((e) => s.players.some((p) => p.id === e.ownerId));
+export const playableEntries = (s: GameState): Entry[] => s.entries.filter((e) => s.players.some((p) => p.id === e.ownerId));
 
 export const canStart = (s: GameState): boolean => s.phase === 'lobby' && playableEntries(s).length >= RULES.minEntries;
 
@@ -122,8 +120,7 @@ export function gameReducer(s: GameState, a: GameAction): GameState {
       if (validateJoin(s, a.playerId, a.name, a.claimId)) return s;
       const existing = playerById(s, a.playerId);
       if (existing) return setPlayer(s, a.playerId, { connected: true, claimed: true });
-      const claim =
-        playerById(s, a.claimId) ?? s.players.find((p) => !p.claimed && sameName(p.name, a.name));
+      const claim = playerById(s, a.claimId) ?? s.players.find((p) => !p.claimed && sameName(p.name, a.name));
       if (claim && !claim.claimed) {
         return setPlayer(rekey(s, claim.id, a.playerId), a.playerId, { connected: true, claimed: true });
       }
@@ -180,7 +177,10 @@ export function gameReducer(s: GameState, a: GameAction): GameState {
 
     case 'start': {
       if (!canStart(s)) return s;
-      const order = shuffle(playableEntries(s).map((e) => e.id), seeded(a.seed));
+      const order = shuffle(
+        playableEntries(s).map((e) => e.id),
+        seeded(a.seed),
+      );
       return { ...s, phase: 'showing', order, index: 0, guesses: [], history: {}, deadline: null, revealedAt: null };
     }
 

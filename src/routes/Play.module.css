@@ -5,8 +5,8 @@
 .app {
   --gutter: max(var(--space-4), env(safe-area-inset-left));
   min-height: 100dvh;
-  display: grid;
-  grid-template-rows: auto auto 1fr auto;
+  display: flex;
+  flex-direction: column;
   padding: max(var(--space-3), env(safe-area-inset-top)) var(--gutter) max(var(--space-3), env(safe-area-inset-bottom));
 }
 
@@ -71,6 +71,7 @@
 }
 
 .main {
+  flex: 1;
   display: flex;
   flex-direction: column;
   padding: var(--space-6) 0;
@@ -351,7 +352,9 @@
 .flipBack {
   grid-area: 1 / 1;
   backface-visibility: hidden;
-  transition: transform var(--duration-reveal) var(--easing-emphasized), opacity var(--duration-base) linear;
+  transition:
+    transform var(--duration-reveal) var(--easing-emphasized),
+    opacity var(--duration-base) linear;
 }
 
 .flipBack {
@@ -367,8 +370,8 @@
 }
 
 .flipBack .storyLabel {
+  /* Full strength: a faded label on Nebula fails contrast. */
   color: var(--color-text);
-  opacity: var(--opacity-muted);
 }
 
 .flipped .flipFront {
@@ -428,6 +431,10 @@
   padding: var(--space-4) var(--space-5);
   background: var(--color-fueled-perfect-white);
   color: var(--color-text-inverse);
+}
+
+.winnerCard .label {
+  color: var(--color-accent);
 }
 
 .winnerName {

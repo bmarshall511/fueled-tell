@@ -122,8 +122,19 @@ export default function Play() {
         )}
         {kind === 'join' && g.view && <JoinForm view={g.view} game={g} />}
         {kind === 'lobby' && g.view && <LobbyScreen view={g.view} game={g} prompt={pack.prompt} itemNoun={pack.copy.item} />}
-        {kind === 'pick' && g.view && <PickScreen view={g.view} game={g} question={pack.copy.question} item={pack.copy.item} onLocked={() => setChanging(false)} receivedAt={g.receivedAt} />}
-        {kind === 'waiting' && g.view && <WaitingScreen view={g.view} copy={pack.copy.waiting} item={pack.copy.item} onChange={() => setChanging(true)} />}
+        {kind === 'pick' && g.view && (
+          <PickScreen
+            view={g.view}
+            game={g}
+            question={pack.copy.question}
+            item={pack.copy.item}
+            onLocked={() => setChanging(false)}
+            receivedAt={g.receivedAt}
+          />
+        )}
+        {kind === 'waiting' && g.view && (
+          <WaitingScreen view={g.view} copy={pack.copy.waiting} item={pack.copy.item} onChange={() => setChanging(true)} />
+        )}
         {kind === 'yours' && g.view && (
           <Split aside={<StoryCard view={g.view} item={pack.copy.item} />}>
             <Heading className={styles.accent}>{pack.copy.yours}</Heading>

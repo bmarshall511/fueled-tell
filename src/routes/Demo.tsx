@@ -73,20 +73,20 @@ export default function Demo() {
       </div>
 
       {ready && (
-      <div className={styles.panes} key={run}>
-        <figure className={styles.hostPane}>
-          <figcaption className={styles.caption}>{D.host}</figcaption>
-          <div className={`chamfer ${styles.hostFrame}`}>
-            <iframe title={D.host} src={HOST_SRC} allow="fullscreen; screen-wake-lock" />
-          </div>
-        </figure>
-        <figure className={styles.phonePane}>
-          <figcaption className={styles.caption}>{D.phone}</figcaption>
-          <div className={`chamfer ${styles.phoneFrame}`}>
-            <iframe title={D.phone} src={PHONE_SRC} />
-          </div>
-        </figure>
-      </div>
+        <div className={styles.panes} key={run}>
+          <figure className={styles.hostPane}>
+            <figcaption className={styles.caption}>{D.host}</figcaption>
+            <div className={`chamfer ${styles.hostFrame}`}>
+              <iframe title={D.host} src={HOST_SRC} allow="fullscreen; screen-wake-lock" />
+            </div>
+          </figure>
+          <figure className={styles.phonePane}>
+            <figcaption className={styles.caption}>{D.phone}</figcaption>
+            <div className={`chamfer ${styles.phoneFrame}`}>
+              <iframe title={D.phone} src={PHONE_SRC} />
+            </div>
+          </figure>
+        </div>
       )}
     </main>
   );

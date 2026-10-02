@@ -8,11 +8,13 @@ const STEPS = 3;
  * The shared reveal drumroll: counts 3-2-1 over `RULES.drumrollMs` from when
  * the reveal started (host clock on the host; elapsed-at-receipt on phones),
  * then reports done. Returns the number to show, or null when finished.
+ * `elapsedAtStart` must be stable for one reveal (memoize it on the reveal's start time).
  */
 export function useDrumroll(active: boolean, elapsedAtStart: number, withSound: boolean): { count: number | null; done: boolean } {
-  const [elapsed, setElapsed] = useState(elapsedAtStart);
+  // Starts at 0 for every reveal (never carries over the previous one's "done").
+  const [elapsed, setElapsed] = useState(0);
   useEffect(() => {
-    if (!active) return;
+    if (!active) return setElapsed(0);
     const start = performance.now() - elapsedAtStart;
     let raf = 0;
     let lastStep = -1;

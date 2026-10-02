@@ -6,8 +6,7 @@
   grid-template-rows: auto auto 1fr;
   align-content: start;
   gap: calc(var(--space-5) * var(--stage));
-  padding: calc(var(--space-7) * var(--stage)) calc(var(--space-8) * var(--stage))
-    calc(var(--size-tap-target) * 2 + var(--space-6));
+  padding: calc(var(--space-7) * var(--stage)) calc(var(--space-8) * var(--stage)) calc(var(--size-tap-target) * 2 + var(--space-6));
   background: var(--color-bg);
   overflow: auto;
 }

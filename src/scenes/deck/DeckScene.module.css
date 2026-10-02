@@ -15,5 +15,4 @@
 
 .back :global(.t-label) {
   color: var(--color-text);
-  opacity: var(--opacity-muted);
 }

@@ -21,7 +21,14 @@ describe('lobby', () => {
 
   it('lets a phone claim a host-imported name and keeps their entry', () => {
     let s = createGame(TEST_PACK);
-    s = run(s, { type: 'setRoster', rows: [{ name: 'Ada', text: 'hi' }, { name: 'Bo', text: 'yo' }], ids: ['i1', 'i2'] });
+    s = run(s, {
+      type: 'setRoster',
+      rows: [
+        { name: 'Ada', text: 'hi' },
+        { name: 'Bo', text: 'yo' },
+      ],
+      ids: ['i1', 'i2'],
+    });
     expect(s.players.every((p) => !p.claimed)).toBe(true);
     s = run(s, { type: 'join', playerId: 'phone1', name: '', claimId: 'i1' });
     expect(s.players.find((p) => p.id === 'phone1')).toMatchObject({ name: 'Ada', claimed: true });
@@ -42,7 +49,11 @@ describe('lobby', () => {
   });
 
   it('needs at least 3 playable entries to start', () => {
-    let s = run(createGame(TEST_PACK, { intake: 'live' }), { type: 'join', playerId: 'a', name: 'A' }, { type: 'submit', playerId: 'a', text: 't' });
+    let s = run(
+      createGame(TEST_PACK, { intake: 'live' }),
+      { type: 'join', playerId: 'a', name: 'A' },
+      { type: 'submit', playerId: 'a', text: 't' },
+    );
     expect(canStart(s)).toBe(false);
     expect(run(s, { type: 'start', seed: 1 }).phase).toBe('lobby');
     s = lobbyWithFour();
@@ -91,7 +102,11 @@ describe('round loop', () => {
     const third = s.players.find((p) => p.id !== owner && p.id !== other)!.id;
     expect(run(s, { type: 'guess', playerId: owner, entryId: entry.id, ownerId: other }).guesses).toHaveLength(0);
     expect(run(s, { type: 'guess', playerId: other, entryId: entry.id, ownerId: other }).guesses).toHaveLength(0);
-    s = run(s, { type: 'guess', playerId: other, entryId: entry.id, ownerId: third }, { type: 'guess', playerId: other, entryId: entry.id, ownerId: owner });
+    s = run(
+      s,
+      { type: 'guess', playerId: other, entryId: entry.id, ownerId: third },
+      { type: 'guess', playerId: other, entryId: entry.id, ownerId: owner },
+    );
     expect(s.guesses).toEqual([{ playerId: other, entryId: entry.id, ownerId: owner }]);
   });
 
@@ -125,7 +140,12 @@ describe('round loop', () => {
 
 describe('host-only mode', () => {
   it('ignores phone guesses and takes the host tally instead', () => {
-    let s = run(lobbyWithFour(), { type: 'updateSettings', settings: { hostOnly: true } }, { type: 'start', seed: 2 }, { type: 'beginGuessing', now: 0 });
+    let s = run(
+      lobbyWithFour(),
+      { type: 'updateSettings', settings: { hostOnly: true } },
+      { type: 'start', seed: 2 },
+      { type: 'beginGuessing', now: 0 },
+    );
     const entry = currentEntry(s)!;
     const others = s.players.filter((p) => p.id !== entry.ownerId).map((p) => p.id);
     expect(run(s, { type: 'guess', playerId: others[0]!, entryId: entry.id, ownerId: entry.ownerId }).guesses).toHaveLength(0);

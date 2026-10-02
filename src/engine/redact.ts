@@ -67,7 +67,12 @@ export function redactFor(s: GameState, me: PlayerId, now: number, points?: { co
     reveal: revealed && entry ? summarizeReveal(entry, s.guesses) : null,
     standings:
       s.phase === 'finale'
-        ? computeStandings(s.entries.filter((e) => s.order.includes(e.id)), s.history, s.players.map((p) => p.id), points)
+        ? computeStandings(
+            s.entries.filter((e) => s.order.includes(e.id)),
+            s.history,
+            s.players.map((p) => p.id),
+            points,
+          )
         : null,
   };
 }

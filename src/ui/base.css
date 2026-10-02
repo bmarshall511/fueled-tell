@@ -81,14 +81,7 @@ a {
 /* DOM lab chamfer motif: cut top-left and bottom-right corners. Set --cut to size. */
 .chamfer {
   --cut: var(--chamfer-md);
-  clip-path: polygon(
-    var(--cut) 0,
-    100% 0,
-    100% calc(100% - var(--cut)),
-    calc(100% - var(--cut)) 100%,
-    0 100%,
-    0 var(--cut)
-  );
+  clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
 }
 
 .chamfer-all {

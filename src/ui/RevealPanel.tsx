@@ -14,15 +14,7 @@ interface RevealPanelProps {
   nobodyLabel: string;
 }
 
-export function RevealPanel({
-  leadIn,
-  owner,
-  ratioCorrect,
-  correctPlayers,
-  showName = true,
-  guessedLabel,
-  nobodyLabel,
-}: RevealPanelProps) {
+export function RevealPanel({ leadIn, owner, ratioCorrect, correctPlayers, showName = true, guessedLabel, nobodyLabel }: RevealPanelProps) {
   return (
     <section className={styles.panel} aria-live="assertive">
       {showName && (

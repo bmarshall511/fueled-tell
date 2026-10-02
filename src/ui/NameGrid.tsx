@@ -23,11 +23,7 @@ export function NameGrid({ players, selectedId, disabledIds = [], onSelect, lege
     <fieldset className={styles.grid}>
       <legend className="visually-hidden">{legend}</legend>
       {players.map((p) => (
-        <label
-          key={p.id}
-          className={`chamfer ${styles.cell}`}
-          style={{ ['--player' as string]: playerColorVar(p.colorIndex) }}
-        >
+        <label key={p.id} className={`chamfer ${styles.cell}`} style={{ ['--player' as string]: playerColorVar(p.colorIndex) }}>
           <input
             type="radio"
             name={name}

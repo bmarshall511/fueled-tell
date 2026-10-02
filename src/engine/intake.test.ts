@@ -33,6 +33,15 @@ describe('parseEntries', () => {
     ]);
   });
 
+  it('reads a quoted spreadsheet row inside a line-based paste', () => {
+    const rows = parseEntries('Ada: one\nBo | two\n"Cy","Quoted, with comma"', 100);
+    expect(rows.map((r) => [r.name, r.text])).toEqual([
+      ['Ada', 'one'],
+      ['Bo', 'two'],
+      ['Cy', 'Quoted, with comma'],
+    ]);
+  });
+
   it('keeps unparseable lines as rows with issues instead of dropping them', () => {
     const rows = parseEntries('Ada | ok\nthis line has no name at all.\nBo | ' + 'x'.repeat(20) + '\nada | dupe', 10);
     expect(rows).toHaveLength(4);

@@ -156,9 +156,7 @@ function chooseVersion(byteLen: number, ecc: QrEcc): number {
     const needed = 4 + (ver <= 9 ? 8 : 16) + byteLen * 8;
     if (needed <= dataCodewords(ver, ecc) * 8) return ver;
   }
-  throw new Error(
-    `QR: text is too long (${byteLen} bytes) for version ${MAX_VERSION} at ECC level ${ecc}`,
-  );
+  throw new Error(`QR: text is too long (${byteLen} bytes) for version ${MAX_VERSION} at ECC level ${ecc}`);
 }
 
 // ---- Matrix construction ----
@@ -334,8 +332,7 @@ function penalty(g: Grid): number {
       // Rule 3: 1:1:3:1:1 finder-like pattern with 4 light modules on either side.
       for (let j = 0; j + 7 <= s; j++) {
         if (!FINDER_LIKE.every((v, k) => lineAt(g, i, j + k, horizontal) === v)) continue;
-        const lightRun = (from: number) =>
-          [0, 1, 2, 3].every((k) => !lineAt(g, i, from + k, horizontal)); // out-of-range reads light
+        const lightRun = (from: number) => [0, 1, 2, 3].every((k) => !lineAt(g, i, from + k, horizontal)); // out-of-range reads light
         if (lightRun(j - 4) || lightRun(j + 7)) score += 40;
       }
     }

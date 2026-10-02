@@ -33,7 +33,9 @@
   place-items: center;
   padding: calc(var(--size-item-padding) * var(--stage));
   backface-visibility: hidden;
-  transition: transform var(--duration-reveal) var(--easing-emphasized), opacity var(--duration-base) linear;
+  transition:
+    transform var(--duration-reveal) var(--easing-emphasized),
+    opacity var(--duration-base) linear;
 }
 
 .front {
@@ -51,10 +53,6 @@
 
 .back p {
   margin: 0;
-}
-
-.back :global(.t-label) {
-  opacity: var(--opacity-muted);
 }
 
 .flipped .front {

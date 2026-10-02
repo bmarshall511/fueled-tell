@@ -89,7 +89,9 @@ export function EntriesEditor({ rows, onChange, maxLength, itemNoun }: EntriesEd
         </label>
         <Button
           variant="secondary"
-          onClick={() => onChange([...rows.filter((r) => r.name.trim() || r.text.trim()), ...sampleEntries.map((s) => newRow(s.name, s.text))])}
+          onClick={() =>
+            onChange([...rows.filter((r) => r.name.trim() || r.text.trim()), ...sampleEntries.map((s) => newRow(s.name, s.text))])
+          }
         >
           {E.sample}
         </Button>
@@ -255,7 +257,12 @@ function Row({ row, index, issues, maxLength, itemNoun, onChange, onRemove, onAd
           </span>
         </span>
       </div>
-      <button type="button" className={styles.remove} onClick={onRemove} aria-label={`${E.remove} ${E.row.toLowerCase()} ${index + 1}${row.name ? ` (${row.name})` : ''}`}>
+      <button
+        type="button"
+        className={styles.remove}
+        onClick={onRemove}
+        aria-label={`${E.remove} ${E.row.toLowerCase()} ${index + 1}${row.name ? ` (${row.name})` : ''}`}
+      >
         ×
       </button>
     </li>

@@ -4,7 +4,6 @@ import { usePageVisible } from '../ui/hooks';
 import { tokens } from '../tokens/tokens';
 import { SceneReadyContext } from './sceneReady';
 
-
 /**
  * Shared R3F canvas: DPR capped at 2, render loop paused while the tab is hidden.
  * Decorative only: hidden from assistive tech; all meaning lives in the HTML overlay.

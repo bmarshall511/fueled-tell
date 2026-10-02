@@ -30,7 +30,10 @@ const delay = (step: number): CSSProperties => ({ animationDelay: `${step * toke
 
 export function Finale({ standings, awards, players, copy, showScores, showPodium }: FinaleProps) {
   const byId = (id: PlayerId | null) => players.find((p) => p.id === id);
-  const winners = standings.filter((s) => s.place === 1).map((s) => byId(s.playerId)?.name).filter(Boolean);
+  const winners = standings
+    .filter((s) => s.place === 1)
+    .map((s) => byId(s.playerId)?.name)
+    .filter(Boolean);
   const awardRows = [
     { label: copy.awards.detective, player: byId(awards.detective) },
     { label: copy.awards.mysterious, player: byId(awards.mysterious) },
@@ -51,42 +54,21 @@ export function Finale({ standings, awards, players, copy, showScores, showPodiu
       </header>
 
       {showPodium && (
-      <ol className={styles.podium} aria-label={UI_COPY.standings}>
-        {PODIUM.map(({ rank, rise }) => {
-          const s = standings[rank];
-          const p = s && byId(s.playerId);
-          if (!s || !p) return <li key={rank} aria-hidden="true" />;
-          return (
-            <li
-              key={p.id}
-              className={`chamfer ${styles.step} ${styles[`p${s.place}`] ?? ''}`}
-              style={{ ...delay(rise), ['--player' as string]: playerColorVar(p.colorIndex) }}
-            >
-              <span className={`t-display ${styles.place}`}>{ordinal(s.place)}</span>
-              <span className={`t-title ${styles.name}`}>{p.name}</span>
-              {showScores && (
-                <span className={`t-label ${styles.score}`}>
-                  {formatScore(s.score)} {UI_COPY.points}
-                </span>
-              )}
-            </li>
-          );
-        })}
-      </ol>
-      )}
-
-      <div className={styles.lower}>
-        {showPodium && (
-        <ol className={styles.rest} start={4}>
-          {standings.slice(3).map((s, i) => {
-            const p = byId(s.playerId);
-            if (!p) return null;
+        <ol className={styles.podium} aria-label={UI_COPY.standings}>
+          {PODIUM.map(({ rank, rise }) => {
+            const s = standings[rank];
+            const p = s && byId(s.playerId);
+            if (!s || !p) return <li key={rank} aria-hidden="true" />;
             return (
-              <li key={s.playerId} className={styles.row} style={delay(4 + i * 0.25)}>
-                <span className={styles.rowPlace}>{ordinal(s.place)}</span>
-                <PlayerChip player={p} />
+              <li
+                key={p.id}
+                className={`chamfer ${styles.step} ${styles[`p${s.place}`] ?? ''}`}
+                style={{ ...delay(rise), ['--player' as string]: playerColorVar(p.colorIndex) }}
+              >
+                <span className={`t-display ${styles.place}`}>{ordinal(s.place)}</span>
+                <span className={`t-title ${styles.name}`}>{p.name}</span>
                 {showScores && (
-                  <span className={styles.rowScore}>
+                  <span className={`t-label ${styles.score}`}>
                     {formatScore(s.score)} {UI_COPY.points}
                   </span>
                 )}
@@ -94,6 +76,27 @@ export function Finale({ standings, awards, players, copy, showScores, showPodiu
             );
           })}
         </ol>
+      )}
+
+      <div className={styles.lower}>
+        {showPodium && (
+          <ol className={styles.rest} start={4}>
+            {standings.slice(3).map((s, i) => {
+              const p = byId(s.playerId);
+              if (!p) return null;
+              return (
+                <li key={s.playerId} className={styles.row} style={delay(4 + i * 0.25)}>
+                  <span className={styles.rowPlace}>{ordinal(s.place)}</span>
+                  <PlayerChip player={p} />
+                  {showScores && (
+                    <span className={styles.rowScore}>
+                      {formatScore(s.score)} {UI_COPY.points}
+                    </span>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
         )}
         <ul className={styles.awards}>
           {awardRows.map(

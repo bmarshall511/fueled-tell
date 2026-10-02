@@ -44,7 +44,13 @@ export default function FlatScene({ phase, item, copy, reveal, players, guesses,
               const p = g && players.find((pl) => pl.id === g.playerId);
               const gone = flipped && g && !correct.has(g.playerId);
               const style = p && flipped ? ({ '--chip': playerColorVar(p.colorIndex) } as CSSProperties) : undefined;
-              return <li key={g?.playerId ?? `empty-${i}`} className={`chamfer-all ${styles.chip} ${g ? styles.landed : ''} ${gone ? styles.gone : ''}`} style={style} />;
+              return (
+                <li
+                  key={g?.playerId ?? `empty-${i}`}
+                  className={`chamfer-all ${styles.chip} ${g ? styles.landed : ''} ${gone ? styles.gone : ''}`}
+                  style={style}
+                />
+              );
             })}
           </ul>
         </div>

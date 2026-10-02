@@ -42,7 +42,14 @@ function draftFromGame(host: HostGame): Draft | null {
   const s = host.state;
   if (!s) return null;
   const rows = s.entries.map((e) => newRow(s.players.find((p) => p.id === e.ownerId)?.name ?? '', e.text));
-  return { packId: s.packId, intake: s.settings.intake, rows, timerSec: s.settings.timerSec, scoring: s.settings.scoring, hostOnly: s.settings.hostOnly };
+  return {
+    packId: s.packId,
+    intake: s.settings.intake,
+    rows,
+    timerSec: s.settings.timerSec,
+    scoring: s.settings.scoring,
+    hostOnly: s.settings.hostOnly,
+  };
 }
 
 /** Host setup (not for sharing: it shows who wrote what). Creates the game, or edits the open lobby. */
@@ -174,7 +181,13 @@ export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void })
               value={timerSec}
               onChange={setTimerSec}
             />
-            <Segmented label={S.scoring} showLabel options={SCORING.map((m) => ({ value: m, label: S.scoringModes[m] }))} value={scoring} onChange={setScoring} />
+            <Segmented
+              label={S.scoring}
+              showLabel
+              options={SCORING.map((m) => ({ value: m, label: S.scoringModes[m] }))}
+              value={scoring}
+              onChange={setScoring}
+            />
             <label className={styles.toggle}>
               <input type="checkbox" role="switch" checked={hostOnly} onChange={(e) => setHostOnly(e.target.checked)} />
               <span className={`chamfer ${styles.switch}`} aria-hidden="true" />

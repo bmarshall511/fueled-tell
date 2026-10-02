@@ -75,8 +75,7 @@ export function computeAwards(
   standings: readonly Standing[],
 ): Awards {
   const top = (key: 'correct' | 'fooled') =>
-    standings.reduce<Standing | null>((best, s) => (s[key] > 0 && (!best || s[key] > best[key]) ? s : best), null)
-      ?.playerId ?? null;
+    standings.reduce<Standing | null>((best, s) => (s[key] > 0 && (!best || s[key] > best[key]) ? s : best), null)?.playerId ?? null;
   let mysterious: { ownerId: PlayerId; correct: number } | null = null;
   for (const e of entries) {
     const guesses = history[e.id];

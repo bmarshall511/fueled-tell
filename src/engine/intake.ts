@@ -79,7 +79,8 @@ function parseCsv(input: string): { cells: string[]; line: number }[] {
   return rows;
 }
 
-const isHeader = (name: string, text: string) => /^(name|who|player|person)$/i.test(name.trim()) && /^(story|entry|text|answer|submission)/i.test(text.trim());
+const isHeader = (name: string, text: string) =>
+  /^(name|who|player|person)$/i.test(name.trim()) && /^(story|entry|text|answer|submission)/i.test(text.trim());
 
 function detectFormat(lines: string[]): 'inline' | 'csv' | 'blocks' {
   const content = lines.filter((l) => l.trim());
@@ -123,7 +124,11 @@ export function parseEntries(input: string, maxLength: number): ParsedRow[] {
     lines.forEach((l, i) => {
       if (!l.trim()) return;
       const split = splitInline(l);
-      raw.push(split ? { line: i + 1, name: split[0], text: split[1] } : { line: i + 1, name: '', text: l.trim() });
+      // A stray spreadsheet row ("Name","entry") in a mostly line-based paste.
+      const csv = !split && /^\s*"[^"]{1,40}"\s*,/.test(l) ? parseCsv(l)[0]?.cells : undefined;
+      if (split) raw.push({ line: i + 1, name: split[0], text: split[1] });
+      else if (csv) raw.push({ line: i + 1, name: csv[0] ?? '', text: csv.slice(1).join(',') });
+      else raw.push({ line: i + 1, name: '', text: l.trim() });
     });
   }
 
@@ -136,7 +141,10 @@ export function parseEntries(input: string, maxLength: number): ParsedRow[] {
 }
 
 /** Recompute issues for editor rows (also used after hand edits). */
-export function validateRows<T extends { name: string; text: string }>(rows: readonly T[], maxLength: number): (T & { issues: RowIssue[] })[] {
+export function validateRows<T extends { name: string; text: string }>(
+  rows: readonly T[],
+  maxLength: number,
+): (T & { issues: RowIssue[] })[] {
   const counts = new Map<string, number>();
   for (const r of rows) {
     const key = r.name.trim().toLowerCase();

@@ -32,7 +32,7 @@ function useHostKeys(handlers: Record<'advance' | 'lock' | 'reveal' | 'mute' | '
     const onKey = (e: KeyboardEvent) => {
       unlock();
       if (e.metaKey || e.ctrlKey || e.altKey) return;
-      const t = e.target as HTMLElement | null;
+      const t = e.target instanceof Element ? e.target : null;
       if (t?.closest('input, textarea, select, dialog')) return;
       if (t?.closest('button, a') && (e.code === 'Space' || e.code === 'Enter')) return; // the focused control handles it
       const key = e.key.toLowerCase();
@@ -99,7 +99,9 @@ export function GameScreen({ host }: { host: HostGame }) {
 
   const finale = s.phase === 'finale';
   const reveal = s.phase === 'reveal';
-  const drum = useDrumroll(reveal, reveal && s.revealedAt ? Math.max(0, Date.now() - s.revealedAt) : 0, true);
+  // Stable per reveal: how far into the drumroll we are when this reveal is first seen (e.g. after a refresh).
+  const drumStart = useMemo(() => (s.revealedAt ? Math.max(0, Date.now() - s.revealedAt) : 0), [s.revealedAt]);
+  const drum = useDrumroll(reveal, drumStart, true);
   const holdReveal = reveal && !drum.done;
   const sceneProps = toSceneProps(s, copy, reducedMotion, holdReveal);
   const entry = currentEntry(s);
@@ -116,7 +118,15 @@ export function GameScreen({ host }: { host: HostGame }) {
   useHostKeys(handlers);
 
   const standings = useMemo(
-    () => (finale ? computeStandings(s.entries.filter((e) => s.order.includes(e.id)), s.history, s.players.map((p) => p.id), pack.points) : []),
+    () =>
+      finale
+        ? computeStandings(
+            s.entries.filter((e) => s.order.includes(e.id)),
+            s.history,
+            s.players.map((p) => p.id),
+            pack.points,
+          )
+        : [],
     [finale, s.entries, s.order, s.history, s.players, pack.points],
   );
   const awards = useMemo(() => computeAwards(s.entries, s.history, standings), [s.entries, s.history, standings]);
@@ -137,7 +147,8 @@ export function GameScreen({ host }: { host: HostGame }) {
     if (s.phase === 'showing' && entry) return `${progress}. ${entry.text}`;
     if (s.phase === 'guessing') return `${copy.question} ${hostOnly ? G.shout : ''}`;
     if (s.phase === 'locked') return `${UI_COPY.lock}. ${s.guesses.length} ${UI_COPY.guesses}.`;
-    if (reveal && drum.done && owner && summary) return `${copy.reveal} ${owner.name}. ${Math.round(summary.ratioCorrect * 100)}% ${UI_COPY.guessedRight}.`;
+    if (reveal && drum.done && owner && summary)
+      return `${copy.reveal} ${owner.name}. ${Math.round(summary.ratioCorrect * 100)}% ${UI_COPY.guessedRight}.`;
     return '';
   })();
 
@@ -150,14 +161,23 @@ export function GameScreen({ host }: { host: HostGame }) {
 
   return (
     <main className={styles.host} style={stageCssVars(layout)} data-orientation={layout.orientation} aria-busy={!sceneReady && !finale}>
-      <SceneReadyContext.Provider value={onSceneReady}>{Scene && sceneProps && !finale && <Scene {...sceneProps} />}</SceneReadyContext.Provider>
+      <SceneReadyContext.Provider value={onSceneReady}>
+        {Scene && sceneProps && !finale && <Scene {...sceneProps} />}
+      </SceneReadyContext.Provider>
 
       <p className="visually-hidden" aria-live="polite">
         {announcement}
       </p>
 
       {finale ? (
-        <Finale standings={standings} awards={awards} players={s.players} copy={copy} showScores={s.settings.scoring !== 'none'} showPodium={s.settings.scoring === 'competitive'} />
+        <Finale
+          standings={standings}
+          awards={awards}
+          players={s.players}
+          copy={copy}
+          showScores={s.settings.scoring !== 'none'}
+          showPodium={s.settings.scoring === 'competitive'}
+        />
       ) : (
         <>
           <header className={styles.top}>
@@ -202,7 +222,11 @@ export function GameScreen({ host }: { host: HostGame }) {
                 {hostOnly ? (
                   <p className={`t-title ${styles.shout}`}>{G.shout}</p>
                 ) : (
-                  <GuessTicker received={s.guesses.length} expected={Math.max(expectedGuessers(s).length, s.guesses.length)} label={UI_COPY.guesses} />
+                  <GuessTicker
+                    received={s.guesses.length}
+                    expected={Math.max(expectedGuessers(s).length, s.guesses.length)}
+                    label={UI_COPY.guesses}
+                  />
                 )}
               </>
             )}
@@ -225,7 +249,15 @@ export function GameScreen({ host }: { host: HostGame }) {
           <Button size="host" variant="secondary" onClick={toggleMute} aria-pressed={!muted} aria-keyshortcuts="M" shortcut="M">
             {muted ? UI_COPY.soundOff : UI_COPY.soundOn}
           </Button>
-          <Button size="host" variant="secondary" onClick={toggleFullscreen} aria-pressed={fullscreen} aria-keyshortcuts="F" shortcut="F" className={styles.fullscreen}>
+          <Button
+            size="host"
+            variant="secondary"
+            onClick={toggleFullscreen}
+            aria-pressed={fullscreen}
+            aria-keyshortcuts="F"
+            shortcut="F"
+            className={styles.fullscreen}
+          >
             {fullscreen ? UI_COPY.exitFullscreen : UI_COPY.fullscreen}
           </Button>
           <Button
@@ -240,7 +272,12 @@ export function GameScreen({ host }: { host: HostGame }) {
         </span>
       </nav>
 
-      <dialog ref={menu} className={`chamfer ${styles.menu}`} aria-label={UI_COPY.menu} onClick={(e) => e.target === menu.current && menu.current?.close()}>
+      <dialog
+        ref={menu}
+        className={`chamfer ${styles.menu}`}
+        aria-label={UI_COPY.menu}
+        onClick={(e) => e.target === menu.current && menu.current?.close()}
+      >
         <h2 className={styles.menuTitle}>{UI_COPY.menu}</h2>
         <p className={styles.menuHint}>{UI_COPY.shortcuts}</p>
         <Button variant="secondary" onClick={() => host.session && downloadJson(`tell-${host.roomCode}.json`, host.session)}>

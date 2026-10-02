@@ -19,8 +19,7 @@ interface Token {
   value: Json;
 }
 
-const isObject = (v: Json | undefined): v is JsonObject =>
-  typeof v === 'object' && v !== null && !Array.isArray(v);
+const isObject = (v: Json | undefined): v is JsonObject => typeof v === 'object' && v !== null && !Array.isArray(v);
 
 const ALIAS = /^\{([^}]+)\}$/;
 
