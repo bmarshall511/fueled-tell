@@ -181,4 +181,4 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **The CoType EULA** for web use on a public URL.
 - **The GitHub repo:** `bmarshall511/fueled-tell` is **public**, and this repo contains the licensed Aeonik files, so **nothing has been pushed**. Decide: make the repo private, or keep the fonts out of git.
 
-**Approximate time:** about 50 min of wall-clock AI time (roughly 11:17–12:07 CT), including the parallel QR sub-agent.
+**Approximate time:** about 31 min of wall-clock AI time (11:17–11:48 CT), including the parallel QR sub-agent.
