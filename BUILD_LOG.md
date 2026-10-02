@@ -730,3 +730,26 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **The cursor glow and spotlights with a real mouse.**
 
 **Approximate time:** about 55 min of wall-clock AI time (≈17:50–18:45 CT).
+
+## 2026-10-02 (Fri): Session 1q, busy and done button states
+
+**Goal:** finish the approved button states. Busy and done were skipped in 1p because nothing seemed to wait. In fact the phone's network actions all wait on the host to confirm.
+
+**What got done:**
+
+- **`Button` gains `busy` and `done`.** Busy: a spinner replaces the label (which keeps its width, so nothing resizes), `aria-busy` is set, and presses are ignored. Done: a brief glow-gradient check.
+- **New `useAck(acked)` hook:** `start()` when a request is sent, busy until the host's snapshot shows it, then done. It gives up after about 9 s so the player can try again.
+- **Wired into the phone's three host-confirmed actions:**
+  - **Join:** busy until seated; a "name taken" error cancels it.
+  - **Lock in guess:** busy until the host has this guess, then hands over to the waiting screen.
+  - **Send/update entry:** busy, then the check.
+
+**Verification done by the AI:**
+
+- `npm run check`: 45/45 tests.
+- **Full 8-round game:** passes.
+- **PeerJS e2e on the real broker:** join, round, guess counted.
+- **axe-core:** 0 violations.
+- **The entry-send done state** was captured on a phone viewport.
+
+**Approximate time:** about 15 min.

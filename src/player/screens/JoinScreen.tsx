@@ -1,7 +1,8 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { TextInput } from '../../ui/components/TextField';
 import { UI_COPY } from '../../ui/copy';
 import { Form, Heading, Hero, PrimaryAction, Split } from '../components/Layout';
+import { useAck } from '../../ui/hooks/useAck';
 import { haptics } from '../haptics';
 import type { ScreenProps } from './types';
 import styles from './JoinScreen.module.css';
@@ -14,6 +15,12 @@ export function JoinScreen({ view, game }: ScreenProps) {
   const ids = { name: useId(), err: useId(), claim: useId() };
   const unclaimed = view.players.filter((p) => !p.claimed);
   const err = game.error ? P.errors[game.error] : null;
+  // Busy until the host seats us; an error (name taken) ends the wait instead.
+  const seat = useAck(game.joined);
+  const { cancel } = seat;
+  useEffect(() => {
+    if (err) cancel();
+  }, [err, cancel]);
   return (
     <Split centered aside={<Hero />}>
       <Heading>{P.whoAreYou}</Heading>
@@ -30,6 +37,7 @@ export function JoinScreen({ view, game }: ScreenProps) {
                   className={`spot ${styles.claim}`}
                   onClick={() => {
                     haptics.tap();
+                    seat.start();
                     game.join(p.name, p.id);
                   }}
                 >
@@ -45,6 +53,7 @@ export function JoinScreen({ view, game }: ScreenProps) {
         onSubmit={(e) => {
           e.preventDefault();
           haptics.tap();
+          seat.start();
           game.join(name);
         }}
       >
@@ -66,7 +75,9 @@ export function JoinScreen({ view, game }: ScreenProps) {
         <p id={ids.err} className={`text-body text-error ${styles.error}`} role="alert">
           {err}
         </p>
-        <PrimaryAction type="submit">{P.joinBtn}</PrimaryAction>
+        <PrimaryAction type="submit" busy={seat.busy}>
+          {P.joinBtn}
+        </PrimaryAction>
       </Form>
     </Split>
   );

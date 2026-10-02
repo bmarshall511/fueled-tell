@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAck } from '../../ui/hooks/useAck';
 import type { PlayerId } from '../../engine/types';
 import { NameGrid } from '../../ui/components/NameGrid';
 import { GAME } from '../../content';
@@ -15,6 +16,11 @@ const P = UI_COPY.play;
 export function PickScreen({ view, game, onLocked }: ScreenProps & { onLocked: () => void }) {
   const [pick, setPick] = useState<PlayerId | null>(view.myGuess);
   const open = view.phase === 'guessing';
+  // Busy until the host's snapshot carries this guess; then hand over to the waiting screen.
+  const lock = useAck(pick !== null && view.myGuess === pick);
+  useEffect(() => {
+    if (lock.done) onLocked();
+  }, [lock.done, onLocked]);
   const question = GAME.copy.question;
   return (
     <Split aside={<StoryCard view={view} itemNoun={GAME.copy.item} />}>
@@ -24,11 +30,12 @@ export function PickScreen({ view, game, onLocked }: ScreenProps & { onLocked: (
       <NameGrid players={view.players.filter((p) => p.id !== view.me)} selectedId={pick} onSelect={setPick} legend={question} />
       <PrimaryAction
         disabled={!pick || !open}
+        busy={lock.busy}
         onClick={() => {
           if (!pick) return;
           haptics.lock();
+          lock.start();
           game.guess(pick);
-          onLocked();
         }}
       >
         {P.lockGuess}

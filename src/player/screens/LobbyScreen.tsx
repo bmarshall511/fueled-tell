@@ -1,4 +1,5 @@
 import { useId, useState } from 'react';
+import { useAck } from '../../ui/hooks/useAck';
 import type { PlayerView } from '../../engine/redact';
 import { PlayerChip } from '../../ui/components/PlayerChip';
 import { TextArea } from '../../ui/components/TextField';
@@ -55,12 +56,14 @@ function EntryForm({ view, onSubmit, prompt, placeholder }: EntryFormProps) {
   const max = view.settings.maxLength;
   const len = text.trim().length;
   const valid = len > 0 && len <= max;
+  const sent = useAck(view.myEntry !== null && view.myEntry === text.trim());
   return (
     <Form
       onSubmit={(e) => {
         e.preventDefault();
         if (!valid) return;
         haptics.tap();
+        sent.start();
         onSubmit(text);
       }}
     >
@@ -79,7 +82,7 @@ function EntryForm({ view, onSubmit, prompt, placeholder }: EntryFormProps) {
         {len}/{max}
       </span>
       {view.myEntry && <p className="text-body text-ok">{P.sent}</p>}
-      <PrimaryAction type="submit" disabled={!valid || text.trim() === view.myEntry}>
+      <PrimaryAction type="submit" busy={sent.busy} done={sent.done} disabled={!sent.done && (!valid || text.trim() === view.myEntry)}>
         {view.myEntry ? P.update : P.submit}
       </PrimaryAction>
     </Form>
