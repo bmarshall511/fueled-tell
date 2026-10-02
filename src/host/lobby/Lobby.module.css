@@ -1,7 +1,8 @@
 .lobby {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: auto 1fr auto auto;
+  /* The roster row may shrink: its list scrolls, so the controls never need to float over it. */
+  grid-template-rows: auto 1fr minmax(0, auto) auto;
   gap: calc(var(--space-6) * var(--stage));
   padding: max(calc(var(--space-7) * var(--stage)), env(safe-area-inset-top))
     max(calc(var(--space-8) * var(--stage)), env(safe-area-inset-right)) max(var(--space-4), env(safe-area-inset-bottom));
@@ -15,15 +16,10 @@
   color: var(--color-text-muted);
 }
 
-/* Start stays reachable when the roster is long (phones, small windows). */
 .controls {
-  position: sticky;
-  bottom: 0;
-  padding: var(--space-3) 0;
-  /* Fades the roster out beneath the bar instead of a hard black strip over the glow. */
-  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--color-bg) 70%, transparent) 50%);
+  padding: var(--space-3) 0 0;
 }
 
 [data-orientation='portrait'].lobby {
-  grid-template-rows: auto auto auto auto;
+  grid-template-rows: auto auto minmax(0, auto) auto;
 }

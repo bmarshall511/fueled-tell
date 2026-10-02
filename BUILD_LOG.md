@@ -465,3 +465,21 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **The glow on a real screen share** (Meet/Zoom compression), and whether calm is calm enough.
 
 **Approximate time:** about 40 min of wall-clock AI time (≈14:05–14:45 CT).
+
+## 2026-10-02 (Fri): Session 1i, lobby bar background
+
+**Goal:** remove the gradient band behind the lobby's bottom bar (reported as looking awful).
+
+**What got done:**
+
+- The lobby's controls are no longer sticky over the roster, so they need no background at all. They sit in the grid in normal flow.
+- The roster row may shrink (`minmax(0, auto)`), and its chip list scrolls inside itself, with padding so focus rings aren't clipped.
+- Start is always on screen at every size, and the page itself never scrolls.
+
+**Verification done by the AI:**
+
+- **Lobby with 22 players** at 1920×1080, 1280×720, 910×520, 390×844 and 740×360: the controls are fully visible, the list scrolls, and the page doesn't.
+- `npm run check` passes.
+- **axe-core:** 0 violations in the lobby states.
+
+**Approximate time:** about 10 min.
