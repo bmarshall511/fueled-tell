@@ -46,3 +46,15 @@
   background: var(--color-text);
   color: var(--color-text-inverse);
 }
+
+/* Wide screens (players on a laptop): more columns, bigger targets. */
+@media (min-width: 960px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+
+  .cell {
+    font-size: var(--font-size-phone-title);
+    min-height: calc(var(--size-tap-target) * 1.6);
+  }
+}

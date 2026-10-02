@@ -168,6 +168,17 @@ label.chamfer:has(input:focus-visible) {
   font-size: var(--font-size-phone-body);
 }
 
+.text-subhead {
+  margin: 0 0 var(--space-3);
+  font-weight: inherit;
+  font-size: var(--font-size-phone-body);
+  color: var(--color-text-muted);
+}
+
+.text-ok {
+  color: var(--color-highlight);
+}
+
 .text-muted {
   color: var(--color-text-muted);
 }

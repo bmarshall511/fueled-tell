@@ -1,0 +1,77 @@
+/* Mini flip on reveal: the story card turns over to the owner's name. */
+.flip {
+  display: grid;
+  perspective: calc(var(--size-play-wide) * 2);
+}
+
+.front,
+.back {
+  grid-area: 1 / 1;
+  backface-visibility: hidden;
+  transition:
+    transform var(--duration-reveal) var(--easing-emphasized),
+    opacity var(--duration-base) linear;
+}
+
+.back {
+  --cut: var(--chamfer-md);
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  background: var(--color-accent);
+  transform: rotateY(180deg);
+  text-align: center;
+}
+
+/* Full strength: a faded label on Nebula fails contrast. */
+.backLabel {
+  font-size: var(--font-size-phone-label);
+  letter-spacing: var(--font-letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+.flipped .front {
+  transform: rotateY(-180deg);
+}
+
+.flipped .back {
+  transform: rotateY(0deg);
+}
+
+.owner {
+  font-size: var(--font-size-phone-display);
+  line-height: var(--font-line-height-tight);
+}
+
+.drum {
+  margin: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+@media (min-width: 960px) {
+  .owner {
+    font-size: var(--font-size-page-display);
+  }
+}
+
+/* Reduced motion: cross-fade instead of turning over. */
+@media (prefers-reduced-motion: reduce) {
+  .front,
+  .back {
+    transform: none !important;
+  }
+
+  .back,
+  .flipped .front {
+    opacity: 0;
+  }
+
+  .flipped .back {
+    opacity: 1;
+  }
+}

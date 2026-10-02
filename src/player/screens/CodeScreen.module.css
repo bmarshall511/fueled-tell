@@ -1,0 +1,21 @@
+/* The room code is the whole screen: big and centered. */
+.code {
+  min-height: calc(var(--size-tap-target) * 1.8);
+  font-size: var(--font-size-phone-display);
+  text-align: center;
+}
+
+.hostLink {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--size-tap-target);
+  font-size: var(--font-size-phone-body);
+  color: var(--color-text-muted);
+}
+
+@media (min-width: 960px) {
+  .hostLink {
+    align-self: flex-start;
+  }
+}

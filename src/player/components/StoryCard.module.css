@@ -1,0 +1,41 @@
+.card {
+  --cut: var(--chamfer-md);
+  margin: 0;
+  padding: var(--space-5);
+  background: var(--color-fueled-perfect-white);
+  color: var(--color-text-inverse);
+}
+
+.compact {
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+}
+
+.label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-phone-label);
+  letter-spacing: var(--font-letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.compact .label {
+  color: var(--color-text-muted);
+}
+
+.text {
+  margin: 0;
+  font-size: var(--font-size-phone-title);
+  line-height: var(--font-line-height-base);
+}
+
+@media (min-width: 960px) {
+  .card {
+    padding: var(--space-7);
+  }
+
+  .text {
+    font-size: calc(var(--font-size-phone-display) * 0.9);
+  }
+}

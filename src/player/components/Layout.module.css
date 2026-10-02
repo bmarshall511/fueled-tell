@@ -1,0 +1,137 @@
+.heading {
+  margin: 0;
+  font-weight: inherit;
+  font-size: var(--font-size-phone-display);
+  line-height: var(--font-line-height-tight);
+  letter-spacing: var(--font-letter-spacing-tight);
+}
+
+.heading:focus {
+  outline: none;
+}
+
+.accent {
+  color: var(--color-accent);
+}
+
+.centered {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  text-align: center;
+}
+
+.split {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.aside {
+  min-width: 0;
+}
+
+.aside:empty {
+  display: none;
+}
+
+.actions {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.cta {
+  margin-top: auto;
+  width: 100%;
+}
+
+.hero {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.heroName {
+  margin: 0;
+  font-size: calc(var(--font-size-page-display) * 1.4);
+  line-height: var(--font-line-height-tight);
+  letter-spacing: var(--font-letter-spacing-tight);
+  color: var(--color-accent);
+}
+
+.pulse {
+  --cut: var(--chamfer-md);
+  width: var(--space-8);
+  height: var(--space-8);
+  background: var(--color-highlight);
+  animation: pulse var(--duration-entrance) var(--easing-standard) infinite alternate;
+}
+
+@keyframes pulse {
+  to {
+    opacity: var(--opacity-dim);
+    transform: scale(0.8);
+  }
+}
+
+.labelled {
+  margin: 0;
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+}
+
+@media (max-width: 959px) {
+  .actionsFirst {
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+  }
+
+  .hero {
+    display: none;
+  }
+}
+
+@media (min-width: 960px) {
+  .heading {
+    font-size: var(--font-size-page-display);
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-8);
+  }
+
+  .aside {
+    position: sticky;
+    top: var(--space-6);
+  }
+
+  .splitCentered {
+    align-items: center;
+    min-height: 60dvh;
+  }
+
+  .cta {
+    margin-top: var(--space-4);
+    width: auto;
+    align-self: flex-start;
+    min-width: calc(var(--size-tap-target) * 6);
+  }
+}

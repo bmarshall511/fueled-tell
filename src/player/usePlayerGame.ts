@@ -1,47 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { JoinError } from '../engine/game';
-import { makeId } from '../engine/random';
 import type { PlayerView } from '../engine/redact';
 import { normalizeRoomCode } from '../engine/roomCode';
 import type { PlayerId } from '../engine/types';
 import { parseHostMsg, type ClientMsg } from '../transport/protocol';
 import { joinRoom, type ClientStatus, type ClientTransport } from '../transport/Transport';
-
-interface Identity {
-  playerId: PlayerId;
-  room: string | null;
-  name: string;
-  /** The room this identity has actually joined; the saved name only auto-rejoins that room. */
-  joinedRoom?: string | null;
-  /** Secret proving this phone owns its seat (sent only to the host). */
-  key?: string;
-}
-
-/** `?seat=2` gives a separate identity per tab (demo / testing several phones in one browser). */
-const storageKey = () => `tell:player${new URLSearchParams(window.location.search).get('seat') ?? ''}`;
-
-const newKey = () => (typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `${makeId('k')}${makeId('k')}`);
-
-function loadIdentity(): Identity {
-  try {
-    const raw = localStorage.getItem(storageKey());
-    if (raw) {
-      const id = JSON.parse(raw) as Identity;
-      return id.key ? id : { ...id, key: newKey() };
-    }
-  } catch {
-    /* fall through */
-  }
-  return { playerId: makeId('u'), room: null, name: '', key: newKey() };
-}
-
-function saveIdentity(id: Identity) {
-  try {
-    localStorage.setItem(storageKey(), JSON.stringify(id));
-  } catch {
-    /* private mode: rejoin after refresh will need the name again */
-  }
-}
+import { loadIdentity, saveIdentity, type Identity } from './identity';
 
 /**
  * Phone side: connect to a room, keep a stable playerId (so a refresh rejoins

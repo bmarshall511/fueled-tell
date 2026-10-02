@@ -1,0 +1,50 @@
+.standings {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--font-size-phone-body);
+}
+
+.me {
+  outline: var(--border-width-base) solid var(--color-highlight);
+  outline-offset: var(--space-1);
+}
+
+.place {
+  min-width: 3em;
+  color: var(--color-text-muted);
+}
+
+.score {
+  margin-left: auto;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.winner {
+  --cut: var(--chamfer-md);
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-fueled-perfect-white);
+  color: var(--color-text-inverse);
+}
+
+.winnerLabel {
+  font-size: var(--font-size-phone-label);
+  letter-spacing: var(--font-letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.winnerName {
+  font-size: var(--font-size-phone-title);
+}

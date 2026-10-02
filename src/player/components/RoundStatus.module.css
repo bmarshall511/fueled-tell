@@ -1,0 +1,22 @@
+.row {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.number {
+  font-size: var(--font-size-phone-display);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.urgent .number {
+  color: var(--color-fueled-nova);
+}
+
+@media (min-width: 960px) {
+  .number {
+    font-size: var(--font-size-page-display);
+  }
+}
