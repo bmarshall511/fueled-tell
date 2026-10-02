@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tell setup mockup</title>
+<style>
+  /* Mockup only: values map to existing tokens if approved. */
+  @font-face { font-family: 'Aeonik'; src: url('../../assets/fonts/Aeonik-Medium.woff2') format('woff2'); font-weight: 500; }
+  :root {
+    --black: #000; --white: #F5F5F1; --nebula: #6652FF; --solar: #FF52B7; --cryo: #00A6FF; --nova: #FBBC09; --lilac: #B9AEFF; --deep: #4A3BD6;
+    --glass: rgba(23, 23, 28, 0.62); --glass-strong: rgba(30, 30, 38, 0.82); --sunken: rgba(255,255,255,0.05);
+    --line: rgba(255,255,255,0.12); --line-strong: rgba(255,255,255,0.24); --muted: rgba(245,245,241,0.62);
+    --r-pill: 999px; --r-card: 32px; --r-panel: 24px; --r-field: 18px; --r-tile: 16px;
+    --grad-text: linear-gradient(90deg, var(--lilac), var(--solar), var(--lilac), var(--solar));
+    --grad-glow: linear-gradient(135deg, var(--solar), var(--nebula) 35%, var(--deep) 50%, var(--nebula) 65%, var(--solar));
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #050507; color: var(--white); font-family: Aeonik, system-ui, sans-serif; font-weight: 500; line-height: 1.35; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3, p { margin: 0; font-weight: inherit; }
+  .doc { max-width: 1360px; margin: 0 auto; padding: 48px 24px 96px; display: grid; gap: 64px; }
+  .intro h1 { font-size: clamp(34px, 5vw, 52px); letter-spacing: -0.02em; }
+  .intro p, .note { color: var(--muted); max-width: 72ch; font-size: 17px; }
+  .intro p { margin-top: 12px; }
+  .kicker { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lilac); }
+  section.block { display: grid; gap: 18px; }
+  section.block > header { display: grid; gap: 6px; }
+  section.block > header h2 { font-size: 26px; }
+  .row2 { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; }
+
+  /* frames: real 1440x900 layouts scaled to fit */
+  .frame { width: 100%; border-radius: 22px; overflow: hidden; border: 1px solid var(--line); background: #000; }
+  .frame .scale { width: 1440px; transform-origin: 0 0; }
+  .phoneframe { width: 330px; flex: none; border-radius: 46px; border: 8px solid #1b1b20; overflow: hidden; box-shadow: 0 30px 60px -30px #000; }
+  .phoneframe .scale { width: 390px; transform-origin: 0 0; }
+  .vp { position: relative; overflow: hidden; isolation: isolate; }
+
+  /* glow */
+  .aurora { position: absolute; inset: 0; z-index: -1; overflow: hidden; background: #000; }
+  .aurora i { position: absolute; border-radius: 50%; filter: blur(80px); opacity: .85; animation: 14s ease-in-out infinite alternate; }
+  .aurora i:nth-child(1) { width: 70%; aspect-ratio: 1; left: -15%; bottom: -55%; background: radial-gradient(circle at 40% 40%, var(--solar), transparent 62%); animation-name: d1; }
+  .aurora i:nth-child(2) { width: 80%; aspect-ratio: 1; right: -25%; bottom: -65%; background: radial-gradient(circle at 50% 40%, var(--nebula), transparent 60%); animation-name: d2; animation-duration: 17s; }
+  .aurora i:nth-child(3) { width: 55%; aspect-ratio: 1; left: 30%; bottom: -50%; background: radial-gradient(circle, var(--lilac), transparent 60%); opacity: .45; animation-name: d3; animation-duration: 21s; }
+  .aurora::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,.6), transparent 50%); }
+  @keyframes d1 { to { transform: translate(28%, -16%) scale(1.25); } }
+  @keyframes d2 { to { transform: translate(-26%, -12%) scale(.85); } }
+  @keyframes d3 { to { transform: translate(-32%, -20%) scale(1.35); } }
+  .glow-text { background: var(--grad-text); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shimmer 6s ease-in-out infinite alternate; }
+  .glow-fill { background: var(--grad-glow); background-size: 200% 200%; animation: shimmer 9s ease-in-out infinite alternate; }
+  @keyframes shimmer { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+  @media (prefers-reduced-motion: reduce) { .aurora i, .glow-text, .glow-fill { animation: none; } }
+
+  /* kit */
+  .glass { background: var(--glass); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); box-shadow: inset 0 0 0 1px var(--line); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 22px; border: 0; border-radius: var(--r-pill); font: inherit; font-size: 16px; color: var(--white); white-space: nowrap; cursor: pointer; }
+  .btn.glass:hover { background: var(--glass-strong); }
+  .btn.primary { background: var(--white); color: #000; }
+  .btn.xl { min-height: 64px; font-size: 20px; padding: 0 32px; width: 100%; }
+  .btn.sm { min-height: 38px; padding: 0 16px; font-size: 14px; }
+  .btn.ghost { background: transparent; color: var(--muted); }
+  .btn kbd { font: inherit; font-size: 12px; padding: 2px 8px; border-radius: 99px; background: #000; color: var(--white); }
+  .iconbtn { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; color: var(--muted); }
+  svg.i { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+  .field { width: 100%; min-height: 52px; padding: 0 18px; border: 0; border-radius: var(--r-field); background: var(--sunken); box-shadow: inset 0 0 0 1px var(--line); color: var(--white); font: inherit; font-size: 16px; }
+  .field::placeholder { color: rgba(245,245,241,.4); }
+  .field.focus { box-shadow: inset 0 0 0 1px var(--nebula), 0 0 0 4px rgba(102,82,255,.3); }
+  textarea.field { padding: 14px 18px; resize: none; min-height: 52px; line-height: 1.4; }
+  .label { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .muted { color: var(--muted); }
+  .seg { display: inline-flex; padding: 4px; gap: 4px; border-radius: var(--r-pill); }
+  .seg span { padding: 9px 16px; border-radius: var(--r-pill); font-size: 14px; color: var(--muted); white-space: nowrap; }
+  .seg span.on { background: var(--white); color: #000; }
+  .switch { width: 52px; height: 30px; border-radius: 99px; background: rgba(255,255,255,.12); position: relative; flex: none; }
+  .switch::after { content: ''; position: absolute; top: 4px; left: 4px; width: 22px; height: 22px; border-radius: 50%; background: var(--muted); }
+  .switch.on { background: var(--nebula); } .switch.on::after { left: 26px; background: var(--white); }
+  .avatar { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-size: 17px; color: #000; flex: none; }
+
+  /* app shell */
+  .app { min-height: 900px; display: grid; grid-template-rows: auto 1fr; }
+  .topbar { display: flex; align-items: center; gap: 20px; padding: 20px 64px; }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand img { height: 24px; display: block; }
+  .rule { width: 1px; height: 22px; background: var(--line-strong); }
+  .crumb { font-size: 16px; }
+  .privacy { margin-left: auto; display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px 8px 12px; border-radius: 99px; font-size: 14px; color: var(--white); }
+  .privacy svg { color: var(--nova); }
+  .studio { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 32px; padding: 8px 64px 40px; align-items: start; }
+  .main { display: grid; gap: 20px; }
+  .hello h1 { font-size: 56px; letter-spacing: -0.02em; line-height: 1.02; }
+  .hello p { margin-top: 10px; font-size: 19px; color: var(--muted); max-width: 46ch; }
+
+  .composer { border-radius: var(--r-card); padding: 14px; display: grid; grid-template-columns: 220px minmax(0, 1fr) auto; gap: 10px; align-items: start; }
+  .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .toolbar .count { margin-left: auto; font-size: 15px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+  .pcard { border-radius: var(--r-panel); padding: 18px; display: grid; gap: 12px; position: relative; }
+  .pcard .head { display: flex; align-items: center; gap: 12px; }
+  .pcard .name { font-size: 18px; }
+  .pcard .meta { font-size: 13px; color: var(--muted); }
+  .pcard .story { font-size: 15px; line-height: 1.45; color: rgba(245,245,241,.88); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .pcard .x { position: absolute; top: 14px; right: 14px; }
+  .pcard.bad { box-shadow: inset 0 0 0 1px var(--nova); }
+  .issue { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--nova); }
+  .tag { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; padding: 4px 10px; border-radius: 99px; background: rgba(255,255,255,.08); color: var(--muted); }
+  .tag.live { background: rgba(0,166,255,.16); color: var(--cryo); }
+
+  .panel { position: sticky; top: 20px; border-radius: var(--r-card); padding: 22px; display: grid; gap: 22px; }
+  .preview { border-radius: 20px; overflow: hidden; aspect-ratio: 16/9; position: relative; isolation: isolate; box-shadow: inset 0 0 0 1px var(--line); }
+  .preview .mini { position: absolute; inset: 0; padding: 12px 14px; display: grid; grid-template-rows: auto 1fr auto; }
+  .mini .card { justify-self: center; align-self: center; width: 70%; border-radius: 12px; background: var(--white); color: #000; padding: 10px 12px; font-size: 10px; line-height: 1.3; box-shadow: 0 12px 30px -10px rgba(102,82,255,.6); }
+  .mini .card b { display: block; color: var(--nebula); font-weight: inherit; font-size: 7px; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 4px; }
+  .mini .top { display: flex; justify-content: space-between; font-size: 8px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+  .mini .q { font-size: 13px; }
+  .setting { display: grid; gap: 10px; }
+  .setting .line { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .meter { display: grid; gap: 10px; }
+  .meter .bar { height: 8px; border-radius: 99px; background: rgba(255,255,255,.1); overflow: hidden; }
+  .meter .bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--cryo), var(--nebula)); }
+  .meter .line { display: flex; justify-content: space-between; font-size: 15px; }
+  .divider { height: 1px; background: var(--line); }
+
+  /* empty state */
+  .choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .choice { border-radius: var(--r-card); padding: 26px; display: grid; gap: 14px; align-content: start; min-height: 230px; cursor: pointer; transition: transform .2s; }
+  .choice:hover { transform: translateY(-3px); }
+  .choice .ico { width: 54px; height: 54px; border-radius: 18px; display: grid; place-items: center; }
+  .choice .ico svg { width: 26px; height: 26px; }
+  .choice h3 { font-size: 22px; }
+  .choice p { color: var(--muted); font-size: 15px; }
+  .choice.featured { background: var(--white); color: #000; box-shadow: none; }
+  .choice.featured p { color: rgba(0,0,0,.6); }
+  .choice.featured .ico { background: #000; color: var(--white); }
+  .choice .ico.g { background: rgba(255,255,255,.08); }
+  .sample { display: inline-flex; align-items: center; gap: 10px; color: var(--muted); font-size: 15px; }
+  .sample a { color: var(--white); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--line-strong); }
+
+  /* sheet */
+  .scrim { position: absolute; inset: 0; background: rgba(0,0,0,.55); backdrop-filter: blur(6px); }
+  .sheet { position: absolute; left: 50%; top: 80px; transform: translateX(-50%); width: 980px; border-radius: var(--r-card); padding: 26px; display: grid; gap: 18px; background: var(--glass-strong); }
+  .sheet .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .prow { display: flex; gap: 12px; align-items: flex-start; padding: 12px; border-radius: 16px; background: rgba(255,255,255,.05); }
+  .prow b { font-weight: inherit; min-width: 120px; }
+
+  /* phone */
+  .papp { min-height: 844px; display: flex; flex-direction: column; }
+  .papp .topbar { padding: 16px 20px; gap: 12px; }
+  .papp .content { padding: 4px 20px 140px; display: grid; gap: 16px; }
+  .papp .hello h1 { font-size: 36px; }
+  .papp .hello p { font-size: 16px; }
+  .dock { position: absolute; left: 12px; right: 12px; bottom: 12px; border-radius: 28px; padding: 12px; display: grid; gap: 10px; }
+  .dock .line { display: flex; justify-content: space-between; font-size: 14px; padding: 0 6px; }
+  figcaption { color: var(--muted); font-size: 14px; }
+  figcaption b { color: var(--white); font-weight: inherit; }
+  figure { margin: 0; display: grid; gap: 12px; }
+  .points { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; }
+  .points .glass { border-radius: 24px; padding: 18px 20px; display: grid; gap: 6px; }
+  .points h3 { font-size: 16px; } .points p { color: var(--muted); font-size: 15px; }
+
+  /* ---------- Cursor-reactive layer (pointer devices only, off with reduced motion) ---------- */
+  .aurora i { translate: calc(var(--px, 0) * -40px) calc(var(--py, 0) * -40px); transition: translate .6s cubic-bezier(.2,.8,.2,1); }
+  .aurora .follow { position: absolute; width: 38%; aspect-ratio: 1; left: 0; top: 0; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, rgba(255, 82, 183, 0.55), rgba(102, 82, 255, 0.35) 40%, transparent 65%);
+    filter: blur(50px); opacity: 0; transform: translate(calc(var(--fx, 50%) - 50%), calc(var(--fy, 50%) - 50%)); transition: opacity .6s; }
+  .vp.live .aurora .follow { opacity: 1; }
+  .glass, .btn.primary, .choice.featured { --mx: -999px; --my: -999px; }
+  /* Pseudo-element spotlights need a positioned box; the sheet and dock are already absolute. */
+  .glass:not(.sheet, .dock), .btn.primary, .choice.featured { position: relative; }
+  .glass::before, .choice.featured::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: radial-gradient(260px circle at var(--mx) var(--my), rgba(255, 255, 255, 0.09), transparent 60%); }
+  .glass::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; padding: 1px;
+    background: radial-gradient(220px circle at var(--mx) var(--my), rgba(185, 174, 255, 0.9), transparent 60%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+  .choice.featured::before { background: radial-gradient(260px circle at var(--mx) var(--my), rgba(102, 82, 255, 0.18), transparent 60%); }
+  .btn.primary { transition: translate .25s cubic-bezier(.2,.8,.2,1), box-shadow .2s; translate: var(--tx, 0) var(--ty, 0); }
+  .btn.primary:hover { box-shadow: 0 0 0 2px #000, 0 0 0 4px var(--nebula), 0 10px 40px -8px rgba(102, 82, 255, 0.7); }
+  @media (prefers-reduced-motion: reduce), (hover: none) {
+    .aurora .follow, .glass::before, .glass::after, .choice.featured::before { display: none; }
+    .aurora i, .btn.primary { translate: none; }
+  }
+  .try { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 99px; font-size: 15px; }
+</style>
+</head>
+<body>
+<main class="doc">
+  <section class="intro">
+    <p class="kicker">Mockup · not built yet</p>
+    <h1>Host setup, <span class="glow-text">reimagined as an app</span></h1>
+    <p style="margin-top:18px"><span class="try glass">✦ Move your cursor over any screen below: the glow follows you, cards catch the light, and the main button leans in.</span></p>
+    <p>Setup becomes a studio instead of a long form. Who's playing is the main stage. Everything else (settings, readiness, a live preview of the shared screen, and the one big action) sits in a sticky side panel. On a phone the same pieces stack, and the action stays pinned at the bottom.</p>
+  </section>
+
+  <section class="block">
+    <header><p class="kicker">What changes</p><h2>From form to studio</h2></header>
+    <div class="points">
+      <div class="glass"><h3>People, not rows</h3><p>Each person is a card with their color avatar and a story preview. Problems show on the card itself, and you edit in place.</p></div>
+      <div class="glass"><h3>A quick-add composer</h3><p>Name, story, Enter. Paste a whole list into either field and it opens the paste sheet automatically.</p></div>
+      <div class="glass"><h3>A live preview</h3><p>A mini shared screen shows what everyone will see, so the settings feel concrete.</p></div>
+      <div class="glass"><h3>One action, always visible</h3><p>A readiness meter ("6 of 8 ready") and a big "Open lobby" pill. Nothing to scroll down to.</p></div>
+      <div class="glass"><h3>A calmer privacy note</h3><p>A small pill in the top bar ("Private · don't share your screen yet") replaces the long yellow banner.</p></div>
+      <div class="glass"><h3>Reacts to your cursor</h3><p>The glow trails the pointer, the blobs shift in parallax, glass cards and buttons light up under the cursor, and the main action leans toward it. Off on touch devices and with reduced motion.</p></div>
+      <div class="glass"><h3>A friendlier empty state</h3><p>Three big choices to start (Paste a list, Add one by one, Players add their own), plus "Try sample stories".</p></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <header><p class="kicker">Desktop</p><h2>Empty state</h2></header>
+    <figure>
+      <div class="frame" data-w="1440"><div class="scale"><div class="vp app">
+        <div class="aurora"><i></i><i></i><i></i><span class="follow"></span></div>
+        <div class="topbar">
+          <span class="brand"><img src="../../assets/brand/fueled-lockup-white.svg" alt="Fueled"/></span>
+          <span class="rule"></span><span class="crumb">New game</span>
+          <span class="privacy glass"><svg class="i" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.1A9.8 9.8 0 0 1 12 5c5 0 9 5 9 7a9.6 9.6 0 0 1-2.4 3.4M6.6 6.6C4.4 8 3 10.4 3 12c0 2 4 7 9 7a9.6 9.6 0 0 0 4.3-1"/></svg>Private · don't share your screen yet</span>
+        </div>
+        <div class="studio">
+          <div class="main">
+            <div class="hello"><h1>Who's <span class="glow-text">playing?</span></h1><p>Add each person and their story. You can also let people type their own when they join.</p></div>
+            <div class="choices">
+              <div class="choice featured"><span class="ico"><svg class="i" viewBox="0 0 24 24"><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1ZM8 6H6a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-2M9 12h6M9 16h4"/></svg></span><h3>Paste a list</h3><p>From Slack, a doc or a spreadsheet. You'll see every row before anything's added.</p></div>
+              <div class="choice glass"><span class="ico g"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span><h3>Add one by one</h3><p>Type a name and their story. Press Enter to add the next.</p></div>
+              <div class="choice glass"><span class="ico g"><svg class="i" viewBox="0 0 24 24"><path d="M7 4h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1ZM11 17h2"/></svg></span><h3>Players add their own</h3><p>Everyone types their story when they join the lobby.</p></div>
+            </div>
+            <p class="sample">Just exploring? <a href="#">Try it with sample stories</a></p>
+          </div>
+          <aside class="panel glass">
+            <div class="preview glow-preview"><div class="aurora"><i></i><i></i><i></i><span class="follow"></span></div><div class="mini"><div class="top"><span>Story 1 of 8</span><span>45</span></div><div class="card"><b>Story 1</b>Your stories will appear here, one at a time, on the shared screen.</div><div class="q glow-text">Whose story is it?</div></div></div>
+            <div class="setting"><div class="line"><span class="label">Guess timer</span></div><div class="seg glass"><span>20s</span><span>30s</span><span class="on">45s</span><span>60s</span><span>90s</span></div></div>
+            <div class="setting"><div class="line"><span class="label">Scoring</span></div><div class="seg glass"><span class="on">Points &amp; places</span><span>Just for fun</span></div></div>
+            <div class="setting"><div class="line"><span><span style="display:block">Host-only mode</span><span class="muted" style="font-size:13px">Nobody joins; you tick who got it</span></span><span class="switch"></span></div></div>
+            <div class="divider"></div>
+            <div class="meter"><div class="line"><span>0 ready</span><span class="muted">3 needed</span></div><div class="bar"><span style="width:0%"></span></div></div>
+            <button class="btn primary xl" style="opacity:.35">Open lobby</button>
+            <button class="btn ghost sm">Load a saved game</button>
+          </aside>
+        </div>
+      </div></div></div>
+      <figcaption><b>Empty:</b> three clear ways to start instead of an empty table. The preview and settings are already in reach.</figcaption>
+    </figure>
+  </section>
+
+  <section class="block">
+    <header><p class="kicker">Desktop</p><h2>Adding people</h2></header>
+    <figure>
+      <div class="frame" data-w="1440"><div class="scale"><div class="vp app">
+        <div class="aurora"><i></i><i></i><i></i><span class="follow"></span></div>
+        <div class="topbar">
+          <span class="brand"><img src="../../assets/brand/fueled-lockup-white.svg" alt="Fueled"/></span>
+          <span class="rule"></span><span class="crumb">New game</span>
+          <span class="privacy glass"><svg class="i" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.1A9.8 9.8 0 0 1 12 5c5 0 9 5 9 7a9.6 9.6 0 0 1-2.4 3.4M6.6 6.6C4.4 8 3 10.4 3 12c0 2 4 7 9 7a9.6 9.6 0 0 0 4.3-1"/></svg>Private · don't share your screen yet</span>
+        </div>
+        <div class="studio">
+          <div class="main">
+            <div class="hello"><h1>Who's <span class="glow-text">playing?</span></h1></div>
+            <div class="composer glass">
+              <input class="field" value="Ravi Thistle" aria-label="Name"/>
+              <textarea class="field focus" rows="1" aria-label="Story">I was an extra in a cereal commercial. My only line was 'Crunchy!'</textarea>
+              <button class="btn primary">Add <kbd>Enter</kbd></button>
+            </div>
+            <div class="toolbar">
+              <button class="btn glass sm"><svg class="i" viewBox="0 0 24 24"><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1ZM8 6H6a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-2"/></svg>Paste a list</button>
+              <button class="btn glass sm">Players add their own</button>
+              <span class="count"><b style="font-weight:inherit">6</b> <span class="muted">people · </span><span style="color:var(--nova)">1 needs a fix</span></span>
+            </div>
+            <div class="cards">
+              <div class="pcard glass"><div class="head"><span class="avatar" style="background:var(--cryo)">M</span><span><div class="name">Marisol Fenn</div><div class="meta">119 / 280</div></span></div><p class="story">I once got locked inside a bakery after closing. I didn't call anyone for an hour because I was busy eating croissants.</p><span class="iconbtn x"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></span></div>
+              <div class="pcard glass"><div class="head"><span class="avatar" style="background:var(--solar)">J</span><span><div class="name">Juniper Vale</div><div class="meta">104 / 280</div></span></div><p class="story">I accidentally joined a stranger's family reunion and stayed for the three-legged race. We came second.</p><span class="iconbtn x"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></span></div>
+              <div class="pcard glass bad"><div class="head"><span class="avatar" style="background:var(--nova)">G</span><span><div class="name">Gus Moreau</div><div class="meta" style="color:var(--nova)">312 / 280</div></span></div><p class="story">I have a certificate saying I'm the regional champion of competitive napping. There were four entrants and I was the only one who fell asleep, which the judges said was…</p><span class="issue"><svg class="i" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 8v5M12 16.5v.01M10.3 3.9 2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>Too long: trim 32 characters</span><span class="iconbtn x"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></span></div>
+              <div class="pcard glass"><div class="head"><span class="avatar" style="background:var(--nebula)">O</span><span><div class="name">Otto Brisket</div><div class="meta">97 / 280</div></span></div><p class="story">I named my first car Gerald. When Gerald broke down, the tow truck driver was also called Gerald.</p><span class="iconbtn x"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></span></div>
+              <div class="pcard glass"><div class="head"><span class="avatar" style="background:var(--cryo)">P</span><span><div class="name">Pip Calloway</div><div class="meta">106 / 280</div></span></div><p class="story">I taught a parrot to say 'Is that a new haircut?' It now lives with my aunt and compliments every visitor.</p><span class="iconbtn x"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></span></div>
+              <div class="pcard glass"><div class="head"><span class="avatar" style="background:var(--solar)">B</span><span><div class="name">Bea Lindqvist</div><div class="meta">119 / 280</div></span></div><p class="story">I once returned a library book 11 years late. The librarian waived the fine because the book was about procrastination.</p><span class="iconbtn x"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></span></div>
+            </div>
+          </div>
+          <aside class="panel glass">
+            <div class="preview"><div class="aurora"><i></i><i></i><i></i><span class="follow"></span></div><div class="mini"><div class="top"><span>Story 1 of 6</span><span>45</span></div><div class="card"><b>Story 1</b>I once got locked inside a bakery after closing. I didn't call anyone for an hour…</div><div class="q glow-text">Whose story is it?</div></div></div>
+            <div class="setting"><span class="label">Guess timer</span><div class="seg glass"><span>20s</span><span>30s</span><span class="on">45s</span><span>60s</span><span>90s</span></div></div>
+            <div class="setting"><span class="label">Scoring</span><div class="seg glass"><span class="on">Points &amp; places</span><span>Just for fun</span></div></div>
+            <div class="setting"><div class="line"><span><span style="display:block">Host-only mode</span><span class="muted" style="font-size:13px">Nobody joins; you tick who got it</span></span><span class="switch"></span></div></div>
+            <div class="divider"></div>
+            <div class="meter"><div class="line"><span>5 of 6 ready</span><span style="color:var(--nova)">Fix Gus's story</span></div><div class="bar"><span style="width:83%"></span></div></div>
+            <button class="btn primary xl">Open lobby</button>
+            <button class="btn ghost sm">Load a saved game</button>
+          </aside>
+        </div>
+      </div></div></div>
+      <figcaption><b>Adding people:</b> the composer stays on top, and cards wrap in a responsive grid. A problem shows on its card with the exact fix, and the meter points you to it.</figcaption>
+    </figure>
+  </section>
+
+  <section class="block">
+    <header><p class="kicker">Desktop</p><h2>Paste a list</h2></header>
+    <figure>
+      <div class="frame" data-w="1440"><div class="scale"><div class="vp app">
+        <div class="aurora"><i></i><i></i><i></i><span class="follow"></span></div>
+        <div class="topbar"><span class="brand"><img src="../../assets/brand/fueled-lockup-white.svg" alt="Fueled"/></span><span class="rule"></span><span class="crumb">New game</span></div>
+        <div class="studio"><div class="main"><div class="hello"><h1>Who's <span class="glow-text">playing?</span></h1></div></div></div>
+        <div class="scrim"></div>
+        <div class="sheet glass">
+          <div style="display:flex; align-items:center; justify-content:space-between"><h2 style="font-size:26px">Paste a list</h2><span class="iconbtn"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></span></div>
+          <p class="muted">One person per line: "Name | story", "Name: story", "Name - story", two spreadsheet columns, or a name with the story on the next line.</p>
+          <div class="cols">
+            <textarea class="field focus" style="min-height:260px">Ada Lovelace: I once taught a goose to code.
+Bo | Fun fact: I ate a bee by accident.
+Cy
+I can whistle in two keys at once.</textarea>
+            <div style="display:grid; gap:10px; align-content:start"><span class="label">Preview · 3 people</span>
+              <div class="prow"><span class="avatar" style="width:30px;height:30px;font-size:13px;background:var(--cryo)">A</span><b>Ada Lovelace</b><span class="muted">I once taught a goose to code.</span></div>
+              <div class="prow"><span class="avatar" style="width:30px;height:30px;font-size:13px;background:var(--solar)">B</span><b>Bo</b><span class="muted">Fun fact: I ate a bee by accident.</span></div>
+              <div class="prow"><span class="avatar" style="width:30px;height:30px;font-size:13px;background:var(--nova)">C</span><b>Cy</b><span class="muted">I can whistle in two keys at once.</span></div>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:flex-end; gap:10px"><button class="btn glass">Replace all</button><button class="btn primary">Add 3 people</button></div>
+        </div>
+      </div></div></div>
+      <figcaption><b>Paste:</b> a focused sheet over the studio, with a live preview next to the text.</figcaption>
+    </figure>
+  </section>
+
+  <section class="block">
+    <header><p class="kicker">Phone</p><h2>The same studio, stacked</h2><p class="note">The action is pinned to the bottom with the readiness line. Settings fold into a "Game settings" card under the people.</p></header>
+    <div class="row2">
+      <figure><div class="phoneframe" data-w="390"><div class="scale"><div class="vp papp">
+        <div class="aurora"><i></i><i></i><i></i><span class="follow"></span></div>
+        <div class="topbar"><img src="../../assets/brand/fueled-lockup-white.svg" alt="Fueled" style="height:20px"/><span class="privacy glass" style="font-size:12px;padding:6px 12px"><svg class="i" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.1A9.8 9.8 0 0 1 12 5c5 0 9 5 9 7a9.6 9.6 0 0 1-2.4 3.4M6.6 6.6C4.4 8 3 10.4 3 12c0 2 4 7 9 7a9.6 9.6 0 0 0 4.3-1"/></svg>Private</span></div>
+        <div class="content">
+          <div class="hello"><h1>Who's <span class="glow-text">playing?</span></h1><p>Add each person and their story.</p></div>
+          <div class="choice featured" style="min-height:0;padding:20px"><span class="ico"><svg class="i" viewBox="0 0 24 24"><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1ZM8 6H6a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-2M9 12h6M9 16h4"/></svg></span><h3>Paste a list</h3><p>From Slack, a doc or a spreadsheet.</p></div>
+          <div class="choice glass" style="min-height:0;padding:20px"><h3>Add one by one</h3><p>A name and their story.</p></div>
+          <div class="choice glass" style="min-height:0;padding:20px"><h3>Players add their own</h3><p>They type it when they join.</p></div>
+        </div>
+        <div class="dock glass"><div class="line"><span>0 ready</span><span class="muted">3 needed</span></div><button class="btn primary xl" style="opacity:.35">Open lobby</button></div>
+      </div></div></div><figcaption><b>Empty</b></figcaption></figure>
+
+      <figure><div class="phoneframe" data-w="390"><div class="scale"><div class="vp papp">
+        <div class="aurora"><i></i><i></i><i></i><span class="follow"></span></div>
+        <div class="topbar"><img src="../../assets/brand/fueled-lockup-white.svg" alt="Fueled" style="height:20px"/><span class="privacy glass" style="font-size:12px;padding:6px 12px">Private</span></div>
+        <div class="content">
+          <div class="hello"><h1>Who's <span class="glow-text">playing?</span></h1></div>
+          <div class="composer glass" style="grid-template-columns:1fr; border-radius:24px"><input class="field" placeholder="Name"/><textarea class="field" rows="2" placeholder="Their story"></textarea><button class="btn primary">Add person</button></div>
+          <div class="pcard glass"><div class="head"><span class="avatar" style="background:var(--cryo)">M</span><span><div class="name">Marisol Fenn</div><div class="meta">119 / 280</div></span></div><p class="story">I once got locked inside a bakery after closing…</p></div>
+          <div class="pcard glass bad"><div class="head"><span class="avatar" style="background:var(--nova)">G</span><span><div class="name">Gus Moreau</div><div class="meta" style="color:var(--nova)">312 / 280</div></span></div><span class="issue">Too long: trim 32 characters</span></div>
+        </div>
+        <div class="dock glass"><div class="line"><span>5 of 6 ready</span><span style="color:var(--nova)">1 to fix</span></div><button class="btn primary xl">Open lobby</button></div>
+      </div></div></div><figcaption><b>Adding people</b></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="intro">
+    <p class="kicker">If approved</p>
+    <p>Setup is rebuilt around these pieces: <code>SetupShell</code> (top bar and privacy pill), <code>StartChoices</code> (empty state), <code>Composer</code>, <code>PersonCard</code> (inline edit and issues), <code>SetupPanel</code> (preview, settings, meter, action) and a <code>PasteSheet</code> dialog. The parsing, validation, drafts and editing an open lobby all stay as they are. Then the same accessibility, overflow and responsive checks run at every size.</p>
+  </section>
+</main>
+<script>
+  // Fit the fixed-size frames to their column (mockup only).
+  const fit = () => document.querySelectorAll('[data-w]').forEach((f) => {
+    const inner = f.querySelector('.scale');
+    const s = f.clientWidth / Number(f.dataset.w);
+    inner.style.transform = `scale(${s})`;
+    f.style.height = inner.offsetHeight * s + 'px';
+  });
+  addEventListener('resize', fit); addEventListener('load', fit); fit();
+
+  // ---------- Cursor interactions (mockup prototype of a shared `usePointerGlow` hook) ----------
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (fine) {
+    document.querySelectorAll('.vp').forEach((vp) => {
+      const aurora = vp.querySelector(':scope > .aurora');
+      let tx = 0.5, ty = 0.5, x = 0.5, y = 0.5, raf = 0;
+      // Eased follow: the glow drifts toward the pointer instead of snapping to it.
+      const tick = () => {
+        x += (tx - x) * 0.08; y += (ty - y) * 0.08;
+        if (aurora) {
+          aurora.style.setProperty('--fx', x * 100 + '%'); aurora.style.setProperty('--fy', y * 100 + '%');
+          aurora.style.setProperty('--px', (x - 0.5).toFixed(3)); aurora.style.setProperty('--py', (y - 0.5).toFixed(3));
+        }
+        raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.001 ? requestAnimationFrame(tick) : 0;
+      };
+      vp.addEventListener('pointermove', (e) => {
+        const r = vp.getBoundingClientRect();
+        tx = (e.clientX - r.left) / r.width; ty = (e.clientY - r.top) / r.height;
+        vp.classList.add('live');
+        if (!raf) raf = requestAnimationFrame(tick);
+        // Spotlight: each glass surface gets the pointer position in its own (unscaled) coordinates.
+        vp.querySelectorAll('.glass, .choice.featured').forEach((el) => {
+          const b = el.getBoundingClientRect(); const k = el.offsetWidth / b.width || 1;
+          el.style.setProperty('--mx', (e.clientX - b.left) * k + 'px'); el.style.setProperty('--my', (e.clientY - b.top) * k + 'px');
+        });
+        // Magnetic primary buttons: lean up to 6px toward a nearby pointer.
+        vp.querySelectorAll('.btn.primary').forEach((btn) => {
+          const b = btn.getBoundingClientRect(); const cx = b.left + b.width / 2, cy = b.top + b.height / 2;
+          const dx = e.clientX - cx, dy = e.clientY - cy, d = Math.hypot(dx, dy), reach = b.width;
+          const pull = d < reach ? (1 - d / reach) * 6 : 0;
+          btn.style.setProperty('--tx', (d ? (dx / d) * pull : 0) + 'px'); btn.style.setProperty('--ty', (d ? (dy / d) * pull : 0) + 'px');
+        });
+      });
+      vp.addEventListener('pointerleave', () => { vp.classList.remove('live'); vp.querySelectorAll('.btn.primary').forEach((b) => { b.style.setProperty('--tx', '0px'); b.style.setProperty('--ty', '0px'); }); });
+    });
+  }
+</script>
+</body>
+</html>
