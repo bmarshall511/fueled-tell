@@ -93,7 +93,8 @@ export const tokens = {
     "itemPadding": 80,
     "chip": 72,
     "builtbyHost": 40,
-    "builtbyPage": 28
+    "builtbyPage": 28,
+    "playWide": 880
   },
   "chamfer": {
     "sm": 6,

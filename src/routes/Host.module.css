@@ -9,8 +9,9 @@
 .bottom,
 .controls {
   position: absolute;
-  left: 0;
-  right: 0;
+  /* Centered on the reference stage, so ultrawide screens don't stretch the HUD to the edges. */
+  left: max(0px, calc((100% - var(--stage-w)) / 2));
+  right: max(0px, calc((100% - var(--stage-w)) / 2));
   padding: 0 max(calc(var(--space-8) * var(--stage)), env(safe-area-inset-left));
   pointer-events: none;
   z-index: 3;

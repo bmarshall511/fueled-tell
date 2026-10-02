@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useMemo, useReducer } from 'react';
 import { createRound, currentEntryId, roundReducer, type RoundAction } from '../engine/round';
 import type { Entry, GamePhase, Guess, RoundState } from '../engine/types';
-import { MOCK_ENTRIES, MOCK_PACK, MOCK_PLAYERS } from './data';
+import { computeStandings } from '../engine/scoring';
+import { MOCK_ENTRIES, MOCK_ME_ID, MOCK_PACK, MOCK_PLAYERS } from './data';
+import { isDemo, useDemoChannel } from './demoSync';
 import { seeded, shuffle } from './random';
 
 /** Mock pacing (behavior, not design). `?timer=20` overrides the pack timer. */
@@ -22,7 +24,9 @@ function timerMs(): number {
 function simulateGuesses(entry: Entry, index: number, durationMs: number): { guess: Guess; at: number }[] {
   const rand = seeded(index + 11);
   const [from, to] = MOCK.guessWindow;
-  return MOCK_PLAYERS.filter((p) => p.id !== entry.ownerId).map((p) => {
+  // In the /demo walkthrough the phone mockup guesses for MOCK_ME_ID itself.
+  const simulated = MOCK_PLAYERS.filter((p) => p.id !== entry.ownerId && !(isDemo() && p.id === MOCK_ME_ID));
+  return simulated.map((p) => {
     const correct = rand() < MOCK.correctChance;
     const decoys = MOCK_PLAYERS.filter((d) => d.id !== p.id && d.id !== entry.ownerId);
     const ownerId = correct ? entry.ownerId : (decoys[Math.floor(rand() * decoys.length)]?.id ?? entry.ownerId);
@@ -109,6 +113,33 @@ export function useMockRound() {
         return undefined;
     }
   }, [state.phase, durationMs]);
+
+  // Demo sync: tell the phone what's happening; accept its guess.
+  const send = useDemoChannel((msg) => {
+    if (msg.type === 'guess') {
+      dispatch({ type: 'guess', guess: { playerId: MOCK_ME_ID, entryId: entry.id, ownerId: msg.ownerId } });
+    }
+    if (msg.type === 'hello') broadcast();
+  });
+  const broadcast = () => {
+    const mine = entry.ownerId === MOCK_ME_ID;
+    const myGuess = state.guesses.find((g) => g.playerId === MOCK_ME_ID);
+    send({
+      type: 'state',
+      phase: state.phase,
+      index: state.index,
+      total: state.order.length,
+      text: entry.text,
+      mine,
+      result: state.phase === 'reveal' ? { ownerId: entry.ownerId, correct: myGuess ? myGuess.ownerId === entry.ownerId : null } : null,
+      standings:
+        state.phase === 'finale'
+          ? computeStandings(MOCK_ENTRIES, state.history, MOCK_PLAYERS.map((p) => p.id), MOCK_PACK.points)
+          : null,
+    });
+  };
+  // Re-broadcast on every state change (the whole redacted snapshot, like the real protocol).
+  useEffect(broadcast, [state, entry]);
 
   const reveal = useCallback(() => dispatch({ type: 'reveal' }), []);
   const lock = useCallback(() => dispatch({ type: 'lock' }), []);

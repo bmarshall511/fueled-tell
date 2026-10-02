@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import type { PlayerId } from '../engine/types';
 import { playerColorVar } from './playerColor';
 import type { SeatedPlayer } from './types';
@@ -8,30 +9,38 @@ interface NameGridProps {
   selectedId: PlayerId | null;
   disabledIds?: readonly PlayerId[];
   onSelect: (id: PlayerId) => void;
+  /** Accessible group label, e.g. the pack's question. */
+  legend: string;
 }
 
-/** Phone guess picker: one big tap target per player. */
-export function NameGrid({ players, selectedId, disabledIds = [], onSelect }: NameGridProps) {
+/**
+ * Phone guess picker: native radio buttons (arrow keys, screen readers and
+ * form semantics for free), styled as big chamfered tap targets.
+ */
+export function NameGrid({ players, selectedId, disabledIds = [], onSelect, legend }: NameGridProps) {
+  const name = useId();
   return (
-    <div className={styles.grid} role="radiogroup">
-      {players.map((p) => {
-        const selected = p.id === selectedId;
-        return (
-          <button
-            key={p.id}
-            type="button"
-            role="radio"
-            aria-checked={selected}
+    <fieldset className={styles.grid}>
+      <legend className="visually-hidden">{legend}</legend>
+      {players.map((p) => (
+        <label
+          key={p.id}
+          className={`chamfer ${styles.cell}`}
+          style={{ ['--player' as string]: playerColorVar(p.colorIndex) }}
+        >
+          <input
+            type="radio"
+            name={name}
+            value={p.id}
+            className="visually-hidden"
+            checked={p.id === selectedId}
             disabled={disabledIds.includes(p.id)}
-            className={`chamfer ${styles.cell} ${selected ? styles.selected : ''}`}
-            style={{ ['--player' as string]: playerColorVar(p.colorIndex) }}
-            onClick={() => onSelect(p.id)}
-          >
-            <span className={styles.swatch} aria-hidden="true" />
-            {p.name}
-          </button>
-        );
-      })}
-    </div>
+            onChange={() => onSelect(p.id)}
+          />
+          <span className={styles.swatch} aria-hidden="true" />
+          {p.name}
+        </label>
+      ))}
+    </fieldset>
   );
 }

@@ -12,3 +12,6 @@ export const PACKS = [MOCK_PACK, asPack(faveShowJson), asPack(twoTruthsJson)] as
 export const MOCK_PLAYERS: readonly SeatedPlayer[] = playersJson.map((p, i) => ({ ...p, colorIndex: i }));
 export const MOCK_ENTRIES: readonly Entry[] = entriesJson;
 export const MOCK_ROOM_CODE = 'K7QF';
+
+/** The player the phone mockup plays as. */
+export const MOCK_ME_ID = 'p5';

@@ -11,6 +11,21 @@ export function tokensPlugin(root: string): Plugin {
     buildStart() {
       buildTokens(root);
     },
+    /**
+     * Paint the brand background before any JS or CSS arrives (no white flash),
+     * and color the mobile browser chrome to match, straight from the tokens.
+     */
+    transformIndexHtml() {
+      const tree = buildTokens(root) as { color?: { bg?: string } };
+      const bg = tree.color?.bg ?? 'black';
+      return [
+        { tag: 'meta', attrs: { name: 'theme-color', content: bg }, injectTo: 'head' },
+        { tag: 'meta', attrs: { name: 'color-scheme', content: 'dark' }, injectTo: 'head' },
+        { tag: 'meta', attrs: { name: 'apple-mobile-web-app-capable', content: 'yes' }, injectTo: 'head' },
+        { tag: 'meta', attrs: { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' }, injectTo: 'head' },
+        { tag: 'style', children: `html,body{background:${bg}}`, injectTo: 'head' },
+      ];
+    },
     configureServer(server) {
       server.watcher.add(source);
       server.watcher.on('change', (file) => {

@@ -1,10 +1,9 @@
 import { Canvas, type CanvasProps } from '@react-three/fiber';
-import { createContext, useContext } from 'react';
+import { useContext } from 'react';
 import { usePageVisible } from '../ui/hooks';
 import { tokens } from '../tokens/tokens';
+import { SceneReadyContext } from './sceneReady';
 
-/** The host listens on this to know when the 3D scene has drawn (to drop the boot screen). */
-export const SceneReadyContext = createContext<() => void>(() => {});
 
 /**
  * Shared R3F canvas: DPR capped at 2, render loop paused while the tab is hidden.

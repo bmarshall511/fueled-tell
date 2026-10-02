@@ -114,26 +114,26 @@ a {
   white-space: nowrap;
 }
 
-/* Host type scale: reference px sizes multiplied by the stage scale. */
+/* Host type scale: reference px sizes times the stage scale, floored at the phone sizes so small screens stay readable. */
 .t-hero {
-  font-size: calc(var(--font-size-host-hero) * var(--stage));
+  font-size: max(var(--font-size-phone-display), calc(var(--font-size-host-hero) * var(--stage)));
   line-height: var(--font-line-height-tight);
   letter-spacing: var(--font-letter-spacing-tight);
 }
 .t-display {
-  font-size: calc(var(--font-size-host-display) * var(--stage));
+  font-size: max(var(--font-size-phone-title), calc(var(--font-size-host-display) * var(--stage)));
   line-height: var(--font-line-height-tight);
   letter-spacing: var(--font-letter-spacing-tight);
 }
 .t-title {
-  font-size: calc(var(--font-size-host-title) * var(--stage));
+  font-size: max(var(--font-size-phone-body), calc(var(--font-size-host-title) * var(--stage)));
   line-height: var(--font-line-height-tight);
 }
 .t-body {
-  font-size: calc(var(--font-size-host-body) * var(--stage));
+  font-size: max(var(--font-size-phone-body), calc(var(--font-size-host-body) * var(--stage)));
 }
 .t-label {
-  font-size: calc(var(--font-size-host-label) * var(--stage));
+  font-size: max(var(--font-size-phone-label), calc(var(--font-size-host-label) * var(--stage)));
   letter-spacing: var(--font-letter-spacing-label);
   text-transform: uppercase;
 }

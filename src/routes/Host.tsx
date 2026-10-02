@@ -4,7 +4,7 @@ import { MOCK_ENTRIES, MOCK_PACK, MOCK_PLAYERS } from '../mock/data';
 import { useMockRound } from '../mock/useMockRound';
 import { SCENES, type SceneId } from '../scenes/registry';
 import type { SceneModule } from '../scenes/Scene';
-import { SceneReadyContext } from '../scenes/SceneCanvas';
+import { SceneReadyContext } from '../scenes/sceneReady';
 import { toSceneProps } from '../scenes/toSceneProps';
 import { tokens } from '../tokens/tokens';
 import { BootScreen } from '../ui/BootScreen';

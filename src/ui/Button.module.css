@@ -55,3 +55,8 @@
   border: var(--border-width-base) solid currentColor;
   opacity: var(--opacity-muted);
 }
+
+/* On the accent fill, the muted hint fails contrast: keep it full strength. */
+.primary .kbd {
+  opacity: 1;
+}

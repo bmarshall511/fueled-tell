@@ -7,6 +7,8 @@ import type { SceneId } from './scenes/registry';
 const Picker = lazy(() => import('./routes/Picker'));
 const Host = lazy(() => import('./routes/Host'));
 const Play = lazy(() => import('./routes/Play'));
+const Create = lazy(() => import('./routes/Create'));
+const Demo = lazy(() => import('./routes/Demo'));
 
 const HOST_ROUTES: Record<string, SceneId> = { '/orbit': 'orbit', '/signal': 'signal', '/deck': 'deck' };
 
@@ -16,6 +18,8 @@ function Route() {
   const sceneId = HOST_ROUTES[path];
   if (sceneId) return <Host sceneId={sceneId} />;
   if (path === '/play') return <Play />;
+  if (path === '/create') return <Create />;
+  if (path === '/demo') return <Demo />;
   return <Picker />;
 }
 

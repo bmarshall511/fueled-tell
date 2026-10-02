@@ -102,8 +102,8 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: calc(var(--space-2) * var(--stage)) calc(var(--space-8) * var(--stage));
+  grid-template-columns: repeat(3, 1fr);
+  gap: calc(var(--space-2) * var(--stage)) calc(var(--space-7) * var(--stage));
   flex: 1;
 }
 

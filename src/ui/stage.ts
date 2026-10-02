@@ -42,6 +42,7 @@ export function stageFor(width: number, height: number): StageLayout {
 export function stageCssVars(l: StageLayout): CSSProperties {
   return {
     '--stage': l.scale,
+    '--stage-w': `${l.refWidth * l.scale}px`,
     '--item-w': `${l.itemWidth * l.scale}px`,
     '--item-h': `${l.itemHeight * l.scale}px`,
     '--item-offset': `${l.itemOffsetY * l.scale}px`,

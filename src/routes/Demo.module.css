@@ -1,0 +1,131 @@
+.demo {
+  max-width: calc(var(--size-stage-width) * 0.9);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5) var(--space-8);
+  display: grid;
+  gap: var(--space-6);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.title {
+  margin: 0 0 var(--space-2);
+  font-weight: inherit;
+  font-size: clamp(var(--font-size-phone-display), 6vw, var(--font-size-page-display));
+  line-height: var(--font-line-height-tight);
+  letter-spacing: var(--font-letter-spacing-tight);
+}
+
+.lede {
+  margin: 0;
+  max-width: 60ch;
+  font-size: var(--font-size-phone-title);
+  color: var(--color-text-muted);
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-2);
+}
+
+.step {
+  --cut: var(--chamfer-md);
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  background: var(--color-surface-raised);
+  font-size: var(--font-size-phone-body);
+}
+
+.stepNum {
+  font-size: var(--font-size-phone-display);
+  line-height: var(--font-line-height-tight);
+  color: var(--color-accent);
+}
+
+.who {
+  font-size: var(--font-size-phone-label);
+  letter-spacing: var(--font-letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--color-highlight);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--font-size-phone-body);
+  color: var(--color-text-muted);
+}
+
+.panes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, var(--size-phone-width));
+  gap: var(--space-5);
+  align-items: start;
+}
+
+.hostPane,
+.phonePane {
+  margin: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.caption {
+  font-size: var(--font-size-phone-label);
+  letter-spacing: var(--font-letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.hostFrame,
+.phoneFrame {
+  --cut: var(--chamfer-lg);
+  background: var(--color-surface);
+  padding: var(--space-2);
+}
+
+.hostFrame iframe,
+.phoneFrame iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: var(--color-bg);
+}
+
+.hostFrame iframe {
+  aspect-ratio: 16 / 9;
+}
+
+.phoneFrame iframe {
+  aspect-ratio: 9 / 19;
+}
+
+@media (max-width: 960px) {
+  .panes {
+    grid-template-columns: 1fr;
+  }
+  .phonePane {
+    max-width: var(--size-phone-width);
+    justify-self: center;
+    width: 100%;
+  }
+}

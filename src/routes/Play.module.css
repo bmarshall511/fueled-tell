@@ -4,7 +4,8 @@
   justify-items: center;
   align-content: start;
   gap: var(--space-4);
-  padding: var(--space-4);
+  padding: max(var(--space-4), env(safe-area-inset-top)) max(var(--space-4), env(safe-area-inset-right))
+    max(var(--space-4), env(safe-area-inset-bottom)) max(var(--space-4), env(safe-area-inset-left));
 }
 
 .mockNav {
@@ -17,9 +18,10 @@
 }
 
 .mockNav button {
+  min-height: var(--size-tap-target);
   border: var(--border-width-base) solid var(--color-border);
   background: none;
-  padding: var(--space-1) var(--space-3);
+  padding: 0 var(--space-3);
   cursor: pointer;
 }
 
@@ -32,7 +34,7 @@
   --cut: var(--chamfer-lg);
   width: 100%;
   max-width: var(--size-phone-width);
-  min-height: min(calc(var(--size-phone-width) * 2), calc(100dvh - var(--space-9)));
+  min-height: min(calc(var(--size-phone-width) * 2), calc(100dvh - var(--size-tap-target) * 3));
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
@@ -104,7 +106,47 @@
 }
 
 .input::placeholder {
-  color: var(--color-border-strong);
+  color: var(--color-text-muted);
+  opacity: var(--opacity-muted);
+}
+
+.hint {
+  font-size: var(--font-size-phone-label);
+  color: var(--color-text-muted);
+}
+
+.error {
+  margin: 0;
+  min-height: 1lh;
+  font-size: var(--font-size-phone-label);
+  color: var(--color-fueled-nova);
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  view-transition-name: phone-screen;
+}
+
+.title:focus,
+.display:focus {
+  outline: none;
+}
+
+.score {
+  margin: 0;
+  font-size: var(--font-size-phone-body);
+  color: var(--color-text-muted);
+}
+
+.winnerCard {
+  --cut: var(--chamfer-md);
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface-raised);
 }
 
 .code {
@@ -148,4 +190,114 @@
   width: calc(var(--size-tap-target) * 0.6);
   height: calc(var(--size-tap-target) * 0.7);
   font-size: var(--font-size-phone-body);
+}
+
+/* View transition between phone screens: the old screen slides out on the chamfer diagonal. */
+::view-transition-old(phone-screen) {
+  animation: screen-out var(--duration-base) var(--easing-standard) both;
+}
+
+::view-transition-new(phone-screen) {
+  animation: screen-in var(--duration-slow) var(--easing-emphasized) both;
+}
+
+@keyframes screen-out {
+  to {
+    opacity: 0;
+    transform: translate(calc(var(--space-6) * -1), calc(var(--space-4) * -1));
+  }
+}
+
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translate(var(--space-6), var(--space-4));
+  }
+}
+
+.story {
+  --cut: var(--chamfer-md);
+  margin: 0;
+  padding: var(--space-4);
+  background: var(--color-fueled-perfect-white);
+  color: var(--color-text-inverse);
+  text-align: left;
+  max-height: 40dvh;
+  overflow: auto;
+}
+
+.storyCompact {
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  width: 100%;
+}
+
+.storyLabel {
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-phone-label);
+  letter-spacing: var(--font-letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.storyCompact .storyLabel {
+  color: var(--color-text-muted);
+}
+
+.storyText {
+  margin: 0;
+  font-size: var(--font-size-phone-body);
+  line-height: var(--font-line-height-base);
+}
+
+.yourGuess {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+}
+
+/*
+ * Desktop / tablet players: same app, more room. The phone frame becomes a wide
+ * app column, the name grid gets more columns, and type steps up.
+ */
+@media (min-width: 768px) {
+  .phone {
+    max-width: var(--size-play-wide);
+    min-height: auto;
+    padding: var(--space-7);
+    gap: var(--space-7);
+  }
+
+  .display {
+    font-size: var(--font-size-page-display);
+  }
+
+  .title {
+    font-size: var(--font-size-phone-display);
+  }
+
+  .storyText {
+    font-size: var(--font-size-phone-title);
+  }
+
+  .phone :global(fieldset) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .phone :global(fieldset label) {
+    font-size: var(--font-size-phone-title);
+    min-height: calc(var(--size-tap-target) * 1.8);
+  }
+
+  .meta,
+  .label {
+    font-size: var(--font-size-phone-body);
+  }
+
+  .cta {
+    align-self: flex-end;
+    width: auto;
+    min-width: calc(var(--size-tap-target) * 6);
+  }
 }
