@@ -70,4 +70,11 @@ npm run build      # production build (PWA) in dist/
 
 See `PLAN.md` for the design, `CLAUDE.md` for conventions, `BUILD_LOG.md` for how it was built.
 
-**Fonts:** Aeonik is licensed (CoType EULA in `assets/fonts/`). Don't publish this repo or the font files publicly.
+### Deploying (Vercel, free)
+1. Import `github.com/bmarshall511/fueled-tell` in Vercel. `vercel.json` sets the build (`npm run build` → `dist/`) and the rewrites that make `/host`, `/play` and `/demo` work on refresh.
+2. Share the URL. The lobby's QR code and join link use whatever domain you deploy to.
+3. It's a PWA: on HTTPS, Chrome/Edge/Android offer **Install Tell**; on iOS use Share → Add to Home Screen.
+
+No environment variables or services to configure. Realtime uses the free public PeerJS broker.
+
+**Fonts:** Aeonik Medium is included in `assets/fonts/` with its CoType web-font EULA.

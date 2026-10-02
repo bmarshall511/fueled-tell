@@ -14,7 +14,7 @@
 
 ## Other constraints
 
-- Fonts in `assets/fonts/` are licensed (see the CoType EULA). Self-host only; this repo must not be pushed anywhere public.
+- The repo is public (github.com/bmarshall511/fueled-tell) so others at Fueled can use it, and it includes everything the app needs, including the Aeonik web fonts in `assets/fonts/` (CoType EULA alongside). Don't add secrets or personal data.
 - Brand: Fueled is primary, DOM lab is the "built by" endorsement. "Fueled" always has a capital F. Never stack the lockup vertically, recolor the logo with secondaries, or skew/stretch it. Nebula is for large text/accents only (about 4.2:1 on black).
 - Screen-share first: big type, high contrast, nothing that depends on fine detail or high frame rates.
 - Respect `prefers-reduced-motion`, cap DPR at 2, pause rendering when the tab is hidden.
