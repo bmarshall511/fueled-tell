@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tell retheme mockup</title>
+<style>
+  /* Mockup only: values here become tokens in tokens.json if approved. */
+  @font-face {
+    font-family: 'Aeonik';
+    src: url('../../assets/fonts/Aeonik-Medium.woff2') format('woff2'), url('../../assets/fonts/Aeonik-Medium.woff') format('woff');
+    font-weight: 500;
+  }
+  :root {
+    --black: #000; --white: #F5F5F1; --nebula: #6652FF; --solar: #FF52B7; --cryo: #00A6FF; --nova: #FBBC09;
+    --lilac: #B9AEFF;
+    --glass: rgba(23, 23, 28, 0.62); --glass-strong: rgba(30, 30, 38, 0.82);
+    --line: rgba(255, 255, 255, 0.10); --line-strong: rgba(255, 255, 255, 0.22);
+    --muted: rgba(245, 245, 241, 0.62);
+    --r-pill: 999px; --r-card: 32px; --r-panel: 24px; --r-field: 18px; --r-tile: 16px;
+    --blur: 24px;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #050507; color: var(--white); font-family: Aeonik, system-ui, sans-serif; font-weight: 500; line-height: 1.35; -webkit-font-smoothing: antialiased; overflow-wrap: break-word; }
+  .page { max-width: 1360px; margin: 0 auto; padding: 48px 24px 96px; display: grid; gap: 72px; }
+  h1, h2, h3, p { margin: 0; font-weight: inherit; }
+  .doc h1 { font-size: clamp(36px, 5vw, 56px); letter-spacing: -0.02em; }
+  .doc p { color: var(--muted); max-width: 70ch; font-size: 18px; }
+  .doc .lede { margin-top: 12px; }
+  .section { display: grid; gap: 24px; }
+  .section > header { display: grid; gap: 8px; }
+  .section > header h2 { font-size: 28px; letter-spacing: -0.01em; }
+  .section > header p { color: var(--muted); max-width: 72ch; }
+  .kicker { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lilac); }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 560px), 1fr)); gap: 32px; }
+  .phones { display: flex; flex-wrap: wrap; gap: 32px; justify-content: center; }
+  figure { margin: 0; display: grid; gap: 12px; }
+  figcaption { color: var(--muted); font-size: 14px; }
+  figcaption b { color: var(--white); font-weight: inherit; }
+
+  /* ---------- The animated gradient backdrop ---------- */
+  .aurora { position: absolute; inset: 0; overflow: hidden; background: var(--black); z-index: 0; }
+  .aurora i { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.9; will-change: transform; }
+  .aurora i:nth-child(1) { width: 70%; aspect-ratio: 1; left: -10%; bottom: -45%; background: radial-gradient(circle at 35% 35%, var(--solar), transparent 62%); animation: drift1 18s ease-in-out infinite alternate; }
+  .aurora i:nth-child(2) { width: 80%; aspect-ratio: 1; right: -20%; bottom: -55%; background: radial-gradient(circle at 50% 40%, var(--nebula), transparent 60%); animation: drift2 22s ease-in-out infinite alternate; }
+  .aurora i:nth-child(3) { width: 55%; aspect-ratio: 1; left: 30%; bottom: -40%; background: radial-gradient(circle, var(--lilac), transparent 60%); opacity: 0.55; animation: drift3 26s ease-in-out infinite alternate; }
+  /* Calm: during rounds the glow sinks low and dims so text stays crisp on a screen share. */
+  .aurora.calm i { opacity: 0.35; }
+  .aurora.calm i:nth-child(3) { opacity: 0.18; }
+  .aurora::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.55), transparent 45%); }
+  @keyframes drift1 { to { transform: translate(18%, -10%) scale(1.15); } }
+  @keyframes drift2 { to { transform: translate(-16%, -8%) scale(0.92); } }
+  @keyframes drift3 { to { transform: translate(-22%, -14%) scale(1.25); } }
+  /* Tall phone frames: bigger blobs so the glow rises into view. */
+  .phone .aurora i:nth-child(1) { width: 170%; left: -60%; bottom: -30%; }
+  .phone .aurora i:nth-child(2) { width: 190%; right: -90%; bottom: -40%; }
+  .phone .aurora i:nth-child(3) { width: 140%; left: -10%; bottom: -35%; }
+  .podium > * { min-height: 15cqi; align-content: start; }
+  @media (prefers-reduced-motion: reduce) { .aurora i { animation: none; } }
+
+  /* ---------- Components ---------- */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 26px; border-radius: var(--r-pill); border: 1px solid var(--line); background: var(--glass); color: var(--white); font: inherit; font-size: 16px; white-space: nowrap; backdrop-filter: blur(var(--blur)); -webkit-backdrop-filter: blur(var(--blur)); cursor: pointer; transition: transform .2s, background .2s, border-color .2s; }
+  .btn:hover { border-color: var(--line-strong); background: var(--glass-strong); }
+  .btn.primary { background: var(--white); color: var(--black); border-color: transparent; }
+  .btn.primary:hover { box-shadow: 0 0 0 3px var(--black), 0 0 0 5px var(--nebula); }
+  .btn.lg { min-height: 60px; padding: 0 36px; font-size: 20px; }
+  .btn.sm { min-height: 40px; padding: 0 18px; font-size: 14px; }
+  .btn kbd { font: inherit; font-size: 12px; padding: 2px 8px; border-radius: var(--r-pill); background: rgba(255,255,255,0.10); color: var(--muted); }
+  .btn.primary kbd { background: rgba(0,0,0,0.08); color: rgba(0,0,0,0.6); }
+  .btn.icon { width: 48px; padding: 0; }
+  .btn:focus-visible { outline: 2px solid var(--cryo); outline-offset: 3px; }
+
+  .chip { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; max-width: 100%; padding: 0 14px; border-radius: var(--r-pill); background: var(--glass); border: 1px solid var(--line); backdrop-filter: blur(var(--blur)); font-size: 15px; }
+  .chip .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  .chip .x { margin-right: -8px; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.08); color: var(--muted); font-size: 14px; }
+  .chip.dim { color: var(--muted); }
+  .tag { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+
+  .field { width: 100%; min-height: 56px; padding: 0 20px; border-radius: var(--r-field); border: 1px solid var(--line); background: rgba(255,255,255,0.05); color: var(--white); font: inherit; font-size: 18px; }
+  .field:focus { outline: none; border-color: var(--nebula); box-shadow: 0 0 0 4px rgba(102, 82, 255, 0.25); }
+
+  .card { border-radius: var(--r-card); background: var(--glass); border: 1px solid var(--line); backdrop-filter: blur(var(--blur)); }
+  .story { border-radius: var(--r-card); background: var(--white); color: var(--black); box-shadow: 0 30px 80px -20px rgba(102, 82, 255, 0.55); }
+  .story .label { color: var(--nebula); font-size: 0.42em; letter-spacing: 0.12em; text-transform: uppercase; }
+
+  .code { display: inline-flex; gap: 10px; }
+  .code span { display: grid; place-items: center; width: 1.25em; height: 1.45em; border-radius: var(--r-tile); background: var(--glass); border: 1px solid var(--line-strong); backdrop-filter: blur(var(--blur)); }
+  .roomtag { display: inline-flex; align-items: center; min-height: 32px; padding: 0 12px; border-radius: var(--r-pill); background: rgba(255,255,255,0.08); border: 1px solid var(--line); letter-spacing: 0.12em; font-size: 14px; }
+
+  .grad-text { background: linear-gradient(90deg, var(--lilac), var(--solar)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .eyebrow { display: inline-flex; gap: 10px; align-items: center; font-size: 15px; color: var(--lilac); }
+  .eyebrow i { width: 4px; height: 4px; border-radius: 50%; background: var(--muted); }
+
+  /* ---------- Frames ---------- */
+  .screen { position: relative; aspect-ratio: 16 / 9; border-radius: 20px; overflow: hidden; border: 1px solid var(--line); container-type: inline-size; }
+  .screen > .ui { position: absolute; inset: 0; z-index: 1; padding: 3.2cqi 3.6cqi; display: grid; }
+  .phone { position: relative; width: 300px; aspect-ratio: 390 / 844; border-radius: 44px; overflow: hidden; border: 8px solid #1b1b20; box-shadow: 0 30px 60px -30px rgba(0,0,0,0.9); container-type: inline-size; }
+  .phone > .ui { position: absolute; inset: 0; z-index: 1; padding: 16px 16px 14px; display: flex; flex-direction: column; gap: 14px; font-size: 14px; }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
+  .brandline { display: flex; align-items: center; gap: 1.2cqi; }
+  .wordmark { display: block; height: 22px; }
+  .builtby { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .builtby img { height: 14px; }
+
+  /* host type scales with the frame (stand-in for --stage) */
+  .s-hero { font-size: 7.4cqi; line-height: 1; letter-spacing: -0.02em; }
+  .s-display { font-size: 4.2cqi; line-height: 1.05; letter-spacing: -0.015em; }
+  .s-title { font-size: 2.3cqi; line-height: 1.2; }
+  .s-body { font-size: 1.5cqi; }
+  .s-label { font-size: 1.05cqi; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .screen .btn { min-height: 3.4cqi; padding: 0 1.8cqi; font-size: 1.2cqi; gap: 0.7cqi; }
+  .screen .btn kbd { font-size: 0.85cqi; padding: 0.15cqi 0.6cqi; }
+  .screen .chip { min-height: 2.8cqi; padding: 0 1.1cqi; font-size: 1.25cqi; gap: 0.6cqi; }
+  .screen .chip .dot { width: 0.8cqi; height: 0.8cqi; }
+  .screen .chip .x { width: 2cqi; height: 2cqi; font-size: 1cqi; margin-right: -0.6cqi; }
+  .screen .roomtag { min-height: 2.4cqi; padding: 0 1cqi; font-size: 1.1cqi; }
+  .screen .wordmark { height: 2cqi; }
+  .screen .builtby { font-size: 0.8cqi; gap: 0.5cqi; }
+  .screen .builtby img { height: 1.2cqi; }
+
+  .dock { display: flex; align-items: center; justify-content: space-between; gap: 1.5cqi; }
+  .dock .left { display: flex; align-items: center; gap: 2cqi; }
+  .dock .right { display: flex; gap: 0.8cqi; }
+  .join { display: inline-flex; align-items: center; gap: 0.8cqi; }
+  .join b { color: var(--white); font-weight: inherit; text-transform: none; letter-spacing: 0; }
+  .timer { display: grid; justify-items: end; gap: 0.6cqi; }
+  .timer .track { width: 12cqi; height: 0.5cqi; border-radius: 99px; background: rgba(255,255,255,0.12); overflow: hidden; }
+  .timer .track span { display: block; height: 100%; width: 62%; border-radius: inherit; background: linear-gradient(90deg, var(--cryo), var(--nebula)); }
+  .tokens { display: flex; gap: 0.6cqi; }
+  .tokens span { width: 2.2cqi; height: 2.2cqi; border-radius: 0.7cqi; }
+
+  /* phone type */
+  .p-display { font-size: 30px; line-height: 1.05; letter-spacing: -0.015em; }
+  .p-title { font-size: 18px; }
+  .p-muted { color: var(--muted); font-size: 14px; }
+  .p-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .names { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .name { display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 0 14px; border-radius: 18px; background: var(--glass); border: 1px solid var(--line); backdrop-filter: blur(var(--blur)); font-size: 14px; min-width: 0; }
+  .name .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  .name.on { background: var(--white); color: var(--black); border-color: transparent; }
+  .phone .btn { width: 100%; }
+
+  /* swatches */
+  .swatches { display: flex; flex-wrap: wrap; gap: 12px; }
+  .sw { width: 120px; height: 72px; border-radius: 20px; display: flex; align-items: flex-end; padding: 10px 12px; font-size: 12px; border: 1px solid var(--line); }
+  .rowx { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; }
+  .compare .card { padding: 20px 22px; display: grid; gap: 8px; }
+  .compare h3 { font-size: 16px; }
+  .compare p, .compare li { color: var(--muted); font-size: 15px; }
+  .compare ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <section class="doc">
+    <p class="kicker">Mockup · not built yet</p>
+    <h1>Tell, retheme: <span class="grad-text">one Fueled system</span></h1>
+    <p class="lede">The look of fueled.com applied to every screen of the game, so the shared screen and the phones look like one product. Nothing in the app has changed yet. If you approve this, it becomes tokens and shared components, and every screen inherits them.</p>
+  </section>
+
+  <section class="section">
+    <header><p class="kicker">What changes</p><h2>From chamfered blocks to soft, glassy, rounded</h2></header>
+    <div class="compare">
+      <div class="card"><h3>Shape</h3><ul><li>Pill buttons, chips and tags</li><li>32px-radius cards, 24px panels, 18px fields</li><li>The chamfered corners go away everywhere</li></ul></div>
+      <div class="card"><h3>Surface</h3><ul><li>Dark translucent "glass" with a hairline border and backdrop blur</li><li>The white story card stays as the hero, now rounded with a soft violet glow</li></ul></div>
+      <div class="card"><h3>Motion and colour</h3><ul><li>A slow-drifting gradient glow (Solar → Nebula → lilac) behind every screen</li><li>Vivid on landing, lobby and finale; calm and low during rounds</li><li>Static when reduced motion is on</li></ul></div>
+      <div class="card"><h3>One system</h3><ul><li>Host and phone share the same buttons, chips, fields, cards and backdrop</li><li>The host still scales everything up for screen share</li><li>The 3D deck cards get rounded corners to match</li></ul></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <header><p class="kicker">Components</p><h2>The kit</h2><p>Primary actions are white pills with black text: the highest contrast you can get, and fueled.com's modern feel without putting small text on Nebula. Secondary actions are glass pills.</p></header>
+    <div class="card" style="position:relative; overflow:hidden; padding: 32px; border-radius: 32px;">
+      <div class="aurora"><i></i><i></i><i></i></div>
+      <div style="position:relative; z-index:1; display:grid; gap:24px;">
+        <div class="rowx"><button class="btn primary lg">Start game <kbd>Space</kbd></button><button class="btn lg">Back to setup</button><button class="btn">Menu</button><button class="btn">Sound on <kbd>M</kbd></button><button class="btn sm">Paste a list</button><button class="btn icon" aria-label="Close">×</button></div>
+        <div class="rowx"><span class="chip"><span class="dot" style="background:var(--solar)"></span>Marisol Fenn <span class="x">×</span></span><span class="chip dim"><span class="dot" style="background:var(--cryo)"></span>Gus Moreau <span class="tag">not joined yet</span> <span class="x">×</span></span><span class="chip"><span class="dot" style="background:var(--nova)"></span>Bea Lindqvist</span><span class="roomtag">K7QF</span></div>
+        <div class="rowx" style="max-width:520px"><input class="field" value="Ben Marshall" aria-label="Name"/></div>
+        <div class="rowx"><span class="code s-display" style="font-size:44px"><span>K</span><span>7</span><span>Q</span><span>F</span></span></div>
+      </div>
+    </div>
+    <div class="swatches">
+      <div class="sw" style="background:var(--black)">Perfect Black</div>
+      <div class="sw" style="background:var(--white);color:#000">Perfect White</div>
+      <div class="sw" style="background:var(--nebula)">Nebula</div>
+      <div class="sw" style="background:var(--solar);color:#000">Solar</div>
+      <div class="sw" style="background:var(--cryo);color:#000">Cryo</div>
+      <div class="sw" style="background:var(--nova);color:#000">Nova</div>
+      <div class="sw" style="background:linear-gradient(135deg,var(--solar),var(--nebula) 55%,var(--lilac))">Glow gradient</div>
+      <div class="sw" style="background:var(--glass)">Glass</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <header><p class="kicker">Shared screen</p><h2>Host: lobby, round, reveal, finale</h2></header>
+    <div class="grid2">
+
+      <figure>
+        <div class="screen"><div class="aurora"><i></i><i></i><i></i></div>
+          <div class="ui" style="grid-template-rows:auto 1fr auto auto; gap:2.4cqi">
+            <div class="bar"><img class="wordmark" src="../../assets/brand/fueled-wordmark-white.svg" alt="Fueled"/><span class="roomtag">True Story</span></div>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:3cqi">
+              <div style="display:grid; gap:1.6cqi">
+                <p class="s-label">Join at <b style="color:var(--white); text-transform:none; letter-spacing:0">fueled-tell.vercel.app/play</b></p>
+                <span class="code s-hero"><span>K</span><span>7</span><span>Q</span><span>F</span></span>
+                <p class="s-title" style="color:var(--muted); max-width:34cqi">A short, true story from your life. Weird, funny, or ‘wait, really?’</p>
+              </div>
+              <div style="display:grid; justify-items:center; gap:1cqi"><div style="width:16cqi; aspect-ratio:1; border-radius:2cqi; background:var(--white); display:grid; place-items:center; color:#000" class="s-label">QR</div><p class="s-label">or scan</p></div>
+            </div>
+            <div style="display:grid; gap:1.2cqi"><p class="s-label">5 joined · 8 entries</p>
+              <div class="rowx" style="gap:0.8cqi"><span class="chip"><span class="dot" style="background:var(--solar)"></span>Marisol Fenn <span class="x">×</span></span><span class="chip"><span class="dot" style="background:var(--cryo)"></span>Juniper Vale <span class="x">×</span></span><span class="chip"><span class="dot" style="background:var(--nova)"></span>Ravi Thistle <span class="x">×</span></span><span class="chip"><span class="dot" style="background:var(--nebula)"></span>Otto Brisket <span class="x">×</span></span><span class="chip"><span class="dot" style="background:var(--solar)"></span>Pip Calloway <span class="x">×</span></span><span class="chip dim"><span class="dot" style="background:var(--cryo)"></span>Gus Moreau <span class="tag" style="font-size:0.8cqi">not joined yet</span> <span class="x">×</span></span></div></div>
+            <div class="dock"><span class="builtby">built by <img src="../../assets/brand/DOMlab-logo-white.svg" alt="DOM lab"/></span><span class="right"><button class="btn">Back to setup</button><button class="btn primary">Start game <kbd>Space</kbd></button></span></div>
+          </div>
+        </div>
+        <figcaption><b>Lobby:</b> vivid glow, glass code tiles, pill roster chips.</figcaption>
+      </figure>
+
+      <figure>
+        <div class="screen"><div class="aurora calm"><i></i><i></i><i></i></div>
+          <div class="ui" style="grid-template-rows:auto 1fr auto auto; gap:1.6cqi">
+            <div class="bar" style="align-items:flex-start"><img class="wordmark" src="../../assets/brand/fueled-wordmark-white.svg" alt="Fueled"/><span class="s-label" style="margin-top:0.6cqi">Story 3 of 8</span><span class="timer"><span class="s-title">24</span><span class="track"><span></span></span></span></div>
+            <div style="display:grid; place-items:center"><div class="story s-title" style="width:62cqi; padding:4cqi 4.4cqi; display:grid; gap:1.2cqi; font-size:2.9cqi"><span class="label">Story 3</span>I once got locked inside a bakery after closing. I didn't call anyone for an hour because I was busy eating croissants.</div></div>
+            <div style="display:flex; align-items:flex-end; justify-content:space-between"><p class="s-display grad-text">Whose story is it?</p><div style="display:flex; align-items:center; gap:1cqi"><p class="s-label">4/7 guesses in</p><span class="tokens"><span style="background:var(--solar)"></span><span style="background:var(--cryo)"></span><span style="background:var(--nova)"></span><span style="background:var(--nebula)"></span></span></div></div>
+            <div class="dock"><span class="left"><span class="builtby">built by <img src="../../assets/brand/DOMlab-logo-white.svg" alt="DOM lab"/></span><span class="join s-label">Join at <b>fueled-tell.vercel.app/play</b> <span class="roomtag">K7QF</span></span></span><span class="right"><button class="btn">Menu</button><button class="btn">Sound on <kbd>M</kbd></button><button class="btn">Full screen <kbd>F</kbd></button><button class="btn primary">Lock in <kbd>Space</kbd></button></span></div>
+          </div>
+        </div>
+        <figcaption><b>Round:</b> calm glow low on the screen, rounded white card, gradient question.</figcaption>
+      </figure>
+
+      <figure>
+        <div class="screen"><div class="aurora calm"><i></i><i></i><i></i></div>
+          <div class="ui" style="grid-template-rows:auto 1fr auto auto; gap:1.6cqi">
+            <div class="bar" style="align-items:flex-start"><img class="wordmark" src="../../assets/brand/fueled-wordmark-white.svg" alt="Fueled"/><span class="s-label" style="margin-top:0.6cqi">Story 3 of 8</span><span class="timer" style="opacity:.4"><span class="s-title">0</span><span class="track"><span style="width:0"></span></span></span></div>
+            <div style="display:grid; place-items:center"><div style="width:62cqi; padding:4cqi; border-radius:var(--r-card); background:linear-gradient(135deg,var(--solar),var(--nebula) 60%,#4a3bd6); display:grid; justify-items:center; gap:1cqi; box-shadow:0 30px 80px -20px rgba(255,82,183,.5)"><span class="s-label" style="color:var(--white)">It was…</span><span class="s-hero">Juniper Vale</span></div></div>
+            <div style="display:flex; align-items:baseline; justify-content:flex-end; gap:1.6cqi"><p class="s-display">57% <span class="s-label">guessed right</span></p><span class="rowx" style="gap:0.6cqi"><span class="chip"><span class="dot" style="background:var(--solar)"></span>Marisol Fenn</span><span class="chip"><span class="dot" style="background:var(--nova)"></span>Ravi Thistle</span><span class="chip"><span class="dot" style="background:var(--nebula)"></span>Otto Brisket</span><span class="chip"><span class="dot" style="background:var(--cryo)"></span>Pip Calloway</span></span></div>
+            <div class="dock"><span class="left"><span class="builtby">built by <img src="../../assets/brand/DOMlab-logo-white.svg" alt="DOM lab"/></span><span class="join s-label">Join at <b>fueled-tell.vercel.app/play</b> <span class="roomtag">K7QF</span></span></span><span class="right"><button class="btn">Menu</button><button class="btn primary">Next <kbd>Space</kbd></button></span></div>
+          </div>
+        </div>
+        <figcaption><b>Reveal:</b> the card flips to the owner on the glow gradient.</figcaption>
+      </figure>
+
+      <figure>
+        <div class="screen"><div class="aurora"><i></i><i></i><i></i></div>
+          <div class="ui" style="grid-template-rows:auto auto 1fr auto; gap:1.8cqi; justify-items:center">
+            <p class="s-label">Final standings</p>
+            <div style="display:grid; justify-items:center; gap:0.4cqi"><p class="s-label" style="color:var(--lilac)">Winner</p><p class="s-display">Ravi Thistle</p></div>
+            <div class="podium" style="display:grid; grid-template-columns:repeat(3, 18cqi); gap:1.4cqi; align-items:start">
+              <div class="card" style="margin-top:3cqi; padding:2cqi; display:grid; gap:0.6cqi; box-shadow: inset 0 3px 0 var(--cryo)"><span class="s-display">2nd</span><span class="s-title">Juniper Vale</span><span class="s-label">350 pts</span></div>
+              <div class="story" style="padding:2cqi; display:grid; gap:0.6cqi"><span class="s-display grad-text" style="background:linear-gradient(90deg,var(--nebula),var(--solar)); -webkit-background-clip:text; background-clip:text">1st</span><span class="s-title">Ravi Thistle</span><span class="s-label" style="color:var(--nebula)">450 pts</span></div>
+              <div class="card" style="margin-top:5cqi; padding:2cqi; display:grid; gap:0.6cqi; box-shadow: inset 0 3px 0 var(--nova)"><span class="s-display">3rd</span><span class="s-title">Otto Brisket</span><span class="s-label">300 pts</span></div>
+            </div>
+            <div class="dock" style="width:100%"><span class="left"><span class="builtby">built by <img src="../../assets/brand/DOMlab-logo-white.svg" alt="DOM lab"/></span><span class="join s-label">Join at <b>fueled-tell.vercel.app/play</b> <span class="roomtag">K7QF</span></span></span><span class="right"><button class="btn">Menu</button><button class="btn primary">Back to lobby</button></span></div>
+          </div>
+        </div>
+        <figcaption><b>Finale:</b> vivid glow returns; rounded podium cards, with first place on white.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section">
+    <header><p class="kicker">Phones</p><h2>Player: join, pick, result, final</h2><p>Same components and the same glow (always calm on phones, for battery and readability), so the phone feels like the big screen in your hand.</p></header>
+    <div class="phones">
+
+      <figure><div class="phone"><div class="aurora"><i></i><i></i><i></i></div><div class="ui">
+        <div class="bar"><img class="wordmark" style="height:18px" src="../../assets/brand/fueled-wordmark-white.svg" alt="Fueled"/></div>
+        <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:14px">
+          <p class="eyebrow">Tell <i></i> a party game</p>
+          <p class="p-display">Enter the room code</p>
+          <input class="field" value="K7QF" aria-label="Room code" style="text-align:center; letter-spacing:.3em; font-size:28px; min-height:72px"/>
+          <p class="p-muted">It's on the big screen.</p>
+        </div>
+        <button class="btn primary lg">Join</button>
+        <p class="p-muted" style="text-align:center">Hosting instead?</p>
+      </div></div><figcaption><b>Code</b></figcaption></figure>
+
+      <figure><div class="phone"><div class="aurora calm"><i></i><i></i><i></i></div><div class="ui">
+        <div class="bar"><img class="wordmark" style="height:18px" src="../../assets/brand/fueled-wordmark-white.svg" alt="Fueled"/><span style="display:flex; gap:6px"><span class="chip" style="min-height:30px; font-size:13px"><span class="dot" style="background:var(--cryo)"></span>Ben</span><span class="roomtag" style="min-height:30px; font-size:12px">K7QF</span></span></div>
+        <div class="story" style="padding:18px; display:grid; gap:6px; font-size:16px; border-radius:24px"><span class="label" style="font-size:11px">Story 3 of 8</span>I once got locked inside a bakery after closing…</div>
+        <div style="display:flex; align-items:baseline; gap:8px"><span class="p-display">24</span><span class="p-label">seconds left</span></div>
+        <p class="p-title">Whose story is it?</p>
+        <div class="names"><span class="name"><span class="dot" style="background:var(--solar)"></span>Marisol</span><span class="name on"><span class="dot" style="background:var(--cryo)"></span>Juniper</span><span class="name"><span class="dot" style="background:var(--nova)"></span>Ravi</span><span class="name"><span class="dot" style="background:var(--nebula)"></span>Otto</span><span class="name"><span class="dot" style="background:var(--solar)"></span>Pip</span><span class="name"><span class="dot" style="background:var(--cryo)"></span>Gus</span></div>
+        <div style="flex:1"></div>
+        <button class="btn primary lg">Lock in guess</button>
+      </div></div><figcaption><b>Pick</b></figcaption></figure>
+
+      <figure><div class="phone"><div class="aurora calm"><i></i><i></i><i></i></div><div class="ui">
+        <div class="bar"><img class="wordmark" style="height:18px" src="../../assets/brand/fueled-wordmark-white.svg" alt="Fueled"/><span style="display:flex; gap:6px"><span class="chip" style="min-height:30px; font-size:13px"><span class="dot" style="background:var(--cryo)"></span>Ben</span><span class="roomtag" style="min-height:30px; font-size:12px">K7QF</span></span></div>
+        <div style="padding:26px 18px; border-radius:24px; background:linear-gradient(135deg,var(--solar),var(--nebula) 60%,#4a3bd6); display:grid; justify-items:center; gap:6px; text-align:center"><span class="p-label" style="color:var(--white)">It was</span><span class="p-display">Juniper Vale</span></div>
+        <p class="p-display grad-text">You got it!</p>
+        <p class="p-muted">+100 points · 4 of 7 got it right</p>
+      </div></div><figcaption><b>Result</b></figcaption></figure>
+
+      <figure><div class="phone"><div class="aurora"><i></i><i></i><i></i></div><div class="ui">
+        <div class="bar"><img class="wordmark" style="height:18px" src="../../assets/brand/fueled-wordmark-white.svg" alt="Fueled"/><span class="roomtag" style="min-height:30px; font-size:12px">K7QF</span></div>
+        <p class="p-label">Final standings</p>
+        <p class="p-display">You placed 2nd</p>
+        <p class="p-muted">350 pts · 3 correct · 1 fooled</p>
+        <div class="story" style="padding:16px 18px; border-radius:24px; display:grid; gap:4px"><span class="label" style="font-size:11px">Winner</span><span style="font-size:20px">Ravi Thistle</span></div>
+        <div class="card" style="padding:8px; border-radius:24px; display:grid; gap:4px">
+          <div style="display:flex; align-items:center; gap:10px; padding:8px 10px"><span class="p-muted" style="width:32px">1st</span>Ravi Thistle<span class="p-muted" style="margin-left:auto">450</span></div>
+          <div style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:16px; background:rgba(255,255,255,.08)"><span class="p-muted" style="width:32px">2nd</span>Ben Marshall<span class="p-muted" style="margin-left:auto">350</span></div>
+          <div style="display:flex; align-items:center; gap:10px; padding:8px 10px"><span class="p-muted" style="width:32px">3rd</span>Otto Brisket<span class="p-muted" style="margin-left:auto">300</span></div>
+        </div>
+      </div></div><figcaption><b>Final</b></figcaption></figure>
+    </div>
+  </section>
+
+  <section class="section">
+    <header><p class="kicker">Front door</p><h2>Landing</h2></header>
+    <div class="screen" style="aspect-ratio: 16 / 8"><div class="aurora"><i></i><i></i><i></i></div>
+      <div class="ui" style="grid-template-rows:auto 1fr auto; gap:2cqi">
+        <div class="bar"><img src="../../assets/brand/fueled-lockup-white.svg" alt="Fueled" style="height:2.4cqi"/><span class="builtby">built by <img src="../../assets/brand/DOMlab-logo-white.svg" alt="DOM lab"/></span></div>
+        <div style="display:grid; place-content:center; justify-items:center; text-align:center; gap:1.6cqi">
+          <p class="eyebrow" style="font-size:1.3cqi">Stories <i></i> Guesses <i></i> Points</p>
+          <p style="font-size:9cqi; line-height:.95; letter-spacing:-.03em">Tell</p>
+          <p class="s-title" style="color:var(--muted)">Everyone has a story. Can you tell whose?</p>
+          <div class="rowx" style="justify-content:center; gap:1cqi; margin-top:1cqi"><button class="btn primary" style="min-height:4.2cqi; padding:0 2.6cqi; font-size:1.4cqi">Host a game</button><button class="btn" style="min-height:4.2cqi; padding:0 2.6cqi; font-size:1.4cqi">Join with a code</button><button class="btn" style="min-height:4.2cqi; padding:0 2.6cqi; font-size:1.4cqi">See how it works</button></div>
+        </div>
+        <div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="doc">
+    <p class="kicker">If approved</p>
+    <p>New tokens for radii, glass, blur and the glow. Button, chips, fields, cards, the code tiles and the notices move to the new shapes. A shared <code>Backdrop</code> component (vivid or calm) goes on every page. The 3D deck cards get rounded corners. The chamfer utilities are deleted. Then a full visual, accessibility and responsive pass at every size before it ships.</p>
+  </section>
+</main>
+</body>
+</html>
