@@ -1,4 +1,6 @@
-# Build plan: "Whose Is It?" party game (built by DOM lab)
+# Build plan: Tell, a party game (built by DOM lab)
+
+> **Status (Fri Oct 2):** everything in this plan is built: engine, PeerJS + local transports, host and phone apps, Deck scene + flat fallback, finale with ranking, PWA, README. What remains is testing on real phones and networks (section 6). The working title "Whose Is It?" became **Tell**.
 
 > Project plan. Kickoff prompts for each phase are at the bottom.
 
@@ -98,11 +100,17 @@ src/
 - **Host → players:** `state {redacted snapshot}`. The host broadcasts the whole redacted state on every change. That's simpler than diffs, and the state is tiny.
 - **Reconnects:** `playerId` lives in the phone's `localStorage`, so a refresh rejoins as the same player.
 
-**Scoring "light"** (default, friendly for new folks):
+**Scoring (ranked):** every game ends with a ranking unless the host picks "Just for fun".
 
-- Each reveal shows the % who guessed right.
-- The finale gives fun awards instead of a ranking: *Best Detective* (most correct), *Most Mysterious* (the entry fewest people guessed), *Fooled the Room*.
-- You can't guess your own entry.
+- A correct guess scores **100**; an owner scores **50** for every player their entry fools. Points are per pack (`points` in the pack JSON).
+- Places use standard competition ranking: equal scores share a place (1, 2, 2, 4); within a tie, more correct guesses list first.
+- Scoring modes (per game, set in setup):
+  - `competitive` ("Points & places", the default): podium, full standings with points, winner, plus awards.
+  - `light` ("Awards only"): no podium, standings or winner on the big screen; just the awards (phones still show your place).
+  - `none` ("Just for fun"): no points shown.
+- Awards on every finale: *Best Detective* (most correct), *Most Mysterious* (owner of the entry the fewest people guessed), *Fooled the Room* (owner who fooled the most guessers).
+- Each reveal shows the % who guessed right; phones show "You got it" / "Not this time", and the owner sees how many they fooled.
+- You can't guess your own entry, or name yourself.
 
 **Tokens → everything:**
 
@@ -133,7 +141,8 @@ src/
 
 | When | Phase | Done when |
 |---|---|---|
-| Fri Oct 2 / weekend | **0. Mockups** (Prompt 1) | You've picked a concept |
+| Fri Oct 2 | **0. Mockups** (Prompt 1) | Picked **Deck** ✅ |
+| Fri Oct 2 | **1–3 built in one go** (foundation, networking + intake, polish) | ✅ Built; see BUILD_LOG.md |
 | Mon Oct 5 | **1. Foundation:** token pipeline, engine + tests, packs, local transport, host and play routes working across two browser tabs | A full game plays end to end in two tabs |
 | Tue Oct 6 | **2. Networking + intake:** PeerJS adapter, room code + QR join, phone UI, host import + live submit, JSON export/import. Deploy a Vercel preview | 3 real phones on different networks join and play |
 | Wed Oct 7 | **3. Polish:** port the winning scene into `scenes/`, flat fallback, finale awards, PWA, perf + a11y pass, README for other pods. **Load the stories at EOD** | Lighthouse looks good, the README lets another EM run it cold |

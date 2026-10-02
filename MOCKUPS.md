@@ -1,3 +1,5 @@
+> **Historical.** These were the Phase 0 mockups. Deck was chosen and the full app (Tell) is now built; see `README.md`. Orbit and Signal were removed from the code (they live in git history, commit `e696628` and earlier).
+
 # Phase 0 mockups
 
 **Decision: Deck.** Orbit and Signal are kept as alternates (same `SceneProps`, so they could become themes later).

@@ -131,7 +131,7 @@ export const UI_COPY = {
     endGame: 'End game',
     endConfirm: 'End this game for everyone?',
     exportBackup: 'Download a backup',
-    restartRound: 'Play again with new entries',
+    restartRound: 'Back to lobby',
     newGame: 'New game',
     linkLost: 'Room offline. Reconnecting…',
   },

@@ -101,3 +101,84 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **That the fake QR won't confuse people in a demo.** It looks like a real code.
 
 **Approximate time:** about 30 min of wall-clock AI time (roughly 10:37–11:05 CT), with 4 rounds of mid-task feedback folded in.
+
+---
+
+## 2026-10-02 (Fri): Session 1c, building the whole app (Tell)
+
+**Goal:** You said: no deferred phases, build everything now. That covered the real game end to end (networking, QR, host-only mode, persistence, PWA, flat fallback, tests). Plus:
+- `/play` fully responsive on desktop.
+- A much less error-prone way to add entries.
+- PLAN.md updated so scoring includes a ranking.
+- Sounds.
+- Renamed to **Tell**.
+- You also gave the GitHub repo (bmarshall511/fueled-tell).
+
+**What the AI generated**
+- **Engine:**
+  - `game.ts`: the full lobby → showing → guessing → locked → reveal → finale → lobby machine. It handles joins and re-joins, players claiming host-imported names, live submissions, the host-only tally, and removing players.
+  - `redact.ts`: each phone's view. It never includes the owner before the reveal, never shows other entries, and sends remaining time instead of the host clock.
+  - Also `roomCode.ts`, `random.ts`, `rules.ts`, and a rewritten intake parser. The parser handles pipe, colon, dash and tab lines; CSV with quotes and a header; name-then-paragraph blocks; and stray quoted rows. It never drops a line.
+- **Tests:** 35 Vitest tests covering every phase transition, redaction, can't-guess-own and can't-name-yourself, claiming, host-only mode, standings with ties, awards, parser formats, room codes, and the QR encoder.
+- **Transport:**
+  - The `Transport` interface.
+  - `peer.ts` (PeerJS): heartbeats, a reconnect watchdog, a connect timeout, retry while the broker still holds a refreshed host's ID, and a "room taken" error.
+  - `local.ts` (BroadcastChannel): mirrors the same behavior.
+  - `protocol.ts`, with runtime guards on every incoming message.
+- **QR code:** a dependency-free encoder (`ui/qr/`), written by a sub-agent and verified by Chrome's built-in barcode reader. It decoded all 15 versions at every error-correction level, plus UTF-8 text.
+- **Host:**
+  - `useHostGame`: persistence, timers, room, message routing, and `?bots=1` for demos.
+  - **Setup with a new EntriesEditor:** one row per person, inline issues (missing name or entry, too long, duplicate name), and a character counter. "Paste a list" (also triggered by pasting multiple lines into any field) shows a preview of every parsed row before adding, and nothing is dropped. File import, sample entries, and an autosaved draft.
+  - **Lobby:** real QR, join URL, roster with joined and entry status, remove player, and a fallback to host-only mode.
+  - **GameScreen:** drumroll, synthesized sounds, host-only tally, a menu (download backup, end game), and the finale.
+  - A podium only when scoring is "Points & places".
+- **Player app** (`routes/Play.tsx` + `player/usePlayerGame`):
+  - Screens: room code, join (tap your name if the host added you, or type it), lobby with live entry submit, pick (story on screen, countdown), waiting (change guess), mini-flip result, and final place with standings.
+  - Layout: one column on phones; a two-column layout filling the window from 960 px.
+  - Reconnects with a stable player ID.
+- **Other pieces:**
+  - **Flat scene:** HTML/CSS Deck for reduced motion and no WebGL.
+  - **Sound:** `ui/sound.ts`, Web Audio, persisted mute.
+  - **PWA:** vite-plugin-pwa with manifest, icons rendered from the Fueled emblem, offline shell, shortcuts, and an "Install Tell" button.
+  - **Pages:** a landing page, and `/demo` running a real local game with bots.
+  - **Checks:** `scripts/check-rules.mjs` plus `npm run check`.
+  - **Docs:** a README for hosts and developers, and updates to PLAN.md and CLAUDE.md.
+- **Removed:** the mock round, Orbit, Signal, the mockup picker and `/create`. They're still in git history.
+
+**Decisions the AI made on its own**
+- **ESLint isn't installed.** `typescript-eslint` doesn't support TypeScript 7 yet: npm refused the peer dependency, and I didn't force it. Instead, `scripts/check-rules.mjs` enforces the two project rules that matter: no hex colors outside tokens, and Three.js never reachable from `/play`. Both were tested by deliberately breaking them. Prettier is installed and has been run.
+- **I wrote the QR encoder myself** rather than add a QR library (CLAUDE.md asks before new dependencies). It was verified by decoding.
+- **PeerJS host ID:** `fueled-tell-<CODE>`. Room alphabet: `ACDEFGHJKMNPQRTUVWXY34679`, with no O/0, I/1/L, S/5, Z/2 or B/8.
+- **Players claim host-imported names** by tapping them on the phone, or by typing the same name (case-insensitive). The phone's ID then replaces the imported placeholder everywhere.
+- **Scoring modes:** "Points & places" shows the podium, "Awards only" shows awards, and "Just for fun" shows no points. The finale headline is "Winner" (not "Top detective", which clashed with the Best Detective award).
+- **"Play again" returns to the lobby** with the same people and entries. Change entries from there with "Back to setup".
+- **The drumroll lasts 2.1 s,** shared by host and phones (phones sync from the elapsed time in each snapshot).
+- **`/play` bundle:** about 86 KB gzipped to first paint, then PeerJS (24 KB) loads lazily to connect, so about 110 KB in total. That's about 10% over PLAN.md's ~100 KB target. React DOM is 60 KB of it.
+- **The Deck card label on Nebula is now full strength,** because faded text there failed contrast.
+
+**Verification done by the AI**
+- `npm run check` is clean: `tsc` (strict), the rule checks and 35/35 tests. `vite build` produces the PWA (41 precached files).
+- **Local end to end (headless Chrome, two frames or tabs):**
+  - The phone joins, bots claim the imported names, the host starts, and the phone shows the story.
+  - The phone's guess is counted, guessing auto-locks, the drumroll runs, and the result appears.
+  - A full 8-round game reaches the finale. The phone shows its place, and "Back to lobby" works.
+- **Over the real PeerJS public broker:** a host tab opened room UHAM, and a separate tab joined by code, got the story, and its guess was counted. Both tabs were on **one machine**.
+- **axe-core** (WCAG 2.2 AA + best practice): 0 violations on `/`, `/host` setup, `/play`, `/demo`, and in a live game on host lobby, round, reveal and finale, and on phone join, lobby, pick, result and final.
+  - axe found two contrast bugs on phone screens, both now fixed.
+- **Bugs found and fixed during verification:**
+  - The drumroll restarted every render (repeated ticks) and could flash the previous reveal.
+  - The host key handler crashed on non-element event targets.
+  - The phone header overflowed at 390 px.
+  - The phone footer floated mid-page.
+  - The parser missed quoted CSV rows inside mixed pastes.
+
+**What you need to verify by hand**
+- **Real phones on different networks** (cellular plus home Wi-Fi), per PLAN.md's Tue test. I only tested PeerJS between two tabs on one machine. Strict NATs may need TURN; if they fail, host-only mode is the fallback.
+- **Feel at a real frame rate:** deal, chip drop, flip, drumroll, and the phone mini-flip.
+- **Sound:** whether the levels work on a Meet tab share, and whether the cues are too much or too little.
+- **PWA install:** the "Install" prompt on Chrome/Android and Add to Home Screen on iOS. This needs HTTPS, so it can only be checked on the Vercel deploy (localhost is exempt).
+- **VoiceOver / NVDA passes** and Windows High Contrast.
+- **The CoType EULA** for web use on a public URL.
+- **The GitHub repo:** `bmarshall511/fueled-tell` is **public**, and this repo contains the licensed Aeonik files, so **nothing has been pushed**. Decide: make the repo private, or keep the fonts out of git.
+
+**Approximate time:** about 50 min of wall-clock AI time (roughly 11:17–12:07 CT), including the parallel QR sub-agent.
