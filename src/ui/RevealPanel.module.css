@@ -39,3 +39,16 @@
   gap: calc(var(--space-2) * var(--stage));
   max-width: calc(var(--size-stage-width) * 0.62 * var(--stage));
 }
+
+[data-orientation='portrait'] .panel,
+[data-orientation='portrait'] .stats {
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  gap: var(--space-2);
+}
+
+[data-orientation='portrait'] .chips {
+  justify-content: center;
+  max-width: none;
+}

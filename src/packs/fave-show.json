@@ -1,0 +1,20 @@
+{
+  "id": "fave-show",
+  "name": "Comfort Watch",
+  "prompt": "The show or movie you'd rewatch forever, and one line on why.",
+  "entry": { "type": "text", "maxLength": 140 },
+  "guess": "owner",
+  "timerSec": 30,
+  "scoring": "competitive",
+  "points": { "correct": 100, "fooled": 50 },
+  "copy": {
+    "item": "Pick",
+    "question": "Whose comfort watch is this?",
+    "reveal": "That's…",
+    "yours": "Your pick. Poker face.",
+    "waiting": "Locked in. Watch the big screen.",
+    "finale": "Final standings",
+    "winner": "Top critic",
+    "awards": { "detective": "Best Taste Reader", "mysterious": "Hidden Depths", "fooled": "Plot Twist" }
+  }
+}

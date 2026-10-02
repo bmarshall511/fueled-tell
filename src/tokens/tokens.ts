@@ -50,7 +50,8 @@ export const tokens = {
       "phoneDisplay": 40,
       "phoneTitle": 26,
       "phoneBody": 18,
-      "phoneLabel": 14
+      "phoneLabel": 14,
+      "pageDisplay": 72
     },
     "lineHeight": {
       "tight": 1.05,
@@ -83,7 +84,16 @@ export const tokens = {
     "itemOffsetY": -40,
     "cardWidth": 1440,
     "planetRadius": 390,
-    "planetItemWidth": 700
+    "planetItemWidth": 700,
+    "stagePortraitWidth": 1080,
+    "stagePortraitHeight": 1920,
+    "cardWidthPortrait": 960,
+    "itemHeightPortrait": 960,
+    "itemOffsetYPortrait": -200,
+    "itemPadding": 80,
+    "chip": 72,
+    "builtbyHost": 40,
+    "builtbyPage": 28
   },
   "chamfer": {
     "sm": 6,
@@ -99,7 +109,9 @@ export const tokens = {
     "base": 300,
     "slow": 600,
     "entrance": 1400,
-    "reveal": 1800
+    "reveal": 1800,
+    "bootMin": 1400,
+    "stagger": 220
   },
   "easing": {
     "standard": [

@@ -1,21 +1,25 @@
 import { useThree } from '@react-three/fiber';
 import { MathUtils } from 'three';
-import { tokens } from '../../tokens/tokens';
+import { stageFor, type StageLayout } from '../../ui/stage';
 
 /** Shared camera so every scene maps stage pixels to world units the same way. */
 export const CAMERA = { fov: 40, distance: 10 } as const;
 
 /**
- * Converts host-stage pixels (1920x1080 reference) into world units at z = 0,
- * matching the HUD's --stage scaling so 3D objects and HTML overlays line up.
+ * The host stage layout for the canvas size, plus a converter from reference
+ * stage pixels to world units at z = 0. Matches the HUD's --stage scaling, so
+ * 3D objects and HTML overlays line up in landscape and portrait.
  */
-export function useStageToWorld(): (px: number) => number {
+export function useStage(): { layout: StageLayout; toWorld: (px: number) => number } {
   const { size } = useThree();
-  const { stageWidth, stageHeight } = tokens.size;
-  const fit = Math.min(1, size.width / size.height / (stageWidth / stageHeight));
-  const worldPerPx = ((2 * CAMERA.distance * Math.tan(MathUtils.degToRad(CAMERA.fov / 2))) / stageHeight) * fit;
-  return (px) => px * worldPerPx;
+  const layout = stageFor(size.width, size.height);
+  const worldPerScreenPx = (2 * CAMERA.distance * Math.tan(MathUtils.degToRad(CAMERA.fov / 2))) / size.height;
+  const worldPerRefPx = worldPerScreenPx * layout.scale;
+  return { layout, toWorld: (px) => px * worldPerRefPx };
 }
+
+/** Back-compat helper for scenes that only need the converter. */
+export const useStageToWorld = () => useStage().toWorld;
 
 /** Frame-rate independent easing toward a target; snaps when motion is reduced. */
 export const approach = (current: number, target: number, dt: number, reducedMotion: boolean, lambda = 6) =>

@@ -32,6 +32,8 @@ export interface Pack {
   guess: 'owner';
   timerSec: number;
   scoring: ScoringMode;
+  /** Points per correct guess, and per player an owner's entry fools. */
+  points?: { correct: number; fooled: number };
   copy: PackCopy;
 }
 
@@ -46,13 +48,28 @@ export interface PackCopy {
   yours: string;
   /** Phone: after a guess is locked in. */
   waiting: string;
+  /** Finale headline. */
+  finale: string;
+  /** Lead-in before the winner's name. */
+  winner: string;
+  awards: {
+    /** Most correct guesses. */
+    detective: string;
+    /** Owner of the entry the fewest people guessed. */
+    mysterious: string;
+    /** Owner who fooled the most guessers overall. */
+    fooled: string;
+  };
 }
 
-/** Phases of a single round. Phase 1 wraps these in lobby / intro / finale. */
+/** Phases of a single round. Phase 1 adds lobby / intro in front. */
 export type RoundPhase = 'showing' | 'guessing' | 'locked' | 'reveal';
 
+/** Session phase: a round phase, or the end-of-game finale. */
+export type GamePhase = RoundPhase | 'finale';
+
 export interface RoundState {
-  phase: RoundPhase;
+  phase: GamePhase;
   /** Shuffled entry order for the session. */
   order: EntryId[];
   index: number;
@@ -60,4 +77,6 @@ export interface RoundState {
   guesses: Guess[];
   /** Epoch ms when guessing closes, while guessing. */
   deadline: number | null;
+  /** Locked-in guesses of every finished entry, for final scoring. */
+  history: Record<EntryId, Guess[]>;
 }

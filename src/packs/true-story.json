@@ -5,12 +5,16 @@
   "entry": { "type": "text", "maxLength": 280 },
   "guess": "owner",
   "timerSec": 45,
-  "scoring": "light",
+  "scoring": "competitive",
+  "points": { "correct": 100, "fooled": 50 },
   "copy": {
     "item": "Story",
     "question": "Whose story is it?",
     "reveal": "It was…",
     "yours": "This one's yours. Act natural.",
-    "waiting": "Guess locked in. Eyes on the big screen."
+    "waiting": "Guess locked in. Eyes on the big screen.",
+    "finale": "Final standings",
+    "winner": "Top detective",
+    "awards": { "detective": "Best Detective", "mysterious": "Most Mysterious", "fooled": "Fooled the Room" }
   }
 }

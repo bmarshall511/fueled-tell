@@ -1,0 +1,154 @@
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: calc(var(--space-6) * var(--stage));
+  background: var(--color-bg);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  transition: clip-path var(--duration-slow) var(--easing-standard);
+}
+
+/* Exit: wipe away on the chamfer diagonal, toward the top-left. */
+.leaving {
+  clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+  transition-delay: var(--duration-base);
+}
+
+.deck {
+  position: relative;
+  width: calc(var(--size-card-width) * 0.28 * var(--stage));
+  height: calc(var(--size-item-height) * 0.28 * var(--stage));
+  margin-bottom: calc(var(--space-7) * var(--stage));
+}
+
+.card {
+  --cut: calc(var(--chamfer-lg) * var(--stage));
+  position: absolute;
+  inset: 0;
+  animation: riffle calc(var(--duration-boot-min) * 0.9) var(--easing-emphasized) infinite;
+}
+
+.c1 {
+  background: var(--color-fueled-perfect-white);
+}
+
+.c2 {
+  background: var(--color-accent);
+  animation-delay: calc(var(--duration-stagger) * 1);
+}
+
+.c3 {
+  background: var(--color-highlight);
+  animation-delay: calc(var(--duration-stagger) * 2);
+}
+
+/* Each card pulls out of the deck, rotates, and slides back underneath. */
+@keyframes riffle {
+  0%,
+  20% {
+    transform: translate(0, 0) rotate(0);
+  }
+  45% {
+    transform: translate(62%, -18%) rotate(9deg);
+  }
+  70%,
+  100% {
+    transform: translate(0, 0) rotate(0);
+  }
+}
+
+.leaving .card {
+  animation: none;
+  transform: scale(1.04);
+  transition: transform var(--duration-base) var(--easing-emphasized);
+}
+
+.title {
+  margin: 0;
+  text-align: center;
+}
+
+.status {
+  margin: 0;
+  color: var(--color-text-muted);
+}
+
+.dots span {
+  animation: blink var(--duration-entrance) infinite;
+}
+
+.dots span:nth-child(2) {
+  animation-delay: var(--duration-stagger);
+}
+
+.dots span:nth-child(3) {
+  animation-delay: calc(var(--duration-stagger) * 2);
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.bar {
+  --cut: calc(var(--chamfer-sm) * var(--stage));
+  width: calc(var(--size-card-width) * 0.28 * var(--stage));
+  height: calc(var(--space-3) * var(--stage));
+  background: var(--color-surface-raised);
+  overflow: hidden;
+}
+
+.bar span {
+  display: block;
+  height: 100%;
+  width: 40%;
+  background: var(--color-highlight);
+  animation: scan var(--duration-entrance) var(--easing-standard) infinite;
+}
+
+.leaving .bar span {
+  width: 100%;
+  animation: none;
+}
+
+@keyframes scan {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
+
+.footer {
+  position: absolute;
+  left: calc(var(--space-8) * var(--stage));
+  right: calc(var(--space-8) * var(--stage));
+  bottom: calc(var(--space-7) * var(--stage));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .bar span,
+  .dots span {
+    animation: none;
+  }
+  .c2 {
+    transform: translate(8%, -8%);
+  }
+  .c3 {
+    transform: translate(16%, -16%);
+  }
+  .leaving {
+    clip-path: none;
+    opacity: 0;
+    transition: opacity var(--duration-base) linear;
+  }
+}

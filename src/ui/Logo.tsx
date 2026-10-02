@@ -16,7 +16,7 @@ function MonoSvg({ markup, label, height, className }: MonoLogoProps & { markup:
       aria-label={label}
       className={`${styles.mono} ${className ?? ''}`}
       style={{ height }}
-      dangerouslySetInnerHTML={{ __html: markup }}
+      dangerouslySetInnerHTML={{ __html: markup.replace('<svg', '<svg aria-hidden="true" focusable="false"') }}
     />
   );
 }
@@ -35,9 +35,9 @@ export const FueledLockup = ({ height, className }: MonoLogoProps) => (
 /** "built by DOM lab" endorsement. */
 export function BuiltBy({ height, className }: MonoLogoProps) {
   return (
-    <span className={`${styles.builtBy} ${className ?? ''}`} style={{ fontSize: `calc(${height} * 0.5)` }}>
+    <span className={`${styles.builtBy} ${className ?? ''}`} style={{ fontSize: `calc(${height} * 0.42)` }}>
       <span>built by</span>
-      <DomLabLogo height={height} />
+      <DomLabLogo height={height} className={styles.domlab} />
     </span>
   );
 }

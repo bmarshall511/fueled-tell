@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useReducer } from 'react';
 import { createRound, currentEntryId, roundReducer, type RoundAction } from '../engine/round';
-import type { Entry, Guess, RoundPhase, RoundState } from '../engine/types';
+import type { Entry, GamePhase, Guess, RoundState } from '../engine/types';
 import { MOCK_ENTRIES, MOCK_PACK, MOCK_PLAYERS } from './data';
 import { seeded, shuffle } from './random';
 
@@ -30,13 +30,26 @@ function simulateGuesses(entry: Entry, index: number, durationMs: number): { gue
   });
 }
 
-/** `?at=guessing|locked|reveal&item=3` deep-links into a phase (for reviews and screenshots). */
+/** Plays one entry from showing through reveal with every simulated guess. */
+function playThrough(reducer: (s: RoundState, a: RoundAction) => RoundState, state: RoundState, durationMs: number): RoundState {
+  const entry = MOCK_ENTRIES.find((e) => e.id === currentEntryId(state)) as Entry;
+  let s = reducer(state, { type: 'beginGuessing', now: Date.now(), durationMs });
+  simulateGuesses(entry, s.index, durationMs).forEach(({ guess }) => (s = reducer(s, { type: 'guess', guess })));
+  return reducer(reducer(s, { type: 'lock' }), { type: 'reveal' });
+}
+
+/** `?at=guessing|locked|reveal|finale&item=3` deep-links into a phase (for reviews and screenshots). */
 function initialState(reducer: (s: RoundState, a: RoundAction) => RoundState, durationMs: number): RoundState {
   const params = new URLSearchParams(window.location.search);
   let state = createRound(shuffle(MOCK_ENTRIES.map((e) => e.id), seeded(7)));
   state = { ...state, index: Math.max(0, Math.min(state.order.length - 1, Number(params.get('item') ?? 1) - 1)) };
-  const at = params.get('at') as RoundPhase | null;
+  const at = params.get('at') as GamePhase | null;
   if (!at || at === 'showing') return state;
+  if (at === 'finale') {
+    state = { ...state, index: 0 };
+    while (state.phase !== 'finale') state = reducer(playThrough(reducer, state, durationMs), { type: 'next' });
+    return state;
+  }
   const entry = MOCK_ENTRIES.find((e) => e.id === currentEntryId(state)) as Entry;
   state = reducer(state, { type: 'beginGuessing', now: Date.now(), durationMs });
   if (at === 'guessing') return state;
@@ -92,6 +105,8 @@ export function useMockRound() {
         return dispatch({ type: 'reveal' });
       case 'reveal':
         return dispatch({ type: 'next' });
+      case 'finale':
+        return undefined;
     }
   }, [state.phase, durationMs]);
 

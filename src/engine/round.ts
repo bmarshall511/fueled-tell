@@ -8,7 +8,7 @@ export type RoundAction =
   | { type: 'next' };
 
 export function createRound(order: EntryId[]): RoundState {
-  return { phase: 'showing', order, index: 0, guesses: [], deadline: null };
+  return { phase: 'showing', order, index: 0, guesses: [], deadline: null, history: {} };
 }
 
 export const currentEntryId = (s: RoundState): EntryId | undefined => s.order[s.index];
@@ -16,7 +16,8 @@ export const currentEntryId = (s: RoundState): EntryId | undefined => s.order[s.
 export const isLastEntry = (s: RoundState): boolean => s.index >= s.order.length - 1;
 
 /**
- * Pure round reducer: showing -> guessing -> locked -> reveal -> (next) showing.
+ * Pure round reducer: showing -> guessing -> locked -> reveal -> (next) showing,
+ * and after the last entry's reveal, finale.
  * Invalid actions for the current phase return the same state object.
  */
 export function roundReducer(entries: readonly Entry[]) {
@@ -47,15 +48,13 @@ export function roundReducer(entries: readonly Entry[]) {
         if (state.phase !== 'locked') return state;
         return { ...state, phase: 'reveal' };
 
-      case 'next':
+      case 'next': {
         if (state.phase !== 'reveal') return state;
-        return {
-          ...state,
-          phase: 'showing',
-          index: (state.index + 1) % state.order.length, // mock loops; Phase 1 goes to finale
-          guesses: [],
-          deadline: null,
-        };
+        const id = currentEntryId(state);
+        const history = id ? { ...state.history, [id]: state.guesses } : state.history;
+        if (isLastEntry(state)) return { ...state, phase: 'finale', history, guesses: [], deadline: null };
+        return { ...state, phase: 'showing', index: state.index + 1, guesses: [], deadline: null, history };
+      }
     }
   };
 }

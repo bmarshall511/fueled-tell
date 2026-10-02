@@ -1,0 +1,187 @@
+.finale {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  align-content: start;
+  gap: calc(var(--space-5) * var(--stage));
+  padding: calc(var(--space-7) * var(--stage)) calc(var(--space-8) * var(--stage))
+    calc(var(--size-tap-target) * 2 + var(--space-6));
+  background: var(--color-bg);
+  overflow: auto;
+}
+
+.head {
+  text-align: center;
+}
+
+.kicker {
+  margin: 0 0 calc(var(--space-3) * var(--stage));
+  font-weight: inherit;
+  color: var(--color-text-muted);
+}
+
+.winner {
+  margin: 0;
+  animation: rise var(--duration-slow) var(--easing-emphasized) both;
+}
+
+.winner :global(.t-label) {
+  display: block;
+  color: var(--color-accent);
+}
+
+.podium {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: end;
+  gap: calc(var(--space-5) * var(--stage));
+  max-width: calc(var(--size-card-width) * var(--stage));
+  width: 100%;
+  justify-self: center;
+}
+
+.step {
+  --cut: calc(var(--chamfer-lg) * var(--stage));
+  display: grid;
+  align-content: start;
+  gap: calc(var(--space-2) * var(--stage));
+  padding: calc(var(--space-6) * var(--stage));
+  background: var(--color-surface-raised);
+  border-top: calc(var(--border-width-strong) * 2 * var(--stage)) solid var(--player);
+  animation: rise var(--duration-slow) var(--easing-emphasized) both;
+}
+
+/* Winner gets the Deck card treatment: Perfect White, inverse text, tallest. */
+.p1 {
+  min-height: calc(var(--item-h) * 0.54);
+  background: var(--color-fueled-perfect-white);
+  color: var(--color-text-inverse);
+}
+
+.p2 {
+  min-height: calc(var(--item-h) * 0.42);
+}
+
+.p3 {
+  min-height: calc(var(--item-h) * 0.34);
+}
+
+.place {
+  color: var(--color-accent);
+}
+
+.p1 .place {
+  color: var(--color-accent);
+}
+
+.name {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+.score {
+  opacity: var(--opacity-muted);
+}
+
+.lower {
+  display: grid;
+  align-items: start;
+  gap: calc(var(--space-6) * var(--stage));
+  max-width: calc(var(--size-card-width) * var(--stage));
+  width: 100%;
+  justify-self: center;
+}
+
+.rest {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: calc(var(--space-2) * var(--stage)) calc(var(--space-8) * var(--stage));
+  flex: 1;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--space-4) * var(--stage));
+  font-size: calc(var(--font-size-host-label) * var(--stage));
+  animation: rise var(--duration-slow) var(--easing-standard) both;
+}
+
+.rowPlace {
+  min-width: 2.5em;
+  color: var(--color-text-muted);
+}
+
+.rowScore {
+  margin-left: auto;
+  white-space: nowrap;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.awards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: calc(var(--space-3) * var(--stage));
+}
+
+.award {
+  --cut: calc(var(--chamfer-md) * var(--stage));
+  display: grid;
+  gap: calc(var(--space-1) * var(--stage));
+  padding: calc(var(--space-3) * var(--stage));
+  background: var(--color-surface);
+  animation: rise var(--duration-slow) var(--easing-emphasized) both;
+}
+
+.award :global(.t-label) {
+  color: var(--color-highlight);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--space-8) * var(--stage)));
+  }
+}
+
+/* Portrait: podium stays 3-up but shorter; everything else stacks. */
+[data-orientation='portrait'] .finale {
+  padding: var(--space-6) var(--space-4) calc(var(--size-tap-target) * 2 + var(--space-7));
+}
+
+[data-orientation='portrait'] .awards,
+[data-orientation='portrait'] .rest {
+  grid-template-columns: 1fr;
+}
+
+[data-orientation='portrait'] .row {
+  font-size: max(var(--font-size-phone-body), calc(var(--font-size-host-label) * var(--stage)));
+}
+
+[data-orientation='portrait'] .name {
+  font-size: max(var(--font-size-phone-body), calc(var(--font-size-host-label) * var(--stage)));
+}
+
+[data-orientation='portrait'] .p1 {
+  min-height: calc(var(--item-h) * 0.5);
+}
+
+[data-orientation='portrait'] .p2 {
+  min-height: calc(var(--item-h) * 0.4);
+}
+
+[data-orientation='portrait'] .p3 {
+  min-height: calc(var(--item-h) * 0.32);
+}

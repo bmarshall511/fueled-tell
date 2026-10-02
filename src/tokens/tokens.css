@@ -37,6 +37,7 @@
   --font-size-phone-title: 26px;
   --font-size-phone-body: 18px;
   --font-size-phone-label: 14px;
+  --font-size-page-display: 72px;
   --font-line-height-tight: 1.05;
   --font-line-height-base: 1.25;
   --font-letter-spacing-tight: -0.02em;
@@ -61,6 +62,15 @@
   --size-card-width: 1440px;
   --size-planet-radius: 390px;
   --size-planet-item-width: 700px;
+  --size-stage-portrait-width: 1080px;
+  --size-stage-portrait-height: 1920px;
+  --size-card-width-portrait: 960px;
+  --size-item-height-portrait: 960px;
+  --size-item-offset-y-portrait: -200px;
+  --size-item-padding: 80px;
+  --size-chip: 72px;
+  --size-builtby-host: 40px;
+  --size-builtby-page: 28px;
   --chamfer-sm: 6px;
   --chamfer-md: 12px;
   --chamfer-lg: 24px;
@@ -71,6 +81,8 @@
   --duration-slow: 600ms;
   --duration-entrance: 1400ms;
   --duration-reveal: 1800ms;
+  --duration-boot-min: 1400ms;
+  --duration-stagger: 220ms;
   --easing-standard: cubic-bezier(0.2, 0, 0, 1);
   --easing-emphasized: cubic-bezier(0.3, 0, 0, 1.3);
   --opacity-dim: 0.35;

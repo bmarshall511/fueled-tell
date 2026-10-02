@@ -41,9 +41,10 @@
 }
 
 .host {
-  min-height: calc(var(--size-tap-target) * 1.25 * var(--stage));
-  padding: 0 calc(var(--space-5) * var(--stage));
-  font-size: calc(var(--font-size-host-label) * 0.75 * var(--stage));
+  /* Never below a real tap target, even when the stage is scaled down on a phone. */
+  min-height: max(var(--size-tap-target), calc(var(--size-tap-target) * 1.25 * var(--stage)));
+  padding: 0 max(var(--space-4), calc(var(--space-5) * var(--stage)));
+  font-size: max(var(--font-size-phone-label), calc(var(--font-size-host-label) * 0.75 * var(--stage)));
   --cut: calc(var(--chamfer-md) * var(--stage));
 }
 

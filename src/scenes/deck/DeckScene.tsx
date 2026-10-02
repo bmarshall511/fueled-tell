@@ -1,12 +1,12 @@
 import { useFrame } from '@react-three/fiber';
-import { useMemo, useRef, type CSSProperties } from 'react';
+import { useEffect, useMemo, useRef, type CSSProperties } from 'react';
 import { Color, ExtrudeGeometry, Shape, ShapeGeometry, type Group, type Mesh, type MeshBasicMaterial } from 'three';
 import { tokens } from '../../tokens/tokens';
 import { ItemText } from '../../ui/ItemText';
 import { playerColor } from '../../ui/playerColor';
 import type { SceneProps } from '../Scene';
 import { SceneCanvas } from '../SceneCanvas';
-import { CAMERA, approach, useStageToWorld } from '../shared/stage';
+import { CAMERA, approach, useStage } from '../shared/stage';
 import { SceneOverlay } from '../shared/SceneOverlay';
 import styles from './DeckScene.module.css';
 
@@ -14,7 +14,7 @@ import styles from './DeckScene.module.css';
 export const rendersOwnerName = true;
 
 const CARD_DEPTH = 0.08;
-const CHIP = { radius: 0.34, height: 0.11, gap: 0.015, offTable: 8 };
+const CHIP = { depth: 0.14, spacing: 1.3, columns: 2, dropHeight: 3, sideShade: 0.5, maxJitter: 0.18 };
 const TABLE_Z = -0.6;
 /** Where cards come from and go to, in card widths. */
 const DEAL_FROM = { x: 1.6, y: 1.2, rot: -0.5 };
@@ -33,10 +33,10 @@ function chamferShape(w: number, h: number, cut: number): Shape {
 }
 
 function Card({ phase, itemId, reducedMotion }: { phase: SceneProps['phase']; itemId: string; reducedMotion: boolean }) {
-  const toWorld = useStageToWorld();
-  const w = toWorld(tokens.size.cardWidth);
-  const h = toWorld(tokens.size.itemHeight);
-  const offsetY = -toWorld(tokens.size.itemOffsetY);
+  const { layout, toWorld } = useStage();
+  const w = toWorld(layout.cardWidth);
+  const h = toWorld(layout.itemHeight);
+  const offsetY = -toWorld(layout.itemOffsetY);
   const cut = toWorld(tokens.chamfer.lg * 2);
 
   const { body, face } = useMemo(() => {
@@ -46,6 +46,7 @@ function Card({ phase, itemId, reducedMotion }: { phase: SceneProps['phase']; it
       face: new ShapeGeometry(shape),
     };
   }, [w, h, cut]);
+  useEffect(() => () => [body, face].forEach((g) => g.dispose()), [body, face]);
 
   const group = useRef<Group>(null);
   const flip = useRef<Group>(null);
@@ -87,36 +88,55 @@ function Card({ phase, itemId, reducedMotion }: { phase: SceneProps['phase']; it
         <meshBasicMaterial color={tokens.color.bg} transparent />
       </mesh>
       <group ref={flip}>
-      <mesh geometry={body} position-z={-CARD_DEPTH / 2}>
-        <meshStandardMaterial color={tokens.color.neutral[700]} roughness={0.6} />
-      </mesh>
-      <mesh geometry={face} position-z={CARD_DEPTH / 2 + 0.001}>
-        <meshBasicMaterial color={tokens.color.fueled.perfectWhite} toneMapped={false} />
-      </mesh>
-      <mesh geometry={face} position-z={-CARD_DEPTH / 2 - 0.001} rotation-y={Math.PI}>
-        <meshBasicMaterial color={tokens.color.accent} toneMapped={false} />
-      </mesh>
+        <mesh geometry={body} position-z={-CARD_DEPTH / 2}>
+          <meshStandardMaterial color={tokens.color.neutral[700]} roughness={0.6} />
+        </mesh>
+        <mesh geometry={face} position-z={CARD_DEPTH / 2 + 0.001}>
+          <meshBasicMaterial color={tokens.color.fueled.perfectWhite} toneMapped={false} />
+        </mesh>
+        <mesh geometry={face} position-z={-CARD_DEPTH / 2 - 0.001} rotation-y={Math.PI}>
+          <meshBasicMaterial color={tokens.color.accent} toneMapped={false} />
+        </mesh>
       </group>
     </group>
   );
 }
 
-/** One chip per guess. Anonymous (same color) until reveal, then guesser colors. */
-function Chips({ guesses, players, reveal, reducedMotion }: Pick<SceneProps, 'guesses' | 'players' | 'reveal' | 'reducedMotion'>) {
-  const toWorld = useStageToWorld();
-  const x = toWorld(tokens.size.cardWidth / 2) + CHIP.radius * 2.2;
-  const baseY = -toWorld(tokens.size.itemHeight / 2) - toWorld(tokens.size.itemOffsetY);
-  const geometry = useMemo(() => new ExtrudeGeometry(chamferShape(CHIP.radius * 2, CHIP.radius * 2, CHIP.radius * 0.5), { depth: CHIP.height, bevelEnabled: false }), []);
-  const meshes = useRef<(Mesh | null)[]>([]);
+interface ChipsProps extends Pick<SceneProps, 'guesses' | 'players' | 'reveal' | 'reducedMotion'> {
+  slots: number;
+}
 
-  const colors = useMemo(
-    () =>
-      guesses.map((g) => {
-        const p = players.find((pl) => pl.id === g.playerId);
-        return reveal && p ? playerColor(p.colorIndex) : tokens.color.fueled.techGrey;
-      }),
-    [guesses, players, reveal],
+/**
+ * One chip per guess, landing in a tidy pot beside the card (below it in
+ * portrait). Anonymous grey until reveal; then guesser colors, correct chips
+ * regroup at the front and wrong ones slide off the table.
+ */
+function Chips({ guesses, players, reveal, reducedMotion, slots }: ChipsProps) {
+  const { layout, toWorld } = useStage();
+  const size = toWorld(tokens.size.chip);
+  const step = size * CHIP.spacing;
+  const cardW = toWorld(layout.cardWidth);
+  const cardH = toWorld(layout.itemHeight);
+  const offsetY = -toWorld(layout.itemOffsetY);
+  const portrait = layout.orientation === 'portrait';
+
+  /** Slot k: a 2-column pot right of the card, or one centered row under it. */
+  const slot = (k: number): [number, number] => {
+    if (portrait) {
+      return [(k - (slots - 1) / 2) * step, offsetY - cardH / 2 - step * 0.9];
+    }
+    const col = k % CHIP.columns;
+    const row = Math.floor(k / CHIP.columns);
+    return [cardW / 2 + step * (0.85 + col), offsetY - cardH / 2 + size / 2 + row * step];
+  };
+  const offTable: [number, number] = portrait ? [0, -toWorld(layout.refHeight)] : [toWorld(layout.refWidth), 0];
+
+  const geometry = useMemo(
+    () => new ExtrudeGeometry(chamferShape(size, size, size * 0.28), { depth: CHIP.depth, bevelEnabled: false }),
+    [size],
   );
+  useEffect(() => () => geometry.dispose(), [geometry]);
+  const meshes = useRef<(Mesh | null)[]>([]);
   const correct = (id: string) => reveal?.correctPlayerIds.includes(id) ?? false;
 
   useFrame((_, dt) => {
@@ -124,36 +144,52 @@ function Chips({ guesses, players, reveal, reducedMotion }: Pick<SceneProps, 'gu
       const m = meshes.current[i];
       if (!m) return;
       const isCorrect = correct(g.playerId);
-      // Stack upward on screen like a fanned pile; on reveal, wrong chips slide off the table.
-      const targetX = reveal && !isCorrect ? x + CHIP.offTable : x;
-      const stackIndex = reveal ? guesses.filter((o, j) => j < i && correct(o.playerId) === isCorrect).length : i;
-      const targetY = baseY + stackIndex * (CHIP.height * 2.6 + CHIP.gap) + CHIP.radius;
-      m.position.x = approach(m.position.x, targetX, dt, reducedMotion, 7);
-      m.position.y = approach(m.position.y, targetY, dt, reducedMotion, 9);
-      m.position.z = approach(m.position.z, stackIndex * CHIP.height, dt, reducedMotion, 9);
+      const k = reveal && isCorrect ? guesses.filter((o, j) => j < i && correct(o.playerId)).length : i;
+      const [sx, sy] = slot(k);
+      const gone = reveal !== null && !isCorrect;
+      const tx = gone ? sx + offTable[0] : sx;
+      const ty = gone ? sy + offTable[1] : sy;
+      m.position.x = approach(m.position.x, tx, dt, reducedMotion, gone ? 2.5 : 8);
+      m.position.y = approach(m.position.y, ty, dt, reducedMotion, gone ? 2.5 : 8);
+      // Drops from above the table and lands with weight.
+      m.position.z = approach(m.position.z, 0, dt, reducedMotion, 10);
+      m.rotation.z = approach(m.rotation.z, reveal ? 0 : jitter(g.playerId), dt, reducedMotion, 8);
     });
   });
 
   return (
     <>
-      {guesses.map((g, i) => (
-        <mesh
-          key={g.playerId}
-          ref={(m) => {
-            meshes.current[i] = m;
-            // New chips drop in from above the stack.
-            if (m && m.userData.placed !== true) {
-              m.userData.placed = true;
-              m.position.set(x, baseY + 4, 2);
-            }
-          }}
-          geometry={geometry}
-        >
-          <meshStandardMaterial color={new Color(colors[i])} roughness={0.4} />
-        </mesh>
-      ))}
+      {guesses.map((g, i) => {
+        const p = players.find((pl) => pl.id === g.playerId);
+        const face = new Color(reveal && p ? playerColor(p.colorIndex) : tokens.color.fueled.techGrey);
+        const side = face.clone().multiplyScalar(CHIP.sideShade);
+        return (
+          <mesh
+            key={g.playerId}
+            ref={(m) => {
+              meshes.current[i] = m;
+              if (m && m.userData.placed !== true) {
+                m.userData.placed = true;
+                const [sx, sy] = slot(i);
+                m.position.set(sx, sy, CHIP.dropHeight);
+              }
+            }}
+            geometry={geometry}
+          >
+            <meshBasicMaterial attach="material-0" color={face} toneMapped={false} />
+            <meshBasicMaterial attach="material-1" color={side} toneMapped={false} />
+          </mesh>
+        );
+      })}
     </>
   );
+}
+
+/** Stable small rotation per player so the pot looks hand-placed. */
+function jitter(id: string): number {
+  let h = 0;
+  for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) | 0;
+  return ((h % 100) / 100) * CHIP.maxJitter;
 }
 
 export default function DeckScene(props: SceneProps) {
@@ -173,11 +209,16 @@ export default function DeckScene(props: SceneProps) {
           <meshStandardMaterial color={tokens.color.surface} roughness={1} />
         </mesh>
         <Card phase={phase} itemId={item.id} reducedMotion={reducedMotion} />
-        <Chips guesses={props.guesses} players={players} reveal={reveal} reducedMotion={reducedMotion} />
+        <Chips guesses={props.guesses} players={players} reveal={reveal} reducedMotion={reducedMotion} slots={players.length - 1} />
       </SceneCanvas>
 
       <SceneOverlay>
-        <div key={item.id} className={`${styles.front} ${phase === 'reveal' ? 'fade-out' : 'fade-in'}`} style={dealDelay}>
+        <div
+          key={item.id}
+          className={`${styles.front} ${phase === 'reveal' ? 'fade-out' : 'fade-in'}`}
+          style={dealDelay}
+          aria-hidden={phase === 'reveal'}
+        >
           <ItemText text={item.text} label={`${copy.item} ${item.index + 1}`} />
         </div>
         {phase === 'reveal' && owner && (

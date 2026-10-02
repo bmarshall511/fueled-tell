@@ -4,7 +4,7 @@
   display: grid;
   place-items: center;
   pointer-events: none;
-  translate: 0 calc(var(--size-item-offset-y) * var(--stage));
+  translate: 0 var(--item-offset, calc(var(--size-item-offset-y) * var(--stage)));
 }
 
 .overlay > * {

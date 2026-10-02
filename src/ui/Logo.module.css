@@ -13,6 +13,12 @@
   align-items: center;
   gap: 0.6em;
   color: var(--color-text-muted);
+  white-space: nowrap;
   letter-spacing: var(--font-letter-spacing-label);
   text-transform: uppercase;
+}
+
+/* The DOM lab mark itself at full text color: it's the endorsement, not decoration. */
+.domlab {
+  color: var(--color-text);
 }

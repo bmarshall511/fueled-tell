@@ -21,7 +21,7 @@ import { ItemText } from '../../ui/ItemText';
 import { playerColor } from '../../ui/playerColor';
 import type { SceneProps } from '../Scene';
 import { SceneCanvas } from '../SceneCanvas';
-import { CAMERA, approach, useStageToWorld } from '../shared/stage';
+import { CAMERA, approach, useStage } from '../shared/stage';
 import { SceneOverlay } from '../shared/SceneOverlay';
 import styles from './OrbitScene.module.css';
 
@@ -236,9 +236,9 @@ function Moons({ phase, guesses, players, reveal, reducedMotion, activeRadius, o
 }
 
 function OrbitWorld(props: SceneProps) {
-  const toWorld = useStageToWorld();
+  const { layout, toWorld } = useStage();
   const activeRadius = toWorld(tokens.size.planetRadius) * depthScale;
-  const offsetY = -toWorld(tokens.size.itemOffsetY) * depthScale;
+  const offsetY = -toWorld(layout.itemOffsetY) * depthScale;
   const glow = glowFor(tokens.color.accent);
   return (
     <>

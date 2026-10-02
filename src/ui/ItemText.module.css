@@ -1,6 +1,6 @@
 .item {
   margin: 0;
-  max-width: calc(var(--size-item-width) * var(--stage));
+  max-width: var(--item-w, calc(var(--size-item-width) * var(--stage)));
 }
 
 .label {
