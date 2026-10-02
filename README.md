@@ -18,7 +18,7 @@ No accounts, no servers, no cost. The host's browser runs the game; phones conne
    - Type them in, one row per person (Enter jumps to the entry; Cmd/Ctrl+Enter adds the next row).
    - **Paste a list** from Slack, a doc or a spreadsheet: `Name | story`, `Name: story`, `Name - story`, two spreadsheet columns, or a name on its own line with the story underneath. You'll see a preview of every row before anything is added, and rows that need a fix are highlighted, never dropped.
    - Or choose **Players type them on their phones** and they'll write their entry in the lobby.
-4. Pick a timer and scoring (**Points & places** is the default), then **Open lobby**.
+4. Pick a timer, then **Open lobby**. Every game is scored: points, places and a winner.
 
 ### On the call
 
@@ -73,7 +73,7 @@ npm run build      # production build (PWA) in dist/
 - `src/host/`: the shared-screen app, in `setup/`, `lobby/`, `game/` and `state/` (`useHostGame`, split into session, room, timers and bots hooks).
 - `src/player/`: the phone app. `screenFor.ts` picks the screen, `screens/` holds one file per screen, and `components/` the layout pieces.
 - `src/ui/`: shared components, hooks, copy and base styles. `src/scenes/`: Deck (Three.js, lazy) and the flat fallback.
-- All game copy, the prompt, entry length, timer and scoring defaults and points live in one file, `src/content/game.json`.
+- All game copy, the prompt, entry length, timer default and points live in one file, `src/content/game.json`.
 
 See `PLAN.md` for the design, `CLAUDE.md` for conventions, `BUILD_LOG.md` for how it was built.
 

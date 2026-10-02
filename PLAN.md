@@ -87,7 +87,6 @@ src/
   "entry": { "type": "text", "maxLength": 280 },
   "guess": "owner",                 // who does this belong to
   "timerSec": 45,
-  "scoring": "competitive",         // competitive | none
   "copy": { "reveal": "It was…", "yours": "This one's yours. Act natural." }
 }
 ```
@@ -100,13 +99,10 @@ src/
 - **Host → players:** `state {redacted snapshot}`. The host broadcasts the whole redacted state on every change. That's simpler than diffs, and the state is tiny.
 - **Reconnects:** `playerId` lives in the phone's `localStorage`, so a refresh rejoins as the same player.
 
-**Scoring (ranked):** every game ends with a ranking unless the host picks "Just for fun".
+**Scoring (ranked):** every game ends with a ranking: points, places and a winner. (The "Just for fun" mode was removed on 2026-10-02.)
 
-- A correct guess scores **100**; an owner scores **50** for every player their entry fools. Points are per pack (`points` in the pack JSON).
+- A correct guess scores **100**; an owner scores **50** for every player their entry fools. Points are set in `src/content/game.json` (`points`).
 - Places use standard competition ranking: equal scores share a place (1, 2, 2, 4); within a tie, more correct guesses list first.
-- Scoring modes (per game, set in setup):
-  - `competitive` ("Points & places", the default): podium, full standings with points, and the winner.
-  - `none` ("Just for fun"): no points; the finale just thanks everyone who played.
 - Host-only mode: the host ticks who guessed right after each reveal, so only correct guesses score (there's no record of wrong guesses to award "fooled" points).
 - Each reveal shows the % who guessed right; phones show "You got it" / "Not this time", and the owner sees how many they fooled.
 - You can't guess your own entry, or name yourself.

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { GameState, Intake, ScoringMode } from '../../engine/types';
+import type { GameState, Intake } from '../../engine/types';
 import { GAME } from '../../content';
 import { newRow, type DraftRow } from './draftRows';
 
@@ -7,7 +7,6 @@ export interface SetupDraft {
   intake: Intake;
   rows: DraftRow[];
   timerSec: number;
-  scoring: ScoringMode;
   hostOnly: boolean;
 }
 
@@ -28,13 +27,12 @@ function fromGame(s: GameState): SetupDraft {
     intake: s.settings.intake,
     rows: s.entries.map((e) => newRow(s.players.find((p) => p.id === e.ownerId)?.name ?? '', e.text)),
     timerSec: s.settings.timerSec,
-    scoring: s.settings.scoring,
     hostOnly: s.settings.hostOnly,
   };
 }
 
 function fresh(): SetupDraft {
-  return { intake: 'host', rows: [], timerSec: GAME.timerSec, scoring: GAME.scoring, hostOnly: false };
+  return { intake: 'host', rows: [], timerSec: GAME.timerSec, hostOnly: false };
 }
 
 /**

@@ -33,7 +33,6 @@ export function createGame(content: GameContent, settings: Partial<Settings> = {
     phase: 'lobby',
     settings: {
       timerSec: content.timerSec,
-      scoring: content.scoring,
       hostOnly: false,
       intake: 'host',
       maxLength: content.entry.maxLength,

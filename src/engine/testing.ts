@@ -6,7 +6,6 @@ export const TEST_CONTENT: GameContent = {
   prompt: 'p',
   entry: { maxLength: 50 },
   timerSec: 30,
-  scoring: 'competitive',
   points: { correct: 100, fooled: 50 },
   copy: {
     item: 'Item',

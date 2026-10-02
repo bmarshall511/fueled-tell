@@ -105,7 +105,7 @@ export function GameScreen({ host }: { host: HostGame }) {
         {describeRound({ state: s, copy, progress, entry, revealed })}
       </p>
 
-      {finale && <Finale standings={standings} players={s.players} copy={copy} scored={s.settings.scoring === 'competitive'} />}
+      {finale && <Finale standings={standings} players={s.players} copy={copy} />}
 
       <div className={`${styles.hud} ${styles.top}`}>
         {finale ? <HostBrand /> : <RoundHeader progress={progress} deadline={s.deadline} durationMs={s.settings.timerSec * 1000} />}

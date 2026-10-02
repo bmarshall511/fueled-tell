@@ -3,21 +3,13 @@ import { PlayerChip } from '../../ui/components/PlayerChip';
 import { GAME } from '../../content';
 import { UI_COPY } from '../../ui/copy';
 import { formatScore, ordinal } from '../../ui/lib/format';
-import { Centered, Heading, Split } from '../components/Layout';
+import { Heading, Split } from '../components/Layout';
 import type { ScreenProps } from './types';
 import styles from './FinalScreen.module.css';
 
-/** Game over: your place, the winner, and the full standings (or just thanks, unscored). */
+/** Game over: your place, the winner, and the full standings. */
 export function FinalScreen({ view }: Pick<ScreenProps, 'view'>) {
   const finale = GAME.copy.finale;
-  if (view.settings.scoring === 'none') {
-    return (
-      <Centered>
-        <p className="text-label">{finale}</p>
-        <Heading>{UI_COPY.thanks}</Heading>
-      </Centered>
-    );
-  }
   const standings = view.standings ?? [];
   const mine = standings.find((s) => s.playerId === view.me);
   const winners = standings.filter((s) => s.place === 1).map((s) => nameOf(view, s.playerId));

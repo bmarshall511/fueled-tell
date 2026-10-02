@@ -4,7 +4,6 @@
     "maxLength": 280
   },
   "timerSec": 45,
-  "scoring": "competitive",
   "points": {
     "correct": 100,
     "fooled": 50

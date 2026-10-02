@@ -163,21 +163,6 @@
   text-align: right;
 }
 
-.finale:has(.played) {
-  justify-content: center;
-}
-
-.played {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: calc(var(--space-3) * var(--stage));
-  max-width: calc(var(--size-card-width) * var(--stage));
-}
-
 @keyframes rise {
   from {
     opacity: 0;

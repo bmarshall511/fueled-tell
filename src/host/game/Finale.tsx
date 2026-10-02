@@ -4,7 +4,6 @@ import type { GameCopy, PlayerId } from '../../engine/types';
 import { tokens } from '../../tokens/tokens';
 import { UI_COPY } from '../../ui/copy';
 import { formatScore, ordinal } from '../../ui/lib/format';
-import { PlayerChip } from '../../ui/components/PlayerChip';
 import { playerColorVar } from '../../ui/lib/playerColor';
 import type { SeatedPlayer } from '../../ui/lib/types';
 import styles from './Finale.module.css';
@@ -13,8 +12,6 @@ interface FinaleProps {
   standings: readonly Standing[];
   players: readonly SeatedPlayer[];
   copy: GameCopy;
-  /** Points & places: podium and ranked standings. Otherwise a simple "thanks for playing". */
-  scored: boolean;
 }
 
 /** Podium visual order: 2nd, 1st, 3rd (rises 3rd, then 2nd, then 1st). */
@@ -26,28 +23,9 @@ const PODIUM = [
 
 const delay = (step: number): CSSProperties => ({ animationDelay: `${step * tokens.duration.stagger * 2}ms` });
 
-export function Finale({ standings, players, copy, scored }: FinaleProps) {
+/** Game over: the winner, a podium for the top three, then everyone else in ranked rows. */
+export function Finale({ standings, players, copy }: FinaleProps) {
   const byId = (id: PlayerId) => players.find((p) => p.id === id);
-
-  if (!scored) {
-    return (
-      <section className={styles.finale} aria-labelledby="finale-title">
-        <header className={styles.head}>
-          <p className={`t-label ${styles.kicker}`}>{copy.finale}</p>
-          <h1 id="finale-title" className={`t-display ${styles.winnerName}`}>
-            {UI_COPY.thanks}
-          </h1>
-        </header>
-        <ul className={styles.played} aria-label={UI_COPY.players}>
-          {players.map((p, i) => (
-            <li key={p.id} style={delay(1 + i * 0.2)} className={styles.rise}>
-              <PlayerChip player={p} />
-            </li>
-          ))}
-        </ul>
-      </section>
-    );
-  }
 
   const winners = standings
     .filter((s) => s.place === 1)

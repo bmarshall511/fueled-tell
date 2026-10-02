@@ -32,16 +32,12 @@ export interface Guess {
   ownerId: PlayerId;
 }
 
-/** `competitive`: points, places and a winner. `none`: just for fun, no scores. */
-export type ScoringMode = 'competitive' | 'none';
-
 /** Everything game-specific lives in src/content/game.json, not in code. */
 export interface GameContent {
   /** What players are asked to write. */
   prompt: string;
   entry: { maxLength: number };
   timerSec: number;
-  scoring: ScoringMode;
   /** Points per correct guess, and per player an owner's entry fools. */
   points?: { correct: number; fooled: number };
   copy: GameCopy;
@@ -68,7 +64,6 @@ export type Intake = 'host' | 'live';
 
 export interface Settings {
   timerSec: number;
-  scoring: ScoringMode;
   /** No phones: players shout guesses and the host tallies who got it. */
   hostOnly: boolean;
   /** Host imports entries, or players submit them from the lobby. */

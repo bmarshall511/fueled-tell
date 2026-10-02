@@ -1,6 +1,5 @@
 import { validateRows } from '../../engine/intake';
 import { RULES } from '../../engine/rules';
-import type { ScoringMode } from '../../engine/types';
 import { GAME } from '../../content';
 import { Backdrop } from '../../ui/components/Backdrop';
 import { BrandHeader } from '../../ui/components/BrandHeader';
@@ -21,7 +20,6 @@ import styles from './Setup.module.css';
 
 const S = UI_COPY.setup;
 const TIMERS = [20, 30, 45, 60, 90];
-const SCORING: ScoringMode[] = ['competitive', 'none'];
 
 /** Host setup (not for sharing: it shows who wrote what). Creates the game, or edits the open lobby. */
 export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void }) {
@@ -38,7 +36,6 @@ export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void })
     const clean = rows.map((r) => ({ name: r.name, text: r.text }));
     const settings = {
       timerSec: draft.timerSec,
-      scoring: draft.scoring,
       hostOnly: draft.hostOnly,
       intake: draft.hostOnly ? ('host' as const) : draft.intake,
       maxLength: GAME.entry.maxLength,
@@ -98,13 +95,6 @@ export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void })
               options={TIMERS.map((t) => ({ value: t, label: `${t}${S.seconds}` }))}
               value={draft.timerSec}
               onChange={(v) => set('timerSec', v)}
-            />
-            <Segmented
-              label={S.scoring}
-              showLabel
-              options={SCORING.map((m) => ({ value: m, label: S.scoringModes[m] }))}
-              value={draft.scoring}
-              onChange={(v) => set('scoring', v)}
             />
             <Switch label={S.hostOnly} hint={S.hostOnlyHint} checked={draft.hostOnly} onChange={(v) => set('hostOnly', v)} />
           </div>

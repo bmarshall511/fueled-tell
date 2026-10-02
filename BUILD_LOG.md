@@ -611,3 +611,21 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **References:** `src` has no "pack" left.
 
 **Approximate time:** about 25 min.
+
+## 2026-10-02 (Fri): Session 1n, always points & places
+
+**Goal:** remove the scoring options; every game is scored (points, places and a winner).
+
+**What got done:**
+
+- `ScoringMode` and `settings.scoring` are gone from the engine, content, redaction, the setup draft and setup.
+- The unscored "Thanks for playing" finale is gone on both host and phone, along with its copy (`thanks`, `players`, `scoring`, `scoringModes`) and CSS.
+- README and PLAN are updated, and the Scoring control is out of the setup mockup.
+
+**Verification done by the AI:**
+
+- `npm run check`: 45/45 tests.
+- **Full 8-round game:** passes.
+- **axe-core:** 0 violations.
+
+**Approximate time:** about 10 min.

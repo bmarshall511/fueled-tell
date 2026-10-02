@@ -17,7 +17,7 @@ export interface PublicPlayer {
  */
 export interface PlayerView {
   phase: Phase;
-  settings: Pick<Settings, 'timerSec' | 'scoring' | 'hostOnly' | 'intake' | 'maxLength'>;
+  settings: Pick<Settings, 'timerSec' | 'hostOnly' | 'intake' | 'maxLength'>;
   me: PlayerId;
   players: PublicPlayer[];
   /** Lobby, live intake: whether my entry is in, and its text (mine only). */
@@ -45,7 +45,6 @@ export function redactFor(s: GameState, me: PlayerId, now: number, points?: { co
     phase: s.phase,
     settings: {
       timerSec: s.settings.timerSec,
-      scoring: s.settings.scoring,
       hostOnly: s.settings.hostOnly,
       intake: s.settings.intake,
       maxLength: s.settings.maxLength,
