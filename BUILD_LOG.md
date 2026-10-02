@@ -100,4 +100,4 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **A Windows High Contrast check.** The `forced-colors` styling was written but not seen.
 - **That the fake QR won't confuse people in a demo.** It looks like a real code.
 
-**Approximate time:** about 1 h 45 min of wall-clock AI time (roughly 10:40–12:25 CT), across 4 rounds of mid-task feedback.
+**Approximate time:** about 30 min of wall-clock AI time (roughly 10:37–11:05 CT), with 4 rounds of mid-task feedback folded in.
