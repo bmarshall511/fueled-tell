@@ -1,25 +1,67 @@
 # Phase 0 mockups
 
-Three host concepts plus one phone screen. All of them share one token file, one set of UI primitives, one mock round, and one `SceneProps` interface. The only thing that changes between concepts is the scene component in `src/scenes/<concept>/`.
+**Decision: Deck.** Orbit and Signal are kept as alternates (same `SceneProps`, so they could become themes later).
 
-Run `npm run dev` and open `/`.
+Run `npm run dev` and open `/`. It walks through the game in order. **Start with `/demo`**: the host screen and one player's phone side by side, synced live.
 
 | Route | What it is |
 |---|---|
-| `/orbit` | Host: Orbit concept |
-| `/signal` | Host: Signal concept |
-| `/deck` | Host: Deck concept |
-| `/play` | Phone: join, pick, waiting, yours |
+| `/` | The flow, step by step, with links to each host and phone screen |
+| `/demo` | **Synced walkthrough:** host (left) and phone (right) in one page |
+| `/create` | Host setup: pack, paste entries (live-parsed), timer, scoring, host-only mode |
+| `/create?screen=lobby` | Lobby for the shared screen: room code, QR placeholder, players arriving |
+| `/deck` | Host round loop (Deck), boot screen, reveal, then the finale after the last entry |
+| `/play` | Player app: join, lobby, guess (with the entry on screen), waiting/result, yours, final place |
+| `/orbit`, `/signal` | Alternate concepts we didn't pick |
 
-**Host keys:** Space = next step, L = lock, R = reveal.
+**Host keys:** Space = next step, L = lock, R = reveal, F = full screen.
 
-**Deep links for review:**
-- `?timer=15` shortens the guess timer.
-- `?at=guessing|locked|reveal&item=3` jumps straight to a phase.
-- `?motion=reduced` forces reduced motion.
-- `/play?screen=pick|waiting|yours` opens a phone state.
+**Deep links:**
+- `?timer=15` for faster rounds.
+- `?at=guessing|locked|reveal|finale&item=3` to jump to a phase.
+- `?motion=reduced` to force reduced motion.
+- `/play?screen=lobby|pick|waiting|yours|final` to open a phone state.
 
-Screenshots (1920×1080, headless Chrome) are in [`docs/mockups/`](docs/mockups/).
+Screenshots are in [`docs/mockups/`](docs/mockups/), numbered in flow order.
+
+## Round 2 (after picking Deck)
+
+- **Workflow:**
+  - `/` is now the flow, in order.
+  - `/demo` runs host and phone together over `BroadcastChannel` (`src/mock/demoSync.ts`, mock-only; Phase 1's `local` transport replaces it). Join on the phone, open the lobby and start on the host, and your guess counts on the big screen.
+- **Create a game** (`/create`): `engine/intake.ts` parses `Name | entry` lines, plus tab or comma for spreadsheet pastes, with per-line errors. The lobby is stage-scaled like the host, so it reads on a screen share.
+- **Scoring with places:**
+  - `engine/scoring.ts` adds `computeStandings`: 100 points per correct guess, plus 50 to the owner for each player fooled, configurable per pack.
+  - Ranking is standard competition style: equal scores share a place (1, 2, 2, 4).
+  - `computeAwards` gives Best Detective, Most Mysterious and Fooled the Room.
+  - The finale shows a podium, the full standings and the awards. Phones show your place, your points and the winner.
+- **Phone shows the entry.** The guess screen puts the entry on a white card above the names, and the waiting and yours screens repeat it compactly, so nobody has to remember it.
+- **Responsive:**
+  - The host has a portrait stage (1080×1920) alongside landscape (1920×1080), shared by the HUD and the 3D scene through `ui/stage.ts`.
+  - Host type sizes never drop below the phone sizes.
+  - On ultrawide screens the HUD stays centered on the stage.
+  - `/play` turns into a wide app layout from 768 px (3-column name grid, bigger type).
+- **Chips** land as separate tiles in a "pot" (a 2-column grid right of the card, or a row below it in portrait), instead of the overlapping stack.
+- **Boot screen** while the Three.js chunk loads:
+  - A riffling chamfered deck, an animated scan bar, and a wipe-out on the chamfer diagonal.
+  - It stays up at least `duration.boot-min` so it never just flickers.
+  - Reduced-motion variant.
+- **Native feel:**
+  - `index.html` gets `theme-color` and a background from the tokens, so there's no white flash.
+  - No overscroll bounce or tap highlight, plus safe-area padding.
+  - View Transitions between phone screens.
+  - Haptic tick on lock-in (Android).
+  - Full screen (F) and Screen Wake Lock on the host.
+- **Accessibility:**
+  - Native radios for the guess grid and settings. Labelled inputs with hints and errors.
+  - Focus moves to each new phone screen's heading.
+  - A polite live region narrates the host round.
+  - The canvas is hidden from assistive tech, and faded-out text is `aria-hidden`.
+  - Chamfered controls get an inset focus ring, because `clip-path` was clipping outlines, which made focus invisible.
+  - `forced-colors` support.
+  - Scaled host buttons never go below a 48 px tap target.
+  - axe-core (WCAG 2.2 AA + best practice) is clean on every route at 1440×900, and on `/play` at 390×844. See the build log for the one WebGL false positive.
+- **"Built by DOM lab"** is about twice the size, with the DOM lab mark at full text color. It's on every host screen, including the finale and lobby.
 
 ## What's shared (carries into Phase 1)
 
@@ -40,8 +82,9 @@ In all three concepts, the entry text and the owner's name are **crisp HTML over
 | Route | Total | Breakdown |
 |---|---|---|
 | `/` picker | ~73 KB | React app shell 69.9 + picker 0.8 + logos 2.3 |
-| `/play` | **~76 KB** | shell 69.9 + Play 1.6 + primitives 2.4 + logos 2.3. **No Three.js** in the graph (checked in the build output). |
-| `/deck` | ~323 KB | shell 69.9 + host 3.7 + primitives 4.7 + Three/R3F/drei 242.4 + scene 1.9 |
+| `/play` | **~82 KB** (round 2) | shell 70.1 + Play 3.1 + shared UI ~8.6. **No Three.js** in the graph (checked in the build output). |
+| `/create`, `/demo` | ~82 KB / ~76 KB | No Three.js. `/demo` loads the host and phone pages in iframes. |
+| `/deck` | ~330 KB (round 2) | shell 70.1 + host 5.7 + shared UI ~8.6 + Three/R3F/drei 242.5 (lazy) + scene 2.2 |
 | `/orbit` | ~324 KB | same, scene 2.9 (+ emblem SVG fetched as a 11 KB asset) |
 | `/signal` | ~323 KB | same, scene 2.5 |
 
