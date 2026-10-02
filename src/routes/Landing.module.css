@@ -1,0 +1,129 @@
+.landing {
+  max-width: calc(var(--size-stage-width) * 0.7);
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: grid;
+  align-content: start;
+  gap: var(--space-8);
+  padding: max(var(--space-6), env(safe-area-inset-top)) var(--space-5) var(--space-8);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.hero {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.title {
+  margin: 0;
+  font-weight: inherit;
+  font-size: clamp(calc(var(--font-size-phone-display) * 2), 18vw, calc(var(--font-size-host-hero) * 1.6));
+  line-height: 0.9;
+  letter-spacing: var(--font-letter-spacing-tight);
+  color: var(--color-text);
+}
+
+.tagline {
+  margin: 0;
+  max-width: 32ch;
+  font-size: clamp(var(--font-size-phone-title), 3vw, var(--font-size-host-label));
+  color: var(--color-text-muted);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-3);
+}
+
+.card {
+  --cut: var(--chamfer-lg);
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  padding: var(--space-6);
+  background: var(--color-surface-raised);
+  text-decoration: none;
+  transition: background-color var(--duration-fast) var(--easing-standard), transform var(--duration-fast) var(--easing-standard);
+}
+
+a.card:hover {
+  transform: translateY(calc(var(--space-1) * -1));
+}
+
+.primary {
+  background: var(--color-accent);
+}
+
+.cardTitle {
+  font-size: var(--font-size-phone-display);
+  line-height: var(--font-line-height-tight);
+}
+
+.cardHint {
+  font-size: var(--font-size-phone-body);
+  color: var(--color-text-muted);
+}
+
+.primary .cardHint {
+  color: var(--color-text);
+}
+
+.joinRow {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.code {
+  --cut: var(--chamfer-sm);
+  flex: 1;
+  min-width: 0;
+  min-height: var(--size-tap-target);
+  padding: 0 var(--space-3);
+  border: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--font-size-phone-title);
+  letter-spacing: var(--font-letter-spacing-code);
+  text-transform: uppercase;
+}
+
+.code::placeholder {
+  color: var(--color-text-muted);
+  opacity: var(--opacity-muted);
+}
+
+.how {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-5);
+}
+
+.step {
+  display: grid;
+  gap: var(--space-2);
+  font-size: var(--font-size-phone-body);
+  color: var(--color-text-muted);
+}
+
+.stepNum {
+  font-size: var(--font-size-phone-display);
+  line-height: 1;
+  color: var(--color-accent);
+}
+
+.install {
+  justify-self: start;
+}

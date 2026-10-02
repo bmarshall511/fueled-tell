@@ -1,72 +1,90 @@
-.page {
-  min-height: 100%;
+/*
+ * Player app. Phones: one full-bleed column. 960px+: a two-column app that uses
+ * the whole window (context left, actions right), with type stepping up.
+ */
+.app {
+  --gutter: max(var(--space-4), env(safe-area-inset-left));
+  min-height: 100dvh;
   display: grid;
-  justify-items: center;
-  align-content: start;
-  gap: var(--space-4);
-  padding: max(var(--space-4), env(safe-area-inset-top)) max(var(--space-4), env(safe-area-inset-right))
-    max(var(--space-4), env(safe-area-inset-bottom)) max(var(--space-4), env(safe-area-inset-left));
+  grid-template-rows: auto auto 1fr auto;
+  padding: max(var(--space-3), env(safe-area-inset-top)) var(--gutter) max(var(--space-3), env(safe-area-inset-bottom));
 }
 
-.mockNav {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--font-size-phone-label);
-  color: var(--color-text-muted);
-}
-
-.mockNav button {
-  min-height: var(--size-tap-target);
-  border: var(--border-width-base) solid var(--color-border);
-  background: none;
-  padding: 0 var(--space-3);
-  cursor: pointer;
-}
-
-.mockNav button[aria-pressed='true'] {
-  border-color: var(--color-highlight);
-  color: var(--color-text);
-}
-
-.phone {
-  --cut: var(--chamfer-lg);
-  width: 100%;
-  max-width: var(--size-phone-width);
-  min-height: min(calc(var(--size-phone-width) * 2), calc(100dvh - var(--size-tap-target) * 3));
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-6);
-  padding: var(--space-5);
-  background: var(--color-surface);
-}
-
-.top {
+.bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-3);
+  min-height: var(--size-tap-target);
 }
 
-.meta {
-  font-size: var(--font-size-phone-label);
-  color: var(--color-text-muted);
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  text-decoration: none;
+  min-height: var(--size-tap-target);
 }
 
-.stack {
+.appName {
+  font-size: var(--font-size-phone-title);
+  white-space: nowrap;
+  line-height: 1;
+  padding-left: var(--space-3);
+  border-left: var(--border-width-base) solid var(--color-border);
+}
+
+.who {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.roomTag {
+  --cut: var(--chamfer-sm);
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-surface-raised);
+  font-size: var(--font-size-phone-body);
+  letter-spacing: var(--font-letter-spacing-label);
+  font-variant-numeric: tabular-nums;
+  clip-path: polygon(var(--cut) 0, 100% 0, 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, 0 100%, 0 var(--cut));
+}
+
+.app {
+  overflow-x: clip;
+}
+
+.main,
+.split,
+.actions,
+.aside {
+  min-width: 0;
+}
+
+.banner {
+  margin: var(--space-2) 0 0;
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-surface-raised);
+  border-left: var(--border-width-strong) solid var(--color-fueled-nova);
+  font-size: var(--font-size-phone-body);
+}
+
+.main {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  flex: 1;
+  padding: var(--space-6) 0;
+  view-transition-name: play-main;
 }
 
-.center {
-  align-items: center;
+.footer {
+  display: flex;
   justify-content: center;
-  text-align: center;
+  padding-top: var(--space-3);
 }
 
-.display {
+/* ---------- Building blocks ---------- */
+.h1 {
   margin: 0;
   font-weight: inherit;
   font-size: var(--font-size-phone-display);
@@ -74,40 +92,32 @@
   letter-spacing: var(--font-letter-spacing-tight);
 }
 
-.title {
-  margin: 0;
+.h1:focus {
+  outline: none;
+}
+
+.h2 {
+  margin: 0 0 var(--space-3);
   font-weight: inherit;
-  font-size: var(--font-size-phone-title);
-  line-height: var(--font-line-height-tight);
+  font-size: var(--font-size-phone-body);
+  color: var(--color-text-muted);
+}
+
+.accent {
+  color: var(--color-accent);
 }
 
 .label {
-  margin: 0;
   font-size: var(--font-size-phone-label);
   letter-spacing: var(--font-letter-spacing-label);
   text-transform: uppercase;
   color: var(--color-text-muted);
 }
 
-.field {
-  display: grid;
-  gap: var(--space-2);
-}
-
-.input {
-  --cut: var(--chamfer-sm);
-  min-height: var(--size-tap-target);
-  padding: 0 var(--space-4);
-  border: 0;
-  background: var(--color-surface-raised);
-  color: var(--color-text);
-  font: inherit;
+.muted {
+  margin: 0;
   font-size: var(--font-size-phone-body);
-}
-
-.input::placeholder {
   color: var(--color-text-muted);
-  opacity: var(--opacity-muted);
 }
 
 .hint {
@@ -118,41 +128,76 @@
 .error {
   margin: 0;
   min-height: 1lh;
-  font-size: var(--font-size-phone-label);
+  font-size: var(--font-size-phone-body);
   color: var(--color-fueled-nova);
 }
 
-.screen {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  view-transition-name: phone-screen;
-}
-
-.title:focus,
-.display:focus {
-  outline: none;
-}
-
-.score {
+.ok {
   margin: 0;
   font-size: var(--font-size-phone-body);
-  color: var(--color-text-muted);
+  color: var(--color-highlight);
 }
 
-.winnerCard {
-  --cut: var(--chamfer-md);
-  display: grid;
-  justify-items: center;
-  gap: var(--space-2);
-  padding: var(--space-4) var(--space-5);
+.centered {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-5);
+  text-align: center;
+}
+
+.split {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.aside:empty {
+  display: none;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  flex: 1;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
+}
+
+.input {
+  --cut: var(--chamfer-sm);
+  width: 100%;
+  min-height: calc(var(--size-tap-target) * 1.2);
+  padding: 0 var(--space-4);
+  border: 0;
   background: var(--color-surface-raised);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--font-size-phone-title);
 }
 
-.code {
-  font-size: var(--font-size-phone-title);
+.codeInput {
   letter-spacing: var(--font-letter-spacing-code);
   text-transform: uppercase;
+  text-align: center;
+  font-size: var(--font-size-phone-display);
+  min-height: calc(var(--size-tap-target) * 1.8);
+}
+
+.textarea {
+  padding: var(--space-4);
+  font-size: var(--font-size-phone-body);
+  line-height: var(--font-line-height-base);
+  resize: vertical;
 }
 
 .cta {
@@ -160,10 +205,32 @@
   width: 100%;
 }
 
+.textLink {
+  align-self: center;
+  min-height: var(--size-tap-target);
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--font-size-phone-body);
+  color: var(--color-text-muted);
+}
+
+.hero {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.heroName {
+  margin: 0;
+  font-size: calc(var(--font-size-page-display) * 1.4);
+  line-height: var(--font-line-height-tight);
+  letter-spacing: var(--font-letter-spacing-tight);
+  color: var(--color-accent);
+}
+
 .pulse {
   --cut: var(--chamfer-md);
-  width: var(--space-9);
-  height: var(--space-9);
+  width: var(--space-8);
+  height: var(--space-8);
   background: var(--color-highlight);
   animation: pulse var(--duration-entrance) var(--easing-standard) infinite alternate;
 }
@@ -175,29 +242,268 @@
   }
 }
 
-.yours .display {
+.story {
+  --cut: var(--chamfer-md);
+  margin: 0;
+  padding: var(--space-5);
+  background: var(--color-fueled-perfect-white);
+  color: var(--color-text-inverse);
+}
+
+.storyCompact {
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+}
+
+.storyLabel {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-phone-label);
+  letter-spacing: var(--font-letter-spacing-label);
+  text-transform: uppercase;
   color: var(--color-accent);
 }
 
-.footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  --cut: var(--chamfer-sm);
+.storyCompact .storyLabel {
+  color: var(--color-text-muted);
 }
 
-.footer :global(.chamfer-all) {
-  width: calc(var(--size-tap-target) * 0.6);
-  height: calc(var(--size-tap-target) * 0.7);
+.storyText {
+  margin: 0;
+  font-size: var(--font-size-phone-title);
+  line-height: var(--font-line-height-base);
+}
+
+.pickHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.countdown {
+  margin: 0;
+  font-size: var(--font-size-phone-display);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.urgent {
+  color: var(--color-fueled-nova);
+}
+
+.yourGuess {
+  margin: 0;
+  display: grid;
+  justify-items: start;
+  gap: var(--space-2);
+}
+
+.claim {
+  display: grid;
+}
+
+.claimList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--space-2);
+}
+
+.claimBtn {
+  --cut: var(--chamfer-sm);
+  width: 100%;
+  min-height: calc(var(--size-tap-target) * 1.3);
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  background: var(--color-surface-raised);
+  font-size: var(--font-size-phone-body);
+  text-align: left;
+  cursor: pointer;
+}
+
+.claimBtn:hover {
+  background: var(--color-border);
+}
+
+.here {
+  display: grid;
+}
+
+.chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Mini flip on reveal: the story card turns over to the owner's name. */
+.flipCard {
+  display: grid;
+  perspective: calc(var(--size-play-wide) * 2);
+}
+
+.flipFront,
+.flipBack {
+  grid-area: 1 / 1;
+  backface-visibility: hidden;
+  transition: transform var(--duration-reveal) var(--easing-emphasized), opacity var(--duration-base) linear;
+}
+
+.flipBack {
+  --cut: var(--chamfer-md);
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-5);
+  background: var(--color-accent);
+  transform: rotateY(180deg);
+  text-align: center;
+}
+
+.flipBack .storyLabel {
+  color: var(--color-text);
+  opacity: var(--opacity-muted);
+}
+
+.flipped .flipFront {
+  transform: rotateY(-180deg);
+}
+
+.flipped .flipBack {
+  transform: rotateY(0deg);
+}
+
+.ownerName {
+  font-size: var(--font-size-phone-display);
+  line-height: var(--font-line-height-tight);
+}
+
+.drum {
+  margin: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.standings {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.standingRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
   font-size: var(--font-size-phone-body);
 }
 
-/* View transition between phone screens: the old screen slides out on the chamfer diagonal. */
-::view-transition-old(phone-screen) {
+.meRow {
+  outline: var(--border-width-base) solid var(--color-highlight);
+  outline-offset: var(--space-1);
+}
+
+.place {
+  min-width: 3em;
+  color: var(--color-text-muted);
+}
+
+.score {
+  margin-left: auto;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.winnerCard {
+  --cut: var(--chamfer-md);
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-fueled-perfect-white);
+  color: var(--color-text-inverse);
+}
+
+.winnerName {
+  font-size: var(--font-size-phone-title);
+}
+
+/* ---------- Wide screens: use the space ---------- */
+@media (min-width: 960px) {
+  .app {
+    --gutter: var(--space-8);
+  }
+
+  .main {
+    padding: var(--space-8) 0;
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-8);
+  }
+
+  .aside {
+    position: sticky;
+    top: var(--space-6);
+  }
+
+  .h1 {
+    font-size: var(--font-size-page-display);
+  }
+
+  .storyText {
+    font-size: calc(var(--font-size-phone-display) * 0.9);
+  }
+
+  .story {
+    padding: var(--space-7);
+  }
+
+  .countdown {
+    font-size: var(--font-size-page-display);
+  }
+
+  .cta {
+    margin-top: var(--space-4);
+    width: auto;
+    align-self: flex-start;
+    min-width: calc(var(--size-tap-target) * 6);
+  }
+
+  .main :global(fieldset) {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+
+  .main :global(fieldset label) {
+    font-size: var(--font-size-phone-title);
+    min-height: calc(var(--size-tap-target) * 1.6);
+  }
+
+  .s_code .split,
+  .s_join .split {
+    align-items: center;
+    min-height: 60dvh;
+  }
+
+  .ownerName {
+    font-size: var(--font-size-page-display);
+  }
+}
+
+::view-transition-old(play-main) {
   animation: screen-out var(--duration-base) var(--easing-standard) both;
 }
 
-::view-transition-new(phone-screen) {
+::view-transition-new(play-main) {
   animation: screen-in var(--duration-slow) var(--easing-emphasized) both;
 }
 
@@ -215,89 +521,18 @@
   }
 }
 
-.story {
-  --cut: var(--chamfer-md);
-  margin: 0;
-  padding: var(--space-4);
-  background: var(--color-fueled-perfect-white);
-  color: var(--color-text-inverse);
-  text-align: left;
-  max-height: 40dvh;
-  overflow: auto;
-}
-
-.storyCompact {
-  background: var(--color-surface-raised);
-  color: var(--color-text);
-  width: 100%;
-}
-
-.storyLabel {
-  margin-bottom: var(--space-2);
-  font-size: var(--font-size-phone-label);
-  letter-spacing: var(--font-letter-spacing-label);
-  text-transform: uppercase;
-  color: var(--color-accent);
-}
-
-.storyCompact .storyLabel {
-  color: var(--color-text-muted);
-}
-
-.storyText {
-  margin: 0;
-  font-size: var(--font-size-phone-body);
-  line-height: var(--font-line-height-base);
-}
-
-.yourGuess {
-  margin: 0;
-  display: grid;
-  justify-items: center;
-  gap: var(--space-2);
-}
-
-/*
- * Desktop / tablet players: same app, more room. The phone frame becomes a wide
- * app column, the name grid gets more columns, and type steps up.
- */
-@media (min-width: 768px) {
-  .phone {
-    max-width: var(--size-play-wide);
-    min-height: auto;
-    padding: var(--space-7);
-    gap: var(--space-7);
+@media (prefers-reduced-motion: reduce) {
+  .flipFront,
+  .flipBack {
+    transform: none !important;
   }
-
-  .display {
-    font-size: var(--font-size-page-display);
+  .flipBack {
+    opacity: 0;
   }
-
-  .title {
-    font-size: var(--font-size-phone-display);
+  .flipped .flipFront {
+    opacity: 0;
   }
-
-  .storyText {
-    font-size: var(--font-size-phone-title);
-  }
-
-  .phone :global(fieldset) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .phone :global(fieldset label) {
-    font-size: var(--font-size-phone-title);
-    min-height: calc(var(--size-tap-target) * 1.8);
-  }
-
-  .meta,
-  .label {
-    font-size: var(--font-size-phone-body);
-  }
-
-  .cta {
-    align-self: flex-end;
-    width: auto;
-    min-width: calc(var(--size-tap-target) * 6);
+  .flipped .flipBack {
+    opacity: 1;
   }
 }

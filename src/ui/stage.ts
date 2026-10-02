@@ -44,6 +44,7 @@ export function stageCssVars(l: StageLayout): CSSProperties {
     '--stage': l.scale,
     '--stage-w': `${l.refWidth * l.scale}px`,
     '--item-w': `${l.itemWidth * l.scale}px`,
+    '--card-w': `${l.cardWidth * l.scale}px`,
     '--item-h': `${l.itemHeight * l.scale}px`,
     '--item-offset': `${l.itemOffsetY * l.scale}px`,
   } as CSSProperties;

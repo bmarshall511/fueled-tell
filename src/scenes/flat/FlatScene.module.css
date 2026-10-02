@@ -1,0 +1,146 @@
+.scene {
+  position: absolute;
+  inset: 0;
+  background: var(--color-surface);
+}
+
+.table {
+  display: flex;
+  align-items: flex-end;
+  gap: calc(var(--space-6) * var(--stage));
+}
+
+[data-orientation='portrait'] .table {
+  flex-direction: column;
+  align-items: center;
+}
+
+.card {
+  position: relative;
+  width: var(--card-w);
+  height: var(--item-h);
+  perspective: calc(var(--size-card-width) * 2 * var(--stage));
+  transform-style: preserve-3d;
+  transition: transform var(--duration-slow) var(--easing-standard);
+  animation: deal var(--duration-entrance) var(--easing-emphasized) both;
+}
+
+.face {
+  --cut: calc(var(--chamfer-lg) * 2 * var(--stage));
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: calc(var(--size-item-padding) * var(--stage));
+  backface-visibility: hidden;
+  transition: transform var(--duration-reveal) var(--easing-emphasized), opacity var(--duration-base) linear;
+}
+
+.front {
+  background: var(--color-fueled-perfect-white);
+  --color-text: var(--color-text-inverse);
+  justify-items: start;
+}
+
+.back {
+  background: var(--color-accent);
+  transform: rotateY(180deg);
+  text-align: center;
+  align-content: center;
+}
+
+.back p {
+  margin: 0;
+}
+
+.back :global(.t-label) {
+  opacity: var(--opacity-muted);
+}
+
+.flipped .front {
+  transform: rotateY(-180deg);
+}
+
+.flipped .back {
+  transform: rotateY(0deg);
+}
+
+.pressed {
+  transform: scale(0.98);
+}
+
+@keyframes deal {
+  from {
+    opacity: 0;
+    transform: translate(40%, -30%) rotate(-12deg);
+  }
+}
+
+.pot {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, calc(var(--size-chip) * var(--stage)));
+  gap: calc(var(--size-chip) * 0.3 * var(--stage));
+}
+
+[data-orientation='portrait'] .pot {
+  grid-template-columns: none;
+  grid-auto-flow: column;
+}
+
+.chip {
+  --cut: calc(var(--chamfer-sm) * 2 * var(--stage));
+  width: calc(var(--size-chip) * var(--stage));
+  height: calc(var(--size-chip) * var(--stage));
+  background: var(--color-surface-raised);
+  transition:
+    background-color var(--duration-base) var(--easing-standard),
+    transform var(--duration-slow) var(--easing-emphasized),
+    opacity var(--duration-slow) linear;
+}
+
+.landed {
+  background: var(--chip, var(--color-fueled-tech-grey));
+  animation: drop var(--duration-base) var(--easing-emphasized) both;
+}
+
+.gone {
+  opacity: 0;
+  transform: translateX(calc(var(--size-chip) * 3 * var(--stage)));
+}
+
+@keyframes drop {
+  from {
+    transform: translateY(calc(var(--size-chip) * -1.5 * var(--stage))) scale(1.3);
+    opacity: 0;
+  }
+}
+
+/* Reduced motion: no deal, no 3D flip: the faces simply cross-fade. */
+.calm .card {
+  animation: none;
+  transform: none;
+}
+
+.calm .face {
+  transform: none !important;
+  transition: opacity var(--duration-base) linear;
+}
+
+.calm .back {
+  opacity: 0;
+}
+
+.calm .flipped .front {
+  opacity: 0;
+}
+
+.calm .flipped .back {
+  opacity: 1;
+}
+
+.calm .landed {
+  animation: none;
+}

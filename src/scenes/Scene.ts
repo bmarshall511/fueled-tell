@@ -1,6 +1,5 @@
 import type { ComponentType } from 'react';
-import type { PackCopy, PlayerId, RoundPhase } from '../engine/types';
-import type { SeatedPlayer } from '../ui/types';
+import type { PackCopy, Player, PlayerId, RoundPhase } from '../engine/types';
 
 /** The active entry as the host screen may show it: no owner before reveal. */
 export interface SceneItem {
@@ -29,7 +28,7 @@ export interface SceneReveal {
 export interface SceneProps {
   phase: RoundPhase;
   item: SceneItem;
-  players: readonly SeatedPlayer[];
+  players: readonly Player[];
   guesses: readonly SceneGuess[];
   reveal: SceneReveal | null;
   copy: PackCopy;

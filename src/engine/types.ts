@@ -6,9 +6,15 @@ export type EntryId = string;
 export interface Player {
   id: PlayerId;
   name: string;
+  /** Stable seat, used to pick the player's color token. */
+  colorIndex: number;
+  /** A phone is currently attached to this player. */
+  connected: boolean;
+  /** A phone has ever joined as this player (false for host-imported names nobody has claimed yet). */
+  claimed: boolean;
 }
 
-/** One submission in a pack (a story, a fave show, ...). */
+/** One submission (a story, a fave show, ...). */
 export interface Entry {
   id: EntryId;
   ownerId: PlayerId;
@@ -21,7 +27,7 @@ export interface Guess {
   ownerId: PlayerId;
 }
 
-export type ScoringMode = 'light' | 'competitive' | 'none';
+export type ScoringMode = 'competitive' | 'light' | 'none';
 
 /** Everything game-specific lives in a pack JSON, not in code. */
 export interface Pack {
@@ -40,7 +46,7 @@ export interface Pack {
 export interface PackCopy {
   /** Short noun for one entry, e.g. "Story". */
   item: string;
-  /** Host headline while guessing. */
+  /** Headline while guessing. */
   question: string;
   /** Lead-in before the owner's name on reveal. */
   reveal: string;
@@ -52,31 +58,42 @@ export interface PackCopy {
   finale: string;
   /** Lead-in before the winner's name. */
   winner: string;
-  awards: {
-    /** Most correct guesses. */
-    detective: string;
-    /** Owner of the entry the fewest people guessed. */
-    mysterious: string;
-    /** Owner who fooled the most guessers overall. */
-    fooled: string;
-  };
+  awards: { detective: string; mysterious: string; fooled: string };
 }
 
-/** Phases of a single round. Phase 1 adds lobby / intro in front. */
-export type RoundPhase = 'showing' | 'guessing' | 'locked' | 'reveal';
+export type Intake = 'host' | 'live';
 
-/** Session phase: a round phase, or the end-of-game finale. */
-export type GamePhase = RoundPhase | 'finale';
+export interface Settings {
+  timerSec: number;
+  scoring: ScoringMode;
+  /** No phones: players shout guesses and the host tallies who got it. */
+  hostOnly: boolean;
+  /** Host imports entries, or players submit them from the lobby. */
+  intake: Intake;
+  /** Longest entry allowed (from the pack). */
+  maxLength: number;
+}
 
-export interface RoundState {
-  phase: GamePhase;
-  /** Shuffled entry order for the session. */
+export type Phase = 'lobby' | 'showing' | 'guessing' | 'locked' | 'reveal' | 'finale';
+
+/** Phases of a single round (what the 3D scenes render). */
+export type RoundPhase = Extract<Phase, 'showing' | 'guessing' | 'locked' | 'reveal'>;
+
+export interface GameState {
+  phase: Phase;
+  packId: string;
+  settings: Settings;
+  players: Player[];
+  entries: Entry[];
+  /** Shuffled entry order, fixed at start. */
   order: EntryId[];
   index: number;
-  /** Guesses for the current entry only. */
+  /** Guesses for the current entry. */
   guesses: Guess[];
-  /** Epoch ms when guessing closes, while guessing. */
-  deadline: number | null;
   /** Locked-in guesses of every finished entry, for final scoring. */
   history: Record<EntryId, Guess[]>;
+  /** Epoch ms (host clock) when guessing closes. */
+  deadline: number | null;
+  /** Epoch ms (host clock) when the current reveal started (drumroll sync). */
+  revealedAt: number | null;
 }

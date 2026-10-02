@@ -1,25 +1,23 @@
-import type { Entry, PackCopy, RoundPhase, RoundState } from '../engine/types';
+import { currentEntry } from '../engine/game';
 import { summarizeReveal } from '../engine/scoring';
-import type { SeatedPlayer } from '../ui/types';
+import type { GameState, PackCopy, RoundPhase } from '../engine/types';
 import type { SceneProps } from './Scene';
 
-/** Redacted snapshot for the host screen: guess targets and owner only appear at reveal. */
-export function toSceneProps(
-  state: RoundState,
-  entry: Entry,
-  players: readonly SeatedPlayer[],
-  copy: PackCopy,
-  reducedMotion: boolean,
-): SceneProps {
-  // The finale is a host screen, not a scene phase: scenes hold their last reveal under it.
-  const phase: RoundPhase = state.phase === 'finale' ? 'reveal' : state.phase;
+/**
+ * Redacted snapshot for the host screen: guess targets and the owner only appear
+ * at reveal. `holdReveal` keeps the scene in "locked" during the drumroll.
+ */
+export function toSceneProps(s: GameState, copy: PackCopy, reducedMotion: boolean, holdReveal: boolean): SceneProps | null {
+  const entry = currentEntry(s);
+  if (!entry || s.phase === 'lobby' || s.phase === 'finale') return null;
+  const phase: RoundPhase = s.phase === 'reveal' && holdReveal ? 'locked' : s.phase;
   const revealed = phase === 'reveal';
   return {
     phase,
-    item: { id: entry.id, text: entry.text, index: state.index, total: state.order.length },
-    players,
-    guesses: state.guesses.map((g) => (revealed ? { playerId: g.playerId, ownerId: g.ownerId } : { playerId: g.playerId })),
-    reveal: revealed ? summarizeReveal(entry, state.guesses) : null,
+    item: { id: entry.id, text: entry.text, index: s.index, total: s.order.length },
+    players: s.players,
+    guesses: s.guesses.map((g) => (revealed ? { playerId: g.playerId, ownerId: g.ownerId } : { playerId: g.playerId })),
+    reveal: revealed ? summarizeReveal(entry, s.guesses) : null,
     copy,
     reducedMotion,
   };

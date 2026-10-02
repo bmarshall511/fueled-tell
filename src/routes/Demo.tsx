@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { sessionKey } from '../host/storage';
 import { tokens } from '../tokens/tokens';
 import { Button } from '../ui/Button';
 import { UI_COPY } from '../ui/copy';
@@ -8,12 +9,31 @@ import styles from './Demo.module.css';
 
 const D = UI_COPY.demo;
 
+const ROOM = 'K7QF';
+const HOST_SRC = `/host?transport=local&room=${ROOM}&sample=1&bots=1`;
+const PHONE_SRC = `/play?transport=local&room=${ROOM}&seat=demo`;
+
+/** Start every demo run fresh: drop the local-demo host session and the demo phone's identity. */
+function resetDemo() {
+  try {
+    localStorage.removeItem(sessionKey(true));
+    localStorage.removeItem('tell:playerdemo');
+  } catch {
+    /* ignore */
+  }
+}
+
 /**
- * The workflow, end to end: the host screen and a phone in two frames, synced
- * over BroadcastChannel (see mock/demoSync.ts). No Three.js in this page itself.
+ * A real game in one browser: the actual /host and /play apps in two frames,
+ * talking over the local (BroadcastChannel) transport, with bots for the rest.
  */
 export default function Demo() {
   const [run, setRun] = useState(0);
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    resetDemo();
+    setReady(true);
+  }, [run]);
   useDocumentTitle(`${D.title} · ${UI_COPY.appName}`);
   return (
     <main className={styles.demo}>
@@ -41,25 +61,33 @@ export default function Demo() {
 
       <div className={styles.bar}>
         <p className={styles.hint}>{D.hint}</p>
-        <Button variant="secondary" onClick={() => setRun((n) => n + 1)}>
+        <Button
+          variant="secondary"
+          onClick={() => {
+            setReady(false);
+            setRun((n) => n + 1);
+          }}
+        >
           {D.restart}
         </Button>
       </div>
 
+      {ready && (
       <div className={styles.panes} key={run}>
         <figure className={styles.hostPane}>
           <figcaption className={styles.caption}>{D.host}</figcaption>
           <div className={`chamfer ${styles.hostFrame}`}>
-            <iframe title={D.host} src="/create?demo=1" />
+            <iframe title={D.host} src={HOST_SRC} allow="fullscreen; screen-wake-lock" />
           </div>
         </figure>
         <figure className={styles.phonePane}>
           <figcaption className={styles.caption}>{D.phone}</figcaption>
           <div className={`chamfer ${styles.phoneFrame}`}>
-            <iframe title={D.phone} src="/play?demo=1" />
+            <iframe title={D.phone} src={PHONE_SRC} />
           </div>
         </figure>
       </div>
+      )}
     </main>
   );
 }

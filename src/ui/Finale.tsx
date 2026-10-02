@@ -15,6 +15,8 @@ interface FinaleProps {
   players: readonly SeatedPlayer[];
   copy: PackCopy;
   showScores: boolean;
+  /** Points & places: podium. Awards only: just the awards. */
+  showPodium: boolean;
 }
 
 /** Podium visual order: 2nd, 1st, 3rd. Rises 3rd -> 2nd -> 1st. */
@@ -26,7 +28,7 @@ const PODIUM = [
 
 const delay = (step: number): CSSProperties => ({ animationDelay: `${step * tokens.duration.stagger * 2}ms` });
 
-export function Finale({ standings, awards, players, copy, showScores }: FinaleProps) {
+export function Finale({ standings, awards, players, copy, showScores, showPodium }: FinaleProps) {
   const byId = (id: PlayerId | null) => players.find((p) => p.id === id);
   const winners = standings.filter((s) => s.place === 1).map((s) => byId(s.playerId)?.name).filter(Boolean);
   const awardRows = [
@@ -41,11 +43,14 @@ export function Finale({ standings, awards, players, copy, showScores }: FinaleP
         <h1 id="finale-title" className={`t-label ${styles.kicker}`}>
           {copy.finale}
         </h1>
-        <p className={`t-title ${styles.winner}`} aria-live="assertive" style={delay(3)}>
-          <span className="t-label">{copy.winner}</span> {winners.join(' & ')}
-        </p>
+        {showPodium && (
+          <p className={`t-title ${styles.winner}`} aria-live="assertive" style={delay(3)}>
+            <span className="t-label">{copy.winner}</span> {winners.join(' & ')}
+          </p>
+        )}
       </header>
 
+      {showPodium && (
       <ol className={styles.podium} aria-label={UI_COPY.standings}>
         {PODIUM.map(({ rank, rise }) => {
           const s = standings[rank];
@@ -68,8 +73,10 @@ export function Finale({ standings, awards, players, copy, showScores }: FinaleP
           );
         })}
       </ol>
+      )}
 
       <div className={styles.lower}>
+        {showPodium && (
         <ol className={styles.rest} start={4}>
           {standings.slice(3).map((s, i) => {
             const p = byId(s.playerId);
@@ -87,6 +94,7 @@ export function Finale({ standings, awards, players, copy, showScores }: FinaleP
             );
           })}
         </ol>
+        )}
         <ul className={styles.awards}>
           {awardRows.map(
             (a, i) =>
