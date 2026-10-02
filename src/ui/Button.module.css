@@ -33,6 +33,17 @@
   background: var(--color-border);
 }
 
+/* For use on raised surfaces (banners, cards), where a secondary fill would disappear. */
+.outline {
+  background: transparent;
+  color: var(--color-text);
+  box-shadow: inset 0 0 0 var(--border-width-base) var(--color-border-strong);
+}
+
+.outline:hover:not(:disabled) {
+  background: var(--color-border);
+}
+
 .phone {
   min-height: var(--size-tap-target);
   padding: 0 var(--space-5);

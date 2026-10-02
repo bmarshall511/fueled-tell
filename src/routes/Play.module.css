@@ -486,6 +486,10 @@
     min-width: calc(var(--size-tap-target) * 6);
   }
 
+  .textLink {
+    align-self: flex-start;
+  }
+
   .main :global(fieldset) {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   }
@@ -541,5 +545,48 @@
   }
   .flipped .flipBack {
     opacity: 1;
+  }
+}
+
+/* ---------- Audit fixes ---------- */
+@media (max-width: 959px) {
+  .actionsFirst {
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+  }
+
+  .wideOnly {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .appName {
+    display: none;
+  }
+}
+
+.who > :first-child {
+  min-width: 0;
+  max-width: 45vw;
+  overflow: hidden;
+}
+
+.countdownRow {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.countdownRow.urgent .countdown {
+  color: var(--color-fueled-nova);
+}
+
+@media (min-width: 960px) {
+  .claimBtn {
+    font-size: var(--font-size-phone-title);
+    min-height: calc(var(--size-tap-target) * 1.5);
   }
 }

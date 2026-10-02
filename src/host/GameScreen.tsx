@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { currentEntry, expectedGuessers, isLastEntry } from '../engine/game';
-import { computeAwards, computeStandings, summarizeReveal } from '../engine/scoring';
+import { computeStandings, summarizeReveal } from '../engine/scoring';
 import type { PlayerId } from '../engine/types';
 import { pickScene, SCENES } from '../scenes/registry';
 import type { SceneModule } from '../scenes/Scene';
@@ -129,7 +129,6 @@ export function GameScreen({ host }: { host: HostGame }) {
         : [],
     [finale, s.entries, s.order, s.history, s.players, pack.points],
   );
-  const awards = useMemo(() => computeAwards(s.entries, s.history, standings), [s.entries, s.history, standings]);
 
   const progress = `${copy.item} ${s.index + 1} ${UI_COPY.of} ${s.order.length}`;
   const nextLabel = {
@@ -170,14 +169,7 @@ export function GameScreen({ host }: { host: HostGame }) {
       </p>
 
       {finale ? (
-        <Finale
-          standings={standings}
-          awards={awards}
-          players={s.players}
-          copy={copy}
-          showScores={s.settings.scoring !== 'none'}
-          showPodium={s.settings.scoring === 'competitive'}
-        />
+        <Finale standings={standings} players={s.players} copy={copy} scored={s.settings.scoring === 'competitive'} />
       ) : (
         <>
           <header className={styles.top}>
@@ -192,19 +184,18 @@ export function GameScreen({ host }: { host: HostGame }) {
                 <span className="t-label">{UI_COPY.drumroll}</span> {drum.count}
               </p>
             ) : reveal && owner && summary ? (
-              <div className={styles.revealArea}>
-                <RevealPanel
-                  leadIn={copy.reveal}
-                  owner={owner}
-                  ratioCorrect={summary.ratioCorrect}
-                  correctPlayers={playersById(s.players, summary.correctPlayerIds)}
-                  showName={!scene?.rendersOwnerName}
-                  guessedLabel={UI_COPY.guessedRight}
-                  nobodyLabel={UI_COPY.nobody}
-                />
-                {hostOnly && (
+              <RevealPanel
+                leadIn={copy.reveal}
+                owner={owner}
+                ratioCorrect={summary.ratioCorrect}
+                correctPlayers={playersById(s.players, summary.correctPlayerIds)}
+                showName={!scene?.rendersOwnerName}
+                guessedLabel={UI_COPY.guessedRight}
+                nobodyLabel={UI_COPY.nobody}
+              >
+                {hostOnly ? (
                   <fieldset className={styles.tally}>
-                    <legend className="t-label">{G.whoGotIt}</legend>
+                    <legend className="visually-hidden">{G.whoGotIt}</legend>
                     {s.players
                       .filter((p) => p.id !== owner.id)
                       .map((p) => (
@@ -214,8 +205,8 @@ export function GameScreen({ host }: { host: HostGame }) {
                         </label>
                       ))}
                   </fieldset>
-                )}
-              </div>
+                ) : undefined}
+              </RevealPanel>
             ) : (
               <>
                 <p className={`t-title ${styles.question}`}>{copy.question}</p>
@@ -246,7 +237,15 @@ export function GameScreen({ host }: { host: HostGame }) {
           <Button size="host" variant="secondary" onClick={() => menu.current?.showModal()} aria-haspopup="dialog">
             {UI_COPY.menu}
           </Button>
-          <Button size="host" variant="secondary" onClick={toggleMute} aria-pressed={!muted} aria-keyshortcuts="M" shortcut="M">
+          <Button
+            size="host"
+            variant="secondary"
+            onClick={toggleMute}
+            aria-pressed={!muted}
+            aria-keyshortcuts="M"
+            shortcut="M"
+            className={styles.optional}
+          >
             {muted ? UI_COPY.soundOff : UI_COPY.soundOn}
           </Button>
           <Button
@@ -256,7 +255,7 @@ export function GameScreen({ host }: { host: HostGame }) {
             aria-pressed={fullscreen}
             aria-keyshortcuts="F"
             shortcut="F"
-            className={styles.fullscreen}
+            className={`${styles.fullscreen} ${styles.optional}`}
           >
             {fullscreen ? UI_COPY.exitFullscreen : UI_COPY.fullscreen}
           </Button>
@@ -280,20 +279,28 @@ export function GameScreen({ host }: { host: HostGame }) {
       >
         <h2 className={styles.menuTitle}>{UI_COPY.menu}</h2>
         <p className={styles.menuHint}>{UI_COPY.shortcuts}</p>
-        <Button variant="secondary" onClick={() => host.session && downloadJson(`tell-${host.roomCode}.json`, host.session)}>
+        <Button size="host" variant="outline" onClick={toggleMute} aria-pressed={!muted}>
+          {muted ? UI_COPY.soundOff : UI_COPY.soundOn}
+        </Button>
+        <Button size="host" variant="outline" onClick={toggleFullscreen} aria-pressed={fullscreen} className={styles.fullscreen}>
+          {fullscreen ? UI_COPY.exitFullscreen : UI_COPY.fullscreen}
+        </Button>
+        <Button size="host" variant="outline" onClick={() => host.session && downloadJson(`tell-${host.roomCode}.json`, host.session)}>
           {G.exportBackup}
         </Button>
         {finale && (
-          <Button variant="secondary" onClick={host.end}>
+          <Button size="host" variant="outline" onClick={host.end}>
             {G.newGame}
           </Button>
         )}
         {!finale && (
-          <Button variant="secondary" onClick={() => window.confirm(G.endConfirm) && host.end()}>
+          <Button size="host" variant="outline" onClick={() => window.confirm(G.endConfirm) && host.end()}>
             {G.endGame}
           </Button>
         )}
-        <Button onClick={() => menu.current?.close()}>{UI_COPY.close}</Button>
+        <Button size="host" onClick={() => menu.current?.close()}>
+          {UI_COPY.close}
+        </Button>
       </dialog>
 
       {!finale && <BootScreen ready={sceneReady} />}

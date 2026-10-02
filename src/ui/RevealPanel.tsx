@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { PlayerId } from '../engine/types';
 import { PlayerChip } from './PlayerChip';
 import type { SeatedPlayer } from './types';
@@ -12,9 +13,20 @@ interface RevealPanelProps {
   showName?: boolean;
   guessedLabel: string;
   nobodyLabel: string;
+  /** Replaces the list of correct guessers (host-only mode puts the tally toggles here). */
+  children?: ReactNode;
 }
 
-export function RevealPanel({ leadIn, owner, ratioCorrect, correctPlayers, showName = true, guessedLabel, nobodyLabel }: RevealPanelProps) {
+export function RevealPanel({
+  leadIn,
+  owner,
+  ratioCorrect,
+  correctPlayers,
+  showName = true,
+  guessedLabel,
+  nobodyLabel,
+  children,
+}: RevealPanelProps) {
   return (
     <section className={styles.panel} aria-live="assertive">
       {showName && (
@@ -28,11 +40,12 @@ export function RevealPanel({ leadIn, owner, ratioCorrect, correctPlayers, showN
           {Math.round(ratioCorrect * 100)}% <span className="t-label">{guessedLabel}</span>
         </p>
         <div className={styles.chips}>
-          {correctPlayers.length === 0 ? (
-            <span className="t-label">{nobodyLabel}</span>
-          ) : (
-            correctPlayers.map((p) => <PlayerChip key={p.id} player={p} />)
-          )}
+          {children ??
+            (correctPlayers.length === 0 ? (
+              <span className={`t-label ${styles.nobody}`}>{nobodyLabel}</span>
+            ) : (
+              correctPlayers.map((p) => <PlayerChip key={p.id} player={p} />)
+            ))}
         </div>
       </div>
     </section>

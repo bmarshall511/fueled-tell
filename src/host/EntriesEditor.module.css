@@ -64,7 +64,10 @@
 }
 
 .num {
-  padding-top: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: var(--size-tap-target);
   font-size: var(--font-size-phone-label);
   color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
@@ -96,6 +99,7 @@
 .textarea {
   resize: none;
   overflow: hidden;
+  field-sizing: content;
 }
 
 .input::placeholder,

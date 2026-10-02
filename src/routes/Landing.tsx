@@ -36,6 +36,9 @@ export default function Landing() {
         <a className={`chamfer ${styles.card} ${styles.primary}`} href="/host">
           <span className={styles.cardTitle}>{L.host}</span>
           <span className={styles.cardHint}>{L.hostHint}</span>
+          <span className={styles.arrow} aria-hidden="true">
+            →
+          </span>
         </a>
         <form
           className={`chamfer ${styles.card}`}
@@ -67,6 +70,9 @@ export default function Landing() {
         <a className={`chamfer ${styles.card}`} href="/demo">
           <span className={styles.cardTitle}>{L.demo}</span>
           <span className={styles.cardHint}>{L.demoHint}</span>
+          <span className={styles.arrow} aria-hidden="true">
+            →
+          </span>
         </a>
       </div>
 

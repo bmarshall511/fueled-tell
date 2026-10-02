@@ -11,6 +11,8 @@ interface Identity {
   playerId: PlayerId;
   room: string | null;
   name: string;
+  /** The room this identity has actually joined; the saved name only auto-rejoins that room. */
+  joinedRoom?: string | null;
 }
 
 /** `?seat=2` gives a separate identity per tab (demo / testing several phones in one browser). */
@@ -69,8 +71,11 @@ export function usePlayerGame() {
       t = tr;
       transport.current = tr;
       const hello = () => {
-        const { playerId, name } = identityRef.current;
-        tr.send({ type: 'hello', playerId, ...(name ? { name } : {}) } satisfies ClientMsg);
+        const { playerId, name, joinedRoom } = identityRef.current;
+        // Re-joining the same room after a refresh: send the name so the host can restore us.
+        // A new room: never auto-join with an old name (it would skip "tap your name").
+        const rejoin = joinedRoom === room && name;
+        tr.send({ type: 'hello', playerId, ...(rejoin ? { name } : {}) } satisfies ClientMsg);
       };
       tr.onStatus((s) => {
         setStatus(s);
@@ -98,6 +103,9 @@ export function usePlayerGame() {
   }, [room]);
 
   const joined = !!view && view.players.some((p) => p.id === identity.playerId);
+  useEffect(() => {
+    if (joined && identity.joinedRoom !== room) setIdentity((i) => ({ ...i, joinedRoom: room }));
+  }, [joined, room, identity.joinedRoom]);
 
   const setRoom = useCallback((code: string) => setIdentity((i) => ({ ...i, room: normalizeRoomCode(code) || null })), []);
   const leaveRoom = useCallback(() => {

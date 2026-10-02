@@ -19,7 +19,6 @@ export const TEST_PACK: Pack = {
     waiting: 'w',
     finale: 'f',
     winner: 'win',
-    awards: { detective: 'd', mysterious: 'm', fooled: 'f' },
   },
 };
 

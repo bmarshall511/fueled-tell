@@ -6,7 +6,8 @@ import { Button } from '../ui/Button';
 import { CodeChip } from '../ui/CodeChip';
 import { UI_COPY } from '../ui/copy';
 import { BuiltBy, FueledWordmark } from '../ui/Logo';
-import { PlayerChip } from '../ui/PlayerChip';
+import { plural } from '../ui/format';
+import { playerColorVar } from '../ui/playerColor';
 import { QrCode } from '../ui/qr/QrCode';
 import { sound } from '../ui/sound';
 import { stageCssVars, useStageLayout } from '../ui/stage';
@@ -56,7 +57,7 @@ export function Lobby({ host, onEdit }: { host: HostGame; onEdit: () => void }) 
       {hostOnly ? (
         <section className={styles.lobbyMain}>
           <div className={styles.joinBlock}>
-            <h1 className={`t-display ${styles.joinAt}`}>{L.hostOnlyTitle}</h1>
+            <h1 className={`t-display ${styles.hostOnlyTitle}`}>{L.hostOnlyTitle}</h1>
             <p className={`t-body ${styles.prompt}`}>{L.hostOnlyHint}</p>
           </div>
         </section>
@@ -73,15 +74,15 @@ export function Lobby({ host, onEdit }: { host: HostGame; onEdit: () => void }) 
               <div className={styles.banner} role="alert">
                 <span>{host.linkError === 'taken' ? L.takenError : L.networkError}</span>
                 {host.linkError === 'taken' ? (
-                  <Button variant="secondary" onClick={host.newRoomCode}>
+                  <Button variant="outline" onClick={host.newRoomCode}>
                     {L.newCode}
                   </Button>
                 ) : (
-                  <Button variant="secondary" onClick={() => window.location.reload()}>
+                  <Button variant="outline" onClick={() => window.location.reload()}>
                     {L.retry}
                   </Button>
                 )}
-                <Button variant="secondary" onClick={() => host.dispatch({ type: 'updateSettings', settings: { hostOnly: true } })}>
+                <Button variant="outline" onClick={() => host.dispatch({ type: 'updateSettings', settings: { hostOnly: true } })}>
                   {L.useHostOnly}
                 </Button>
               </div>
@@ -98,7 +99,7 @@ export function Lobby({ host, onEdit }: { host: HostGame; onEdit: () => void }) 
 
       <section className={styles.roster} aria-label={`${joined} ${L.joined}`}>
         <p className={`t-label ${styles.rosterCount}`} aria-live="polite">
-          {hostOnly ? s.players.length : joined} {hostOnly ? UI_COPY.editor.people : L.joined} · {entries} {L.entries}
+          {hostOnly ? plural(s.players.length, L.people) : `${joined} ${L.joined}`} · {plural(entries, L.entries)}
           {entries < RULES.minEntries && ` · ${L.needMore}`}
         </p>
         <ul className={styles.rosterList}>
@@ -106,20 +107,22 @@ export function Lobby({ host, onEdit }: { host: HostGame; onEdit: () => void }) 
             const hasEntry = s.entries.some((e) => e.ownerId === p.id);
             const away = !hostOnly && !(p.claimed && p.connected);
             return (
-              <li key={p.id} className={`${styles.rosterItem} ${away ? styles.away : ''}`}>
-                <span className={styles.rosterItemInner}>
-                  <PlayerChip player={p} />
+              <li key={p.id} className={styles.rosterItem}>
+                <span className={`chamfer ${styles.rosterChip} ${away ? styles.away : ''}`}>
+                  <span className={styles.rosterDot} style={{ background: playerColorVar(p.colorIndex) }} aria-hidden="true" />
+                  <span className={styles.rosterName}>{p.name}</span>
                   {!hostOnly && !p.claimed && <span className={styles.statusTag}>{L.notJoined}</span>}
                   {live && !hostOnly && (
                     <span className={`${styles.statusTag} ${hasEntry ? styles.statusIn : ''}`}>{hasEntry ? L.submitted : L.noEntry}</span>
                   )}
                   <button
                     type="button"
-                    className={styles.removeBtn}
+                    className={styles.rosterRemove}
                     aria-label={`${L.remove} ${p.name}`}
+                    title={`${L.remove} ${p.name}`}
                     onClick={() => host.dispatch({ type: 'removePlayer', playerId: p.id })}
                   >
-                    ×
+                    <span aria-hidden="true">×</span>
                   </button>
                 </span>
               </li>

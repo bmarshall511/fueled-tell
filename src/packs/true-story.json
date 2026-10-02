@@ -2,11 +2,17 @@
   "id": "true-story",
   "name": "True Story",
   "prompt": "A short, true story from your life. Weird, funny, or 'wait, really?'",
-  "entry": { "type": "text", "maxLength": 280 },
+  "entry": {
+    "type": "text",
+    "maxLength": 280
+  },
   "guess": "owner",
   "timerSec": 45,
   "scoring": "competitive",
-  "points": { "correct": 100, "fooled": 50 },
+  "points": {
+    "correct": 100,
+    "fooled": 50
+  },
   "copy": {
     "item": "Story",
     "question": "Whose story is it?",
@@ -14,7 +20,6 @@
     "yours": "This one's yours. Act natural.",
     "waiting": "Guess locked in. Eyes on the big screen.",
     "finale": "Final standings",
-    "winner": "Winner",
-    "awards": { "detective": "Best Detective", "mysterious": "Most Mysterious", "fooled": "Fooled the Room" }
+    "winner": "Winner"
   }
 }

@@ -7,8 +7,8 @@
 }
 
 .host {
-  font-size: calc(var(--font-size-host-label) * var(--stage));
-  padding: calc(var(--space-2) * var(--stage)) calc(var(--space-4) * var(--stage));
+  font-size: max(var(--font-size-phone-body), calc(var(--font-size-host-label) * var(--stage)));
+  padding: max(var(--space-1), calc(var(--space-2) * var(--stage))) max(var(--space-3), calc(var(--space-4) * var(--stage)));
   --cut: calc(var(--chamfer-sm) * var(--stage));
 }
 

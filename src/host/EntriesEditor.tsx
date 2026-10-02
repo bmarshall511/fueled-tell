@@ -2,6 +2,7 @@ import { useEffect, useId, useMemo, useRef, useState, type ClipboardEvent } from
 import { parseEntries, validateRows, type RowIssue } from '../engine/intake';
 import sampleEntries from '../packs/sample-entries.json';
 import { Button } from '../ui/Button';
+import { plural } from '../ui/format';
 import { UI_COPY } from '../ui/copy';
 import styles from './EntriesEditor.module.css';
 
@@ -146,9 +147,7 @@ export function EntriesEditor({ rows, onChange, maxLength, itemNoun }: EntriesEd
           {problems.length > 0 && (
             <>
               {' · '}
-              <span className={styles.bad}>
-                {problems.length} {E.needsFix}
-              </span>{' '}
+              <span className={styles.bad}>{plural(problems.length, E.needsFix)}</span>{' '}
               <button type="button" className={styles.link} onClick={jump}>
                 {E.jump}
               </button>
@@ -183,12 +182,18 @@ function Row({ row, index, issues, maxLength, itemNoun, onChange, onRemove, onAd
   const len = row.text.trim().length;
   const textRef = useRef<HTMLTextAreaElement>(null);
 
-  // Auto-grow the textarea with its content.
+  // Auto-grow with the content, and re-measure when the width changes (rotation, resize).
   useEffect(() => {
     const el = textRef.current;
     if (!el) return;
-    el.style.height = 'auto';
-    el.style.height = `${el.scrollHeight}px`;
+    const fit = () => {
+      el.style.height = 'auto';
+      el.style.height = `${el.scrollHeight}px`;
+    };
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(el);
+    return () => ro.disconnect();
   }, [row.text]);
 
   return (
@@ -311,13 +316,11 @@ function PasteHelper({ initial, maxLength, onCancel, onApply }: PasteHelperProps
         </div>
         <div className={styles.field}>
           <span className={styles.fieldLabel} aria-live="polite">
-            {E.preview}: {parsed.length} {E.people}
+            {E.preview}: {plural(parsed.length, E.people)}
             {bad > 0 && (
               <>
                 {' · '}
-                <span className={styles.bad}>
-                  {bad} {E.needsFix}
-                </span>
+                <span className={styles.bad}>{plural(bad, E.needsFix)}</span>
               </>
             )}
           </span>
@@ -333,10 +336,10 @@ function PasteHelper({ initial, maxLength, onCancel, onApply }: PasteHelperProps
         </div>
       </div>
       <div className={styles.pasteActions}>
-        <Button variant="secondary" onClick={onCancel}>
+        <Button variant="outline" onClick={onCancel}>
           {E.cancel}
         </Button>
-        <Button variant="secondary" disabled={!parsed.length} onClick={() => onApply(parsed, 'replace')}>
+        <Button variant="outline" disabled={!parsed.length} onClick={() => onApply(parsed, 'replace')}>
           {E.replaceRows}
         </Button>
         <Button disabled={!parsed.length} onClick={() => onApply(parsed, 'add')}>

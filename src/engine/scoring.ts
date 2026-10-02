@@ -61,27 +61,3 @@ export function computeStandings(
   });
   return rows;
 }
-
-export interface Awards {
-  detective: PlayerId | null;
-  mysterious: PlayerId | null;
-  fooled: PlayerId | null;
-}
-
-/** Fun awards for the finale. Each goes to one player (first by standings on ties). */
-export function computeAwards(
-  entries: readonly Entry[],
-  history: Readonly<Record<EntryId, readonly Guess[]>>,
-  standings: readonly Standing[],
-): Awards {
-  const top = (key: 'correct' | 'fooled') =>
-    standings.reduce<Standing | null>((best, s) => (s[key] > 0 && (!best || s[key] > best[key]) ? s : best), null)?.playerId ?? null;
-  let mysterious: { ownerId: PlayerId; correct: number } | null = null;
-  for (const e of entries) {
-    const guesses = history[e.id];
-    if (!guesses?.length) continue;
-    const correct = guesses.filter((g) => g.ownerId === e.ownerId).length;
-    if (!mysterious || correct < mysterious.correct) mysterious = { ownerId: e.ownerId, correct };
-  }
-  return { detective: top('correct'), mysterious: mysterious?.ownerId ?? null, fooled: top('fooled') };
-}

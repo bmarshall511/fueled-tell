@@ -27,7 +27,9 @@ function useScreenTransition(key: string) {
     if (key === shown) return;
     type VT = { finished: Promise<void>; ready: Promise<void>; updateCallbackDone: Promise<void> };
     const doc = document as Document & { startViewTransition?: (cb: () => void) => VT };
-    if (!doc.startViewTransition || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return setShown(key);
+    const skip =
+      !doc.startViewTransition || document.visibilityState !== 'visible' || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (skip) return setShown(key);
     const t = doc.startViewTransition(() => flushSync(() => setShown(key)));
     [t.finished, t.ready, t.updateCallbackDone].forEach((p) => p.catch(() => {}));
   }, [key, shown]);
@@ -40,7 +42,7 @@ const buzz = (ms: number = tokens.duration.fast / 5) => navigator.vibrate?.(ms);
 /** Which screen the phone shows. */
 function screenFor(g: PlayerGame, changing: boolean): string {
   if (!g.identity.room) return 'code';
-  if (!g.view) return g.status === 'not-found' ? 'not-found' : 'connecting';
+  if (!g.view) return g.status === 'not-found' ? 'notfound' : 'connecting';
   if (!g.joined) return 'join';
   const v = g.view;
   if (v.phase === 'lobby') return 'lobby';
@@ -111,7 +113,7 @@ export default function Play() {
             </Button>
           </Centered>
         )}
-        {kind === 'not-found' && (
+        {kind === 'notfound' && (
           <Centered>
             <Heading>{P.notFound}</Heading>
             <CodeChip code={g.identity.room ?? ''} />
@@ -164,9 +166,12 @@ function Heading({ children, className }: { children: ReactNode; className?: str
 
 const Centered = ({ children }: { children: ReactNode }) => <section className={styles.centered}>{children}</section>;
 
-/** One column on phones; story (or context) left, actions right on wide screens. */
-const Split = ({ aside, children }: { aside: ReactNode; children: ReactNode }) => (
-  <div className={styles.split}>
+/**
+ * One column on phones; context left, actions right on wide screens.
+ * `actionsFirst`: on phones, show the actions above the context (e.g. "You're in" before the roster).
+ */
+const Split = ({ aside, children, actionsFirst }: { aside: ReactNode; children: ReactNode; actionsFirst?: boolean }) => (
+  <div className={`${styles.split} ${actionsFirst ? styles.actionsFirst : ''}`}>
     <div className={styles.aside}>{aside}</div>
     <section className={styles.actions}>{children}</section>
   </div>
@@ -197,8 +202,9 @@ function Countdown({ view, receivedAt }: { view: PlayerView; receivedAt: number 
   if (view.remainingMs === null) return null;
   const secs = Math.max(0, Math.ceil((view.remainingMs - (now - receivedAt)) / 1000));
   return (
-    <p className={`${styles.countdown} ${secs <= 5 ? styles.urgent : ''}`} role="timer" aria-label={`${secs} ${P.secondsLeft}`}>
-      {secs}
+    <p className={`${styles.countdownRow} ${secs <= 5 ? styles.urgent : ''}`} role="timer" aria-label={`${secs} ${P.secondsLeft}`}>
+      <span className={styles.countdown}>{secs}</span>
+      <span className={styles.label}>{P.secondsLeft}</span>
     </p>
   );
 }
@@ -211,7 +217,7 @@ function CodeEntry({ onSubmit }: { onSubmit: (code: string) => void }) {
   return (
     <Split
       aside={
-        <div className={styles.hero}>
+        <div className={`${styles.hero} ${styles.wideOnly}`}>
           <p className={styles.heroName}>{UI_COPY.appName}</p>
           <p className={styles.muted}>{UI_COPY.tagline}</p>
         </div>
@@ -258,37 +264,42 @@ function CodeEntry({ onSubmit }: { onSubmit: (code: string) => void }) {
 
 function JoinForm({ view, game }: { view: PlayerView; game: PlayerGame }) {
   const [name, setName] = useState(game.identity.name);
-  const ids = { name: useId(), err: useId() };
+  const ids = { name: useId(), err: useId(), claim: useId() };
   const unclaimed = view.players.filter((p) => !p.claimed);
   const err = game.error ? P.errors[game.error] : null;
   return (
     <Split
       aside={
-        unclaimed.length > 0 && (
-          <section className={styles.claim} aria-labelledby={ids.err + 'c'}>
-            <h2 id={ids.err + 'c'} className={styles.h2}>
-              {P.claimHint}
-            </h2>
-            <ul className={styles.claimList}>
-              {unclaimed.map((p) => (
-                <li key={p.id}>
-                  <button
-                    type="button"
-                    className={`chamfer ${styles.claimBtn}`}
-                    onClick={() => {
-                      buzz();
-                      game.join(p.name, p.id);
-                    }}
-                  >
-                    {p.name}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )
+        <div className={`${styles.hero} ${styles.wideOnly}`}>
+          <p className={styles.heroName}>{UI_COPY.appName}</p>
+          <p className={styles.muted}>{UI_COPY.tagline}</p>
+        </div>
       }
     >
+      <Heading>{P.whoAreYou}</Heading>
+      {unclaimed.length > 0 && (
+        <section className={styles.claim} aria-labelledby={ids.claim}>
+          <h2 id={ids.claim} className={styles.h2}>
+            {P.claimHint}
+          </h2>
+          <ul className={styles.claimList}>
+            {unclaimed.map((p) => (
+              <li key={p.id}>
+                <button
+                  type="button"
+                  className={`chamfer ${styles.claimBtn}`}
+                  onClick={() => {
+                    buzz();
+                    game.join(p.name, p.id);
+                  }}
+                >
+                  {p.name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       <form
         className={styles.form}
         noValidate
@@ -298,7 +309,6 @@ function JoinForm({ view, game }: { view: PlayerView; game: PlayerGame }) {
           game.join(name);
         }}
       >
-        <Heading>{P.whoAreYou}</Heading>
         <label htmlFor={ids.name} className={styles.label}>
           {unclaimed.length ? P.orNew : P.yourName}
         </label>
@@ -326,6 +336,7 @@ function JoinForm({ view, game }: { view: PlayerView; game: PlayerGame }) {
 }
 
 function LobbyScreen({ view, game, prompt, itemNoun }: { view: PlayerView; game: PlayerGame; prompt: string; itemNoun: string }) {
+  // (actions first on phones: "You're in" and the entry form before the roster)
   const live = view.settings.intake === 'live';
   const [text, setText] = useState(view.myEntry ?? '');
   const ids = { text: useId(), count: useId() };
@@ -333,6 +344,7 @@ function LobbyScreen({ view, game, prompt, itemNoun }: { view: PlayerView; game:
   const here = view.players.filter((p) => p.claimed && p.connected);
   return (
     <Split
+      actionsFirst
       aside={
         <section className={styles.here}>
           <h2 className={styles.h2}>
@@ -405,10 +417,8 @@ function PickScreen({
   const others = view.players.filter((p) => p.id !== view.me);
   return (
     <Split aside={<StoryCard view={view} item={item} />}>
-      <div className={styles.pickHead}>
-        <Heading>{question}</Heading>
-        <Countdown view={view} receivedAt={receivedAt} />
-      </div>
+      <Countdown view={view} receivedAt={receivedAt} />
+      <Heading>{question}</Heading>
       {!open && <p className={styles.muted}>{P.opensSoon}</p>}
       <NameGrid players={others} selectedId={pick} onSelect={setPick} legend={question} />
       <Button
@@ -511,8 +521,17 @@ function FinalScreen({ view, finale }: { view: PlayerView; finale: string }) {
   const byId = (id: string) => view.players.find((p) => p.id === id);
   const winners = standings.filter((s) => s.place === 1).map((s) => byId(s.playerId)?.name);
   const scored = view.settings.scoring !== 'none';
+  if (!scored) {
+    return (
+      <Centered>
+        <p className={styles.label}>{finale}</p>
+        <Heading>{UI_COPY.thanks}</Heading>
+      </Centered>
+    );
+  }
   return (
     <Split
+      actionsFirst
       aside={
         <section>
           <h2 className={styles.h2}>{UI_COPY.standings}</h2>

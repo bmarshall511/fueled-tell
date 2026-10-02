@@ -18,7 +18,7 @@
 
 .stats {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: calc(var(--space-5) * var(--stage));
   margin-left: auto;
 }
@@ -34,6 +34,7 @@
 
 .chips {
   display: flex;
+  align-items: baseline;
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: calc(var(--space-2) * var(--stage));
@@ -51,4 +52,8 @@
 [data-orientation='portrait'] .chips {
   justify-content: center;
   max-width: none;
+}
+
+.nobody {
+  color: var(--color-text-muted);
 }

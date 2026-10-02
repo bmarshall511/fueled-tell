@@ -2,11 +2,17 @@
   "id": "two-truths",
   "name": "Two Truths",
   "prompt": "Two true things and one lie about you. Make the lie believable.",
-  "entry": { "type": "text", "maxLength": 240 },
+  "entry": {
+    "type": "text",
+    "maxLength": 240
+  },
   "guess": "owner",
   "timerSec": 45,
-  "scoring": "light",
-  "points": { "correct": 100, "fooled": 50 },
+  "scoring": "competitive",
+  "points": {
+    "correct": 100,
+    "fooled": 50
+  },
   "copy": {
     "item": "Set",
     "question": "Who wrote this set?",
@@ -14,7 +20,6 @@
     "yours": "This set is yours. Stay calm.",
     "waiting": "Locked in. Eyes up.",
     "finale": "Final standings",
-    "winner": "Winner",
-    "awards": { "detective": "Human Polygraph", "mysterious": "Closed Book", "fooled": "Smooth Operator" }
+    "winner": "Winner"
   }
 }

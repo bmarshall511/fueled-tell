@@ -135,18 +135,13 @@
 .tally {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-end;
   align-items: center;
   gap: calc(var(--space-2) * var(--stage));
   margin: 0;
   padding: 0;
   border: 0;
   pointer-events: auto;
-}
-
-.tally legend {
-  width: 100%;
-  margin-bottom: calc(var(--space-2) * var(--stage));
-  color: var(--color-text-muted);
 }
 
 .tallyChip {
@@ -189,8 +184,9 @@
 .menu {
   --cut: var(--chamfer-lg);
   border: 0;
-  padding: var(--space-6);
-  min-width: min(90vw, calc(var(--size-phone-width) * 1.1));
+  padding: var(--space-7);
+  width: min(90vw, max(calc(var(--size-phone-width) * 1.2), calc(var(--size-card-width) * 0.42 * var(--stage))));
+  font-size: max(var(--font-size-phone-body), calc(var(--font-size-host-label) * 0.8 * var(--stage)));
   background: var(--color-surface-raised);
   color: var(--color-text);
   display: none;
@@ -209,11 +205,24 @@
 .menuTitle {
   margin: 0;
   font-weight: inherit;
-  font-size: var(--font-size-phone-title);
+  font-size: max(var(--font-size-phone-title), calc(var(--font-size-host-title) * 0.75 * var(--stage)));
 }
 
 .menuHint {
   margin: 0 0 var(--space-3);
-  font-size: var(--font-size-phone-label);
+  font-size: inherit;
   color: var(--color-text-muted);
+}
+
+.menu :global(button) {
+  width: 100%;
+}
+
+/* Portrait (phones): only Menu + the main action; sound and full screen live in the menu. */
+[data-orientation='portrait'] .optional {
+  display: none;
+}
+
+[data-orientation='portrait'] .controls :global(kbd) {
+  display: none;
 }

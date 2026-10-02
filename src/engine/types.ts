@@ -27,7 +27,8 @@ export interface Guess {
   ownerId: PlayerId;
 }
 
-export type ScoringMode = 'competitive' | 'light' | 'none';
+/** `competitive`: points, places and a winner. `none`: just for fun, no scores. */
+export type ScoringMode = 'competitive' | 'none';
 
 /** Everything game-specific lives in a pack JSON, not in code. */
 export interface Pack {
@@ -58,7 +59,6 @@ export interface PackCopy {
   finale: string;
   /** Lead-in before the winner's name. */
   winner: string;
-  awards: { detective: string; mysterious: string; fooled: string };
 }
 
 export type Intake = 'host' | 'live';

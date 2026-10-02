@@ -64,7 +64,7 @@ a {
  */
 .chamfer:focus-visible,
 .chamfer-all:focus-visible,
-.chamfer:has(:focus-visible) {
+label.chamfer:has(input:focus-visible) {
   outline: none;
   box-shadow: inset 0 0 0 var(--border-width-strong) var(--color-highlight);
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { computeAwards, computeStandings } from './scoring';
+import { computeStandings } from './scoring';
 import type { Entry, Guess } from './types';
 
 const entries: Entry[] = [
@@ -20,13 +20,5 @@ describe('computeStandings', () => {
       ['b', 150, 1],
       ['c', 0, 3],
     ]);
-  });
-});
-
-describe('computeAwards', () => {
-  it('picks detective, most mysterious entry owner, and fooled the room', () => {
-    const history = { e1: [g('b', 'e1', 'a'), g('c', 'e1', 'a')], e2: [g('a', 'e2', 'c'), g('c', 'e2', 'a')] };
-    const standings = computeStandings(entries, history, ['a', 'b', 'c']);
-    expect(computeAwards(entries, history, standings)).toEqual({ detective: 'b', mysterious: 'b', fooled: 'b' });
   });
 });

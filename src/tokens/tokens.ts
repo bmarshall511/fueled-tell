@@ -82,7 +82,7 @@ export const tokens = {
     "phoneWidth": 420,
     "itemHeight": 620,
     "itemOffsetY": -40,
-    "cardWidth": 1440,
+    "cardWidth": 1320,
     "planetRadius": 390,
     "planetItemWidth": 700,
     "stagePortraitWidth": 1080,

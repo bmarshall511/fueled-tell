@@ -16,7 +16,7 @@ import styles from './screens.module.css';
 
 const S = UI_COPY.setup;
 const TIMERS = [20, 30, 45, 60, 90];
-const SCORING: ScoringMode[] = ['competitive', 'light', 'none'];
+const SCORING: ScoringMode[] = ['competitive', 'none'];
 const DRAFT_KEY = 'tell:setup-draft';
 
 interface Draft {

@@ -2,79 +2,97 @@
   position: absolute;
   inset: 0;
   z-index: 2;
-  display: grid;
-  grid-template-rows: auto auto 1fr;
-  align-content: start;
-  gap: calc(var(--space-5) * var(--stage));
-  padding: calc(var(--space-7) * var(--stage)) calc(var(--space-8) * var(--stage)) calc(var(--size-tap-target) * 2 + var(--space-6));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--space-6) * var(--stage));
+  padding: calc(var(--space-8) * var(--stage)) calc(var(--space-8) * var(--stage)) calc(var(--size-tap-target) * 2 + var(--space-6));
   background: var(--color-bg);
   overflow: auto;
 }
 
 .head {
+  display: grid;
+  justify-items: center;
+  gap: calc(var(--space-2) * var(--stage));
   text-align: center;
 }
 
 .kicker {
-  margin: 0 0 calc(var(--space-3) * var(--stage));
-  font-weight: inherit;
+  margin: 0;
   color: var(--color-text-muted);
 }
 
 .winner {
   margin: 0;
-  animation: rise var(--duration-slow) var(--easing-emphasized) both;
+  display: grid;
+  justify-items: center;
+  gap: calc(var(--space-1) * var(--stage));
+  font-weight: inherit;
 }
 
-.winner :global(.t-label) {
-  display: block;
+.winnerLabel {
   color: var(--color-accent);
 }
 
+.winnerName {
+  margin: 0;
+  font-weight: inherit;
+}
+
+.rise,
+.winner,
+.step {
+  animation: rise var(--duration-slow) var(--easing-emphasized) both;
+}
+
+/* ---------- Podium ---------- */
 .podium {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  align-items: end;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
   gap: calc(var(--space-5) * var(--stage));
-  max-width: calc(var(--size-card-width) * var(--stage));
   width: 100%;
-  justify-self: center;
+  max-width: calc(var(--size-card-width) * var(--stage));
 }
 
 .step {
   --cut: calc(var(--chamfer-lg) * var(--stage));
-  display: grid;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   gap: calc(var(--space-2) * var(--stage));
   padding: calc(var(--space-6) * var(--stage));
   background: var(--color-surface-raised);
-  border-top: calc(var(--border-width-strong) * 2 * var(--stage)) solid var(--player);
-  animation: rise var(--duration-slow) var(--easing-emphasized) both;
+  box-shadow: inset 0 calc(var(--border-width-strong) * 2 * var(--stage)) 0 var(--player);
 }
 
-/* Winner gets the Deck card treatment: Perfect White, inverse text, tallest. */
-.p1 {
-  min-height: calc(var(--item-h) * 0.54);
+/*
+ * Cards stretch to one shared height (so long names never misalign them);
+ * rank shows as a step down from the top. Ties share a step.
+ */
+.step {
+  min-height: calc(var(--item-h) * 0.42);
+}
+
+.p2 {
+  margin-top: calc(var(--item-h) * 0.1);
+}
+
+.p3 {
+  margin-top: calc(var(--item-h) * 0.18);
+}
+
+/* First place gets the Deck card treatment: Perfect White, inverse text. */
+.first {
   background: var(--color-fueled-perfect-white);
   color: var(--color-text-inverse);
 }
 
-.p2 {
-  min-height: calc(var(--item-h) * 0.42);
-}
-
-.p3 {
-  min-height: calc(var(--item-h) * 0.34);
-}
-
 .place {
-  color: var(--color-accent);
-}
-
-.p1 .place {
   color: var(--color-accent);
 }
 
@@ -84,68 +102,75 @@
 }
 
 .score {
-  opacity: var(--opacity-muted);
+  color: inherit;
 }
 
-.lower {
-  display: grid;
-  align-items: start;
-  gap: calc(var(--space-6) * var(--stage));
-  max-width: calc(var(--size-card-width) * var(--stage));
-  width: 100%;
-  justify-self: center;
+.step:not(.first) .score {
+  color: var(--color-text-muted);
 }
 
+.first .score {
+  color: var(--color-accent);
+}
+
+/* ---------- Everyone else: aligned rows ---------- */
 .rest {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: calc(var(--space-2) * var(--stage)) calc(var(--space-7) * var(--stage));
-  flex: 1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: calc(var(--space-3) * var(--stage)) calc(var(--space-8) * var(--stage));
+  width: 100%;
+  max-width: calc(var(--size-card-width) * var(--stage));
 }
 
 .row {
-  display: flex;
+  display: grid;
+  grid-template-columns: 3em minmax(0, 1fr) auto;
   align-items: center;
-  gap: calc(var(--space-4) * var(--stage));
-  font-size: calc(var(--font-size-host-label) * var(--stage));
-  animation: rise var(--duration-slow) var(--easing-standard) both;
+  gap: calc(var(--space-3) * var(--stage));
+  font-size: max(var(--font-size-phone-body), calc(var(--font-size-host-label) * var(--stage)));
 }
 
-.rowPlace {
-  min-width: 2.5em;
+.rowName {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.rowDot {
+  width: 0.55em;
+  height: 0.55em;
+  flex: none;
+}
+
+.rowPlace,
+.rowScore {
   color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 .rowScore {
-  margin-left: auto;
-  white-space: nowrap;
-  color: var(--color-text-muted);
-  font-variant-numeric: tabular-nums;
+  text-align: right;
 }
 
-.awards {
+.finale:has(.played) {
+  justify-content: center;
+}
+
+.played {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: calc(var(--space-3) * var(--stage));
-}
-
-.award {
-  --cut: calc(var(--chamfer-md) * var(--stage));
-  display: grid;
-  gap: calc(var(--space-1) * var(--stage));
-  padding: calc(var(--space-3) * var(--stage));
-  background: var(--color-surface);
-  animation: rise var(--duration-slow) var(--easing-emphasized) both;
-}
-
-.award :global(.t-label) {
-  color: var(--color-highlight);
+  max-width: calc(var(--size-card-width) * var(--stage));
 }
 
 @keyframes rise {
@@ -155,32 +180,27 @@
   }
 }
 
-/* Portrait: podium stays 3-up but shorter; everything else stacks. */
+/* Portrait: compact podium, single-column rows. */
 [data-orientation='portrait'] .finale {
   padding: var(--space-6) var(--space-4) calc(var(--size-tap-target) * 2 + var(--space-7));
 }
 
-[data-orientation='portrait'] .awards,
 [data-orientation='portrait'] .rest {
   grid-template-columns: 1fr;
 }
 
-[data-orientation='portrait'] .row {
-  font-size: max(var(--font-size-phone-body), calc(var(--font-size-host-label) * var(--stage)));
+[data-orientation='portrait'] .podium {
+  gap: var(--space-2);
+}
+
+[data-orientation='portrait'] .step {
+  padding: var(--space-3);
 }
 
 [data-orientation='portrait'] .name {
   font-size: max(var(--font-size-phone-body), calc(var(--font-size-host-label) * var(--stage)));
 }
 
-[data-orientation='portrait'] .p1 {
-  min-height: calc(var(--item-h) * 0.5);
-}
-
-[data-orientation='portrait'] .p2 {
-  min-height: calc(var(--item-h) * 0.4);
-}
-
-[data-orientation='portrait'] .p3 {
-  min-height: calc(var(--item-h) * 0.32);
+[data-orientation='portrait'] .step {
+  min-height: calc(var(--item-h) * 0.36);
 }
