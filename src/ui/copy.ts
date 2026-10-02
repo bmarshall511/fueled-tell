@@ -14,6 +14,7 @@ export const UI_COPY = {
   finish: 'Final scores',
   fullscreen: 'Full screen',
   exitFullscreen: 'Exit full screen',
+  sound: 'Sound',
   soundOn: 'Sound on',
   soundOff: 'Sound off',
   menu: 'Menu',

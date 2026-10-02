@@ -1,24 +1,15 @@
 .controls {
-  container-type: inline-size;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: calc(var(--space-4) * var(--stage));
-}
-
-/* Endorsement and join line: one row when it fits, two when the bar is tight (the dock is in flow, so that's safe). */
-.info {
-  flex: 0 1 auto;
-  display: flex;
-  align-items: center;
   flex-wrap: wrap;
   gap: calc(var(--space-3) * var(--stage)) calc(var(--space-6) * var(--stage));
-  min-width: 0;
 }
 
 .buttons {
   display: flex;
-  gap: calc(var(--space-3) * var(--stage));
+  align-items: center;
+  gap: max(var(--space-2), calc(var(--space-3) * var(--stage)));
   margin-left: auto;
 }
 
@@ -26,44 +17,31 @@
   pointer-events: auto;
 }
 
-/* Portrait (phones): stacked, full-width buttons; only the essentials; no key hints. */
+/* Portrait (phones): the actions take the full width under the join capsule; the main one stretches. */
 [data-orientation='portrait'] .controls {
   flex-direction: column-reverse;
+  align-items: stretch;
 }
 
-[data-orientation='portrait'] .info {
-  flex-direction: column-reverse;
+[data-orientation='portrait'] .controls > p {
+  align-self: center;
 }
 
 [data-orientation='portrait'] .buttons {
   margin: 0;
-  width: 100%;
 }
 
-[data-orientation='portrait'] .buttons button {
+[data-orientation='portrait'] .buttons > :last-child {
   flex: 1;
 }
 
-[data-orientation='portrait'] .controls [data-optional],
-[data-orientation='portrait'] .controls kbd {
+[data-orientation='portrait'] .controls kbd,
+[data-orientation='portrait'] .controls [data-desktop-only] {
   display: none;
 }
 
 @media (pointer: coarse) {
   .controls [data-desktop-only] {
-    display: none;
-  }
-}
-
-/* Narrow landscape windows: keep one row. Key hints go first, then Sound / Full screen (both in the menu). */
-@container (max-width: 1100px) {
-  .controls kbd {
-    display: none;
-  }
-}
-
-@container (max-width: 860px) {
-  .controls [data-optional] {
     display: none;
   }
 }

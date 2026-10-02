@@ -78,12 +78,30 @@ label:has(> input:focus-visible) {
   outline-offset: var(--border-width-strong);
 }
 
-/* Gradient text for large display moments (the question, results). */
+/* Gradient text for large display moments (the question, results); the colors drift slowly. */
 .text-glow {
   background: var(--gradient-text);
+  background-size: 300% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  animation: shimmer var(--duration-shimmer) var(--easing-standard) infinite alternate;
+}
+
+/* The glow gradient as a fill (reveal cards, the waiting orb), drifting like the text. */
+.glow-fill {
+  background: var(--gradient-glow);
+  background-size: 200% 200%;
+  animation: shimmer calc(var(--duration-shimmer) * 1.5) var(--easing-standard) infinite alternate;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
 }
 
 /* Windows High Contrast / forced colors: plain text and system borders. */
@@ -91,6 +109,29 @@ label:has(> input:focus-visible) {
   .text-glow {
     background: none;
     color: CanvasText;
+  }
+
+  .glow-fill {
+    background: Canvas;
+    border: var(--border-width-base) solid CanvasText;
+  }
+}
+
+/*
+ * One page width for the whole app: content up to --size-content, centered, with the same
+ * gutter everywhere (safe-area aware on phones). Pages add their own vertical padding.
+ */
+.page {
+  --page-gutter: max(var(--space-5), env(safe-area-inset-left), env(safe-area-inset-right));
+  width: 100%;
+  max-width: calc(var(--size-content) + var(--page-gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+@media (min-width: 960px) {
+  .page {
+    --page-gutter: var(--space-8);
   }
 }
 

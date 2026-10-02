@@ -521,3 +521,54 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **On the host:** the menu animation and the bigger lobby code on a real screen share.
 
 **Approximate time:** about 45 min of wall-clock AI time (≈14:50–15:35 CT).
+
+## 2026-10-02 (Fri): Session 1k, host bar redesign, gradient motion, one page width
+
+**Goal:** three requests:
+
+- Redesign the host's bottom bar (reported as busy, an afterthought, not well designed).
+- Add motion to the background and the gradient colors.
+- Make content widths consistent across the app.
+
+**What got done**
+
+- **Host bar, redesigned:**
+  - "built by DOM lab" moved up beside the Fueled wordmark as one top-left lockup (new `HostBrand`) on the lobby, rounds and finale. Portrait shows the wordmark alone.
+  - The join info is one quiet glass capsule (`JoinTag`): "Join at …/play" plus the code in an inner pill, the one thing to read from across the room.
+  - Menu, Sound and Full screen are round icon buttons (new `Icon` + `IconButton`). Shortcuts are in their tooltips and `aria-keyshortcuts`; the menu still lists them.
+  - The main action (Lock in, Reveal, Next, Back to lobby) is the single white pill, and the only button with a key hint.
+  - The old container-query hiding rules are gone. In portrait, the actions sit in one row (the main action stretches) above the capsule, and Full screen is hidden there (still in the menu).
+  - The round header is a three-column grid, so "Story 1 of 8" is truly centered.
+- **Motion:**
+  - Gradient text (`text-glow`) drifts slowly. The new `glow-fill` does the same for the reveal cards (phone and flat scene).
+  - The 3D card back's gradient drifts: it's painted at double size, and the visible window slides.
+  - The background glow drifts wider, on a 14 s cycle (was 22 s).
+  - All of it holds still with reduced motion.
+- **One page width:**
+  - New `size.content` token (1280px) and a `.page` utility in `base.css`: one max width, one gutter (24px on phones, safe-area aware; 64px from 960px).
+  - Landing, setup, demo and the player app all use it, replacing their own widths (1344px, about 1190px, 1728px, and unbounded).
+  - Measured: identical content edges on all four pages at 1920, 1440, 1024 and 390.
+- **Fixes along the way:** at 320px the finale grid grew to fit the join capsule. It now has a `minmax(0, 1fr)` column, and the capsule truncates its URL.
+
+**Decisions the AI made on its own**
+
+- **Icons with tooltips** rather than text plus key hints for the secondary controls. They're secondary on a shared screen, and the menu repeats them with labels.
+- **The host stage stays full-screen,** not capped at the page width: it's the screen being shared.
+
+**Verification done by the AI**
+
+- `npm run check`: 45/45 tests.
+- `vite build` is clean.
+- **axe-core:** 0 violations on all pages and live states.
+- **Full 8-round game:** passes.
+- **Overflow probe:** 41/41 clean.
+- **Width measurement:** as above.
+- **Screenshot review:** landscape and portrait.
+- `docs/screens/` refreshed.
+
+**What you need to verify by hand**
+
+- **The new bar on a real screen share,** and whether the icon tooltips are discoverable enough.
+- **The gradient drift speed:** it should feel alive, not distracting.
+
+**Approximate time:** about 60 min of wall-clock AI time (≈15:00–16:00 CT).

@@ -1,0 +1,5 @@
+/* Square to the button's own height, so it reads as a circle at any size. */
+.icon {
+  aspect-ratio: 1;
+  padding: 0;
+}

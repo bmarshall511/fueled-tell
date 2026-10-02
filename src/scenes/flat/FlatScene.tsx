@@ -29,7 +29,7 @@ export default function FlatScene({ phase, item, copy, reveal, players, guesses,
             <div className={`${styles.face} ${styles.front}`} aria-hidden={flipped}>
               <ItemText text={item.text} label={`${copy.item} ${item.index + 1}`} />
             </div>
-            <div className={`${styles.face} ${styles.back}`} aria-hidden={!flipped}>
+            <div className={`glow-fill ${styles.face} ${styles.back}`} aria-hidden={!flipped}>
               {owner && (
                 <>
                   <p className="t-label">{copy.reveal}</p>

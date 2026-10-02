@@ -1,4 +1,4 @@
-import { FueledWordmark } from '../../ui/components/Logo';
+import { HostBrand } from '../components/HostBrand';
 import { Timer } from './Timer';
 import styles from './RoundHeader.module.css';
 
@@ -6,7 +6,7 @@ import styles from './RoundHeader.module.css';
 export function RoundHeader({ progress, deadline, durationMs }: { progress: string; deadline: number | null; durationMs: number }) {
   return (
     <header className={styles.header}>
-      <FueledWordmark size="stage" />
+      <HostBrand />
       <span className={`t-label ${styles.progress}`}>{progress}</span>
       <Timer deadline={deadline} durationMs={durationMs} />
     </header>

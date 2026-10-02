@@ -104,7 +104,8 @@ export const tokens = {
     "logoPage": 36,
     "logoCompact": 20,
     "logoHost": 29,
-    "builtbyCompact": 20
+    "builtbyCompact": 20,
+    "content": 1280
   },
   "radius": {
     "pill": 999,
@@ -118,8 +119,8 @@ export const tokens = {
     "glow": 80
   },
   "gradient": {
-    "glow": "linear-gradient(135deg, var(--color-fueled-solar), var(--color-fueled-nebula) 60%, var(--color-fueled-deep-violet))",
-    "text": "linear-gradient(90deg, var(--color-fueled-lilac), var(--color-fueled-solar))"
+    "glow": "linear-gradient(135deg, var(--color-fueled-solar), var(--color-fueled-nebula) 35%, var(--color-fueled-deep-violet) 50%, var(--color-fueled-nebula) 65%, var(--color-fueled-solar))",
+    "text": "linear-gradient(90deg, var(--color-fueled-lilac), var(--color-fueled-solar), var(--color-fueled-lilac), var(--color-fueled-solar))"
   },
   "borderWidth": {
     "base": 2,
@@ -134,7 +135,8 @@ export const tokens = {
     "reveal": 1800,
     "bootMin": 1400,
     "stagger": 220,
-    "drift": 22000
+    "drift": 14000,
+    "shimmer": 6000
   },
   "easing": {
     "standard": [

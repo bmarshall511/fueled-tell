@@ -15,7 +15,8 @@
 ## Other constraints
 
 - The repo is public (github.com/bmarshall511/fueled-tell) so others at Fueled can use it, and it includes everything the app needs, including the Aeonik web fonts in `assets/fonts/` (CoType EULA alongside). Don't add secrets or personal data.
-- Look (matches fueled.com): rounded everywhere via `radius.*` tokens (pills for controls, soft cards); glass surfaces (`color.surface-raised` + `blur.glass` backdrop blur, hairline `color.border`); white pill for the main action, glass pills for the rest; the `Backdrop` glow is vivid on landing, lobby and finale, calm during rounds and on phones. Gradient text (`text-glow`) is for large display text only.
+- Page width: every page uses the `.page` utility (`size.content` max width, one gutter); never set a page's own max-width. The host stage is full-screen by design.
+- Look (matches fueled.com): rounded everywhere via `radius.*` tokens (pills for controls, soft cards); glass surfaces (`color.surface-raised` + `blur.glass` backdrop blur, hairline `color.border`); white pill for the main action, glass pills for the rest; the `Backdrop` glow is vivid on landing, lobby and finale, calm during rounds and on phones. Gradient text (`text-glow`) and fills (`glow-fill`) drift slowly; use them for large display moments only. The host bar shows one white action; secondary controls are round icon buttons with the shortcut in the tooltip.
 - Brand: Fueled is primary, DOM lab is the "built by" endorsement. "Fueled" always has a capital F. Never stack the lockup vertically, recolor the logo with secondaries, or skew/stretch it. Nebula is for large text/accents only (about 4.2:1 on black).
 - Screen-share first: big type, high contrast, nothing that depends on fine detail or high frame rates.
 - Respect `prefers-reduced-motion`, cap DPR at 2, pause rendering when the tab is hidden.
@@ -29,14 +30,14 @@ Organized by feature; each component owns its `*.module.css` next to it. Keep fi
 - `src/transport/`: `Transport.ts` interface, `peer.ts` (PeerJS), `local.ts` (BroadcastChannel), `protocol.ts` (messages + runtime guards).
 - `src/host/`: `HostApp.tsx` routes between `setup/`, `lobby/` and `game/`.
   - `state/`: `useHostGame` composes `useHostSession`, `useHostRoom`, `useRoundTimers` and `useBots`. The host's browser is the server.
-  - `components/`: `HostStage` and `HostControls`, shared by the lobby and the game.
+  - `components/`: `HostStage`, `HostBrand` (wordmark + endorsement, top-left), `HostControls` (join capsule + actions) and `JoinTag`, shared by the lobby and the game.
 - `src/player/`: `PlayerApp.tsx` is only composition.
   - `screenFor.ts` (pure, tested) picks the screen; each screen is a file in `screens/`.
   - Layout pieces (`PlayerShell`, `Split`, `Heading`, `PrimaryAction`, `StoryCard`, `RoundStatus`) are in `components/`.
   - `usePlayerGame` is the connection and state. `identity.ts` handles the persisted seat, and `haptics.ts` the vibration.
 - `src/landing/`, `src/demo/`: the `/` and `/demo` pages.
 - `src/ui/`: shared building blocks.
-  - `components/`: Button, TextInput/TextArea, Notice, Segmented, Switch, NameGrid, PlayerChip, CodeChip, Logo, BrandHeader, QR.
+  - `components/`: Button, IconButton (+ Icon), TextInput/TextArea, Notice, Segmented, Switch, NameGrid, PlayerChip, CodeChip, RoomTag, Logo, BrandHeader, Backdrop, QR.
   - `hooks/`: keyboard shortcuts, screen transitions, drumroll, wake lock, and so on.
   - `lib/`: `stage.ts` is the single host layout source (landscape or portrait stage) for both the HUD and 3D.
   - `copy.ts`: all UI strings, with plural tuples for `plural()`.

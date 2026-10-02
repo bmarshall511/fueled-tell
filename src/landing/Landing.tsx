@@ -17,7 +17,7 @@ export default function Landing() {
   const { canInstall, install } = useInstallPrompt();
   useDocumentTitle();
   return (
-    <main className={styles.landing}>
+    <main className={`page ${styles.landing}`}>
       <Backdrop />
       <BrandHeader />
 

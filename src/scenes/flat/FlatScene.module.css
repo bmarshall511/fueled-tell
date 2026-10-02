@@ -45,7 +45,6 @@
 }
 
 .back {
-  background: var(--gradient-glow);
   transform: rotateY(180deg);
   text-align: center;
   align-content: center;

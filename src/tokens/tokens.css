@@ -80,6 +80,7 @@
   --size-logo-compact: 20px;
   --size-logo-host: 29px;
   --size-builtby-compact: 20px;
+  --size-content: 1280px;
   --radius-pill: 999px;
   --radius-card: 32px;
   --radius-panel: 24px;
@@ -87,8 +88,8 @@
   --radius-tile: 16px;
   --blur-glass: 24px;
   --blur-glow: 80px;
-  --gradient-glow: linear-gradient(135deg, var(--color-fueled-solar), var(--color-fueled-nebula) 60%, var(--color-fueled-deep-violet));
-  --gradient-text: linear-gradient(90deg, var(--color-fueled-lilac), var(--color-fueled-solar));
+  --gradient-glow: linear-gradient(135deg, var(--color-fueled-solar), var(--color-fueled-nebula) 35%, var(--color-fueled-deep-violet) 50%, var(--color-fueled-nebula) 65%, var(--color-fueled-solar));
+  --gradient-text: linear-gradient(90deg, var(--color-fueled-lilac), var(--color-fueled-solar), var(--color-fueled-lilac), var(--color-fueled-solar));
   --border-width-base: 2px;
   --border-width-strong: 4px;
   --border-width-hairline: 1px;
@@ -99,7 +100,8 @@
   --duration-reveal: 1800ms;
   --duration-boot-min: 1400ms;
   --duration-stagger: 220ms;
-  --duration-drift: 22000ms;
+  --duration-drift: 14000ms;
+  --duration-shimmer: 6000ms;
   --easing-standard: cubic-bezier(0.2, 0, 0, 1);
   --easing-emphasized: cubic-bezier(0.3, 0, 0, 1.3);
   --opacity-dim: 0.35;

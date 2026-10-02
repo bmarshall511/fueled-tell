@@ -44,7 +44,7 @@ export default function Demo() {
   const src = srcs(room);
   useDocumentTitle(D.title);
   return (
-    <main className={styles.demo}>
+    <main className={`page ${styles.demo}`}>
       <Backdrop />
       <BrandHeader />
 

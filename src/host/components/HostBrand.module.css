@@ -1,0 +1,18 @@
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: max(var(--space-3), calc(var(--space-4) * var(--stage)));
+  min-width: 0;
+}
+
+.rule {
+  align-self: stretch;
+  width: var(--border-width-hairline);
+  background: var(--color-border-strong);
+}
+
+/* Small screens: the wordmark alone keeps the header calm. */
+[data-orientation='portrait'] .rule,
+[data-orientation='portrait'] .brand > :last-child {
+  display: none;
+}

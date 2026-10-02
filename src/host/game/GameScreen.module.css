@@ -5,6 +5,7 @@
 /* Finale: standings above, controls dock below, both in flow. */
 .ended {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr) auto;
 }
 

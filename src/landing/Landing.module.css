@@ -1,11 +1,9 @@
 .landing {
-  max-width: calc(var(--size-stage-width) * 0.7);
-  margin: 0 auto;
   min-height: 100dvh;
   display: grid;
   align-content: start;
   gap: var(--space-8);
-  padding: max(var(--space-6), env(safe-area-inset-top)) var(--space-5) var(--space-8);
+  padding-block: max(var(--space-6), env(safe-area-inset-top)) var(--space-8);
 }
 
 .hero {

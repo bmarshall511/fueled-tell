@@ -1,7 +1,5 @@
 .setup {
-  max-width: calc(var(--size-item-width) * 0.85);
-  margin: 0 auto;
-  padding: var(--space-7) var(--space-5) var(--space-9);
+  padding-block: var(--space-7) var(--space-9);
 }
 
 .title {

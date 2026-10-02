@@ -5,6 +5,7 @@ import type { PlayerId } from '../../engine/types';
 import { SceneReadyContext } from '../../scenes/sceneReady';
 import { toSceneProps } from '../../scenes/toSceneProps';
 import { Button } from '../../ui/components/Button';
+import { IconButton } from '../../ui/components/IconButton';
 import { Notice } from '../../ui/components/Notice';
 import { UI_COPY } from '../../ui/copy';
 import { useDocumentTitle } from '../../ui/hooks/useDocumentTitle';
@@ -13,6 +14,7 @@ import { useFullscreen } from '../../ui/hooks/useFullscreen';
 import { useKeyboardShortcuts } from '../../ui/hooks/useKeyboardShortcuts';
 import { usePrefersReducedMotion } from '../../ui/hooks/usePrefersReducedMotion';
 import { useWakeLock } from '../../ui/hooks/useWakeLock';
+import { HostBrand } from '../components/HostBrand';
 import { HostControls } from '../components/HostControls';
 import { HostStage } from '../components/HostStage';
 import { DRUMROLL_SOUNDS, unlock } from '../sound';
@@ -102,13 +104,11 @@ export function GameScreen({ host }: { host: HostGame }) {
         {describeRound({ state: s, copy, progress, entry, revealed })}
       </p>
 
-      {finale ? (
-        <Finale standings={standings} players={s.players} copy={copy} scored={s.settings.scoring === 'competitive'} />
-      ) : (
-        <div className={`${styles.hud} ${styles.top}`}>
-          <RoundHeader progress={progress} deadline={s.deadline} durationMs={s.settings.timerSec * 1000} />
-        </div>
-      )}
+      {finale && <Finale standings={standings} players={s.players} copy={copy} scored={s.settings.scoring === 'competitive'} />}
+
+      <div className={`${styles.hud} ${styles.top}`}>
+        {finale ? <HostBrand /> : <RoundHeader progress={progress} deadline={s.deadline} durationMs={s.settings.timerSec * 1000} />}
+      </div>
 
       {!finale && host.link === 'error' && !s.settings.hostOnly && (
         <Notice role="status" className={styles.linkLost}>
@@ -131,41 +131,31 @@ export function GameScreen({ host }: { host: HostGame }) {
           </footer>
         )}
         <HostControls roomCode={joinCode}>
-          <Button size="host" variant="secondary" onClick={() => menu.current?.showModal()} aria-haspopup="dialog">
-            {UI_COPY.menu}
-          </Button>
-          <Button
+          <IconButton size="host" icon="menu" label={UI_COPY.menu} onClick={() => menu.current?.showModal()} aria-haspopup="dialog" />
+          <IconButton
             size="host"
-            variant="secondary"
+            icon={muted ? 'soundOff' : 'soundOn'}
+            label={UI_COPY.sound}
+            shortcut="M"
             onClick={toggleMute}
             aria-pressed={!muted}
-            aria-keyshortcuts="M"
-            shortcut="M"
-            data-optional
-          >
-            {muted ? UI_COPY.soundOff : UI_COPY.soundOn}
-          </Button>
+          />
+          <IconButton
+            size="host"
+            icon={fullscreen ? 'exitFullscreen' : 'fullscreen'}
+            label={fullscreen ? UI_COPY.exitFullscreen : UI_COPY.fullscreen}
+            shortcut="F"
+            onClick={toggleFullscreen}
+            data-desktop-only
+          />
           <Button
             size="host"
-            variant="secondary"
-            onClick={toggleFullscreen}
-            aria-pressed={fullscreen}
-            aria-keyshortcuts="F"
-            shortcut="F"
-            data-optional
-            data-desktop-only
+            onClick={finale ? () => host.dispatch({ type: 'restart' }) : host.advance}
+            shortcut={finale ? undefined : 'Space'}
+            aria-keyshortcuts={finale ? undefined : 'Space'}
           >
-            {fullscreen ? UI_COPY.exitFullscreen : UI_COPY.fullscreen}
+            {nextLabel}
           </Button>
-          {finale ? (
-            <Button size="host" onClick={() => host.dispatch({ type: 'restart' })}>
-              {nextLabel}
-            </Button>
-          ) : (
-            <Button size="host" variant="secondary" onClick={host.advance} shortcut="Space" aria-keyshortcuts="Space">
-              {nextLabel}
-            </Button>
-          )}
         </HostControls>
       </div>
 

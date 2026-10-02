@@ -1,8 +1,13 @@
+/* Brand left, progress dead center, timer right. */
 .header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;
   gap: calc(var(--space-6) * var(--stage));
+}
+
+.header > :last-child {
+  justify-self: end;
 }
 
 .progress {
@@ -12,11 +17,11 @@
 
 /* Portrait: progress drops under the logo and timer. */
 [data-orientation='portrait'] .header {
-  flex-wrap: wrap;
+  grid-template-columns: 1fr auto;
 }
 
 [data-orientation='portrait'] .progress {
   order: 3;
-  width: 100%;
+  grid-column: 1 / -1;
   text-align: center;
 }

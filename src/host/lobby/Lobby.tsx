@@ -2,11 +2,11 @@ import { useEffect, useRef } from 'react';
 import { canStart, playableEntries } from '../../engine/game';
 import { RULES } from '../../engine/rules';
 import { Button } from '../../ui/components/Button';
-import { FueledWordmark } from '../../ui/components/Logo';
 import { UI_COPY } from '../../ui/copy';
 import { useDocumentTitle } from '../../ui/hooks/useDocumentTitle';
 import { useKeyboardShortcuts } from '../../ui/hooks/useKeyboardShortcuts';
 import { plural } from '../../ui/lib/format';
+import { HostBrand } from '../components/HostBrand';
 import { HostControls } from '../components/HostControls';
 import { HostStage } from '../components/HostStage';
 import { sound } from '../sound';
@@ -41,7 +41,7 @@ export function Lobby({ host, onEdit }: { host: HostGame; onEdit: () => void }) 
   return (
     <HostStage className={styles.lobby}>
       <header className={styles.top}>
-        <FueledWordmark size="stage" />
+        <HostBrand />
         <span className="t-label">{host.pack!.name}</span>
       </header>
 

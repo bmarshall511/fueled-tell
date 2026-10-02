@@ -27,6 +27,10 @@ const CARD_DEPTH = 0.08;
 const CHIP = { depth: 0.14, spacing: 1.3, columns: 2, dropHeight: 3, sideShade: 0.5, maxJitter: 0.18 };
 const TABLE_Z = -0.6;
 const GRADIENT_SIZE = 256;
+/** The card shows this fraction of the gradient texture; the rest is drift room. */
+const GLOW_WINDOW = 0.5;
+/** Radians per second for the card-back color drift. */
+const GLOW_DRIFT = 0.35;
 /** Where cards come from and go to, in card widths. */
 const DEAL_FROM = { x: 1.6, y: 1.2, rot: -0.5 };
 
@@ -57,7 +61,10 @@ function normalizeUvs(g: ShapeGeometry, w: number, h: number): ShapeGeometry {
   return g;
 }
 
-/** The glow gradient (Solar → Nebula → deep violet, 135°) as a texture for the card back. */
+/**
+ * The glow gradient as a texture for the card back: painted twice as wide as the card shows,
+ * Solar → Nebula → deep violet → Nebula → Solar, so sliding the window makes the colors drift.
+ */
 function glowTexture(): CanvasTexture {
   const canvas = document.createElement('canvas');
   canvas.width = canvas.height = GRADIENT_SIZE;
@@ -67,13 +74,16 @@ function glowTexture(): CanvasTexture {
     // Canvas y runs down, the UVs run up: top-left to bottom-right on the card.
     const g = ctx.createLinearGradient(0, 0, GRADIENT_SIZE, GRADIENT_SIZE);
     g.addColorStop(0, c.solar);
-    g.addColorStop(0.6, c.nebula);
-    g.addColorStop(1, c.deepViolet);
+    g.addColorStop(0.35, c.nebula);
+    g.addColorStop(0.5, c.deepViolet);
+    g.addColorStop(0.65, c.nebula);
+    g.addColorStop(1, c.solar);
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, GRADIENT_SIZE, GRADIENT_SIZE);
   }
   const t = new CanvasTexture(canvas);
   t.colorSpace = SRGBColorSpace;
+  t.repeat.set(GLOW_WINDOW, GLOW_WINDOW);
   return t;
 }
 
@@ -118,6 +128,9 @@ function Card({ phase, itemId, reducedMotion }: { phase: SceneProps['phase']; it
     g.position.z = approach(g.position.z, pressed, dt, reducedMotion, 10);
     g.rotation.z = approach(g.rotation.z, 0, dt, reducedMotion, 5);
     f.rotation.y = approach(f.rotation.y, phase === 'reveal' ? Math.PI : 0, dt, reducedMotion, 4);
+    // The back's colors drift along the diagonal, like the gradient text.
+    const drift = reducedMotion ? 0.5 : 0.5 + 0.5 * Math.sin(t * GLOW_DRIFT);
+    back.offset.set(drift * (1 - GLOW_WINDOW), drift * (1 - GLOW_WINDOW));
     // A little lift mid-flip gives it weight.
     f.position.z = Math.sin(f.rotation.y) * 0.8;
     // Fake drop shadow on the table: grows and softens as the card lifts.

@@ -24,7 +24,7 @@ export function PlayerShell({ screenKey, me, room, reconnecting, backdrop, child
   const main = useRef<HTMLElement>(null);
   useFocusHeadingOnChange(main, screenKey);
   return (
-    <div className={styles.app}>
+    <div className={`page ${styles.app}`}>
       <Backdrop tone={backdrop} />
       <header className={styles.bar}>
         <a href="/" className={styles.brand} aria-label={`${UI_COPY.appName} home`}>

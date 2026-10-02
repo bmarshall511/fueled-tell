@@ -39,7 +39,7 @@ export function ResultScreen({ view, game, pack }: ScreenProps) {
           <div className={styles.front}>
             <StoryCard view={view} itemNoun={pack.copy.item} />
           </div>
-          <div className={styles.back} aria-hidden={!drum.done}>
+          <div className={`glow-fill ${styles.back}`} aria-hidden={!drum.done}>
             <span className={styles.backLabel}>{P.itWas}</span>
             <span className={styles.owner}>{owner?.name}</span>
           </div>

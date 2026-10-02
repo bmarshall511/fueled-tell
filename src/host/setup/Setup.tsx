@@ -57,7 +57,7 @@ export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void })
 
   let step = 0;
   return (
-    <main className={styles.setup}>
+    <main className={`page ${styles.setup}`}>
       <Backdrop />
       <BrandHeader />
       <h1 className={`text-headline ${styles.title}`}>{editing ? S.save : S.title}</h1>

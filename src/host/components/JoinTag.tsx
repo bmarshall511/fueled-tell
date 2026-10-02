@@ -1,16 +1,17 @@
-import { RoomTag } from '../../ui/components/RoomTag';
 import { UI_COPY } from '../../ui/copy';
 import { displayUrl, joinUrl } from '../joinUrl';
 import styles from './JoinTag.module.css';
 
-/** "Join at tell.example/play [K7QF]": the room stays on screen for latecomers and dropped phones. */
+/** One quiet capsule, "Join at tell.example/play  K7QF", so latecomers and dropped phones can get back in. */
 export function JoinTag({ code }: { code: string }) {
   return (
-    <p className={`t-label ${styles.join}`}>
-      <span>
+    <p className={styles.join}>
+      <span className={styles.text}>
         {UI_COPY.lobby.joinAt} <span className={styles.url}>{displayUrl(joinUrl(code))}</span>
       </span>
-      <RoomTag code={code} size="stage" />
+      <span className={styles.code} role="img" aria-label={`${UI_COPY.roomCode} ${code.split('').join(' ')}`}>
+        {code}
+      </span>
     </p>
   );
 }
