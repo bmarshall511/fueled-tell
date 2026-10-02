@@ -1,10 +1,10 @@
 import type { RevealSummary } from '../../engine/scoring';
-import type { Entry, GameState, PackCopy, Player } from '../../engine/types';
+import type { Entry, GameState, GameCopy, Player } from '../../engine/types';
 import { UI_COPY } from '../../ui/copy';
 
 interface RoundContext {
   state: GameState;
-  copy: PackCopy;
+  copy: GameCopy;
   progress: string;
   entry: Entry | undefined;
   /** Only once the drumroll has finished. */

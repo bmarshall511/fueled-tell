@@ -35,21 +35,19 @@ export interface Guess {
 /** `competitive`: points, places and a winner. `none`: just for fun, no scores. */
 export type ScoringMode = 'competitive' | 'none';
 
-/** Everything game-specific lives in a pack JSON, not in code. */
-export interface Pack {
-  id: string;
-  name: string;
+/** Everything game-specific lives in src/content/game.json, not in code. */
+export interface GameContent {
+  /** What players are asked to write. */
   prompt: string;
-  entry: { type: 'text'; maxLength: number };
-  guess: 'owner';
+  entry: { maxLength: number };
   timerSec: number;
   scoring: ScoringMode;
   /** Points per correct guess, and per player an owner's entry fools. */
   points?: { correct: number; fooled: number };
-  copy: PackCopy;
+  copy: GameCopy;
 }
 
-export interface PackCopy {
+export interface GameCopy {
   /** Short noun for one entry, e.g. "Story". */
   item: string;
   /** Headline while guessing. */
@@ -75,7 +73,7 @@ export interface Settings {
   hostOnly: boolean;
   /** Host imports entries, or players submit them from the lobby. */
   intake: Intake;
-  /** Longest entry allowed (from the pack). */
+  /** Longest entry allowed (from the game content). */
   maxLength: number;
 }
 
@@ -86,7 +84,6 @@ export type RoundPhase = Extract<Phase, 'showing' | 'guessing' | 'locked' | 'rev
 
 export interface GameState {
   phase: Phase;
-  packId: string;
   settings: Settings;
   players: Player[];
   entries: Entry[];

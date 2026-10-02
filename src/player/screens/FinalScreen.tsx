@@ -1,5 +1,6 @@
 import type { PlayerView } from '../../engine/redact';
 import { PlayerChip } from '../../ui/components/PlayerChip';
+import { GAME } from '../../content';
 import { UI_COPY } from '../../ui/copy';
 import { formatScore, ordinal } from '../../ui/lib/format';
 import { Centered, Heading, Split } from '../components/Layout';
@@ -7,8 +8,8 @@ import type { ScreenProps } from './types';
 import styles from './FinalScreen.module.css';
 
 /** Game over: your place, the winner, and the full standings (or just thanks, unscored). */
-export function FinalScreen({ view, pack }: Omit<ScreenProps, 'game'>) {
-  const finale = pack.copy.finale;
+export function FinalScreen({ view }: Pick<ScreenProps, 'view'>) {
+  const finale = GAME.copy.finale;
   if (view.settings.scoring === 'none') {
     return (
       <Centered>

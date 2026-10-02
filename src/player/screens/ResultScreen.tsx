@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import type { PlayerView } from '../../engine/redact';
 import { PlayerChip } from '../../ui/components/PlayerChip';
+import { GAME } from '../../content';
 import { UI_COPY } from '../../ui/copy';
 import { useDrumroll } from '../../ui/hooks/useDrumroll';
 import { BigNumber } from '../components/RoundStatus';
@@ -13,7 +14,7 @@ import styles from './ResultScreen.module.css';
 const P = UI_COPY.play;
 
 /** The reveal: a drumroll in sync with the shared screen, then the card flips to the owner. */
-export function ResultScreen({ view, game, pack }: ScreenProps) {
+export function ResultScreen({ view, game }: ScreenProps) {
   const drum = useDrumroll(true, useRevealElapsed(view, game.receivedAt));
   const reveal = view.reveal;
   const owner = view.players.find((p) => p.id === reveal?.ownerId);
@@ -37,7 +38,7 @@ export function ResultScreen({ view, game, pack }: ScreenProps) {
       aside={
         <div className={`${styles.flip} ${drum.done ? styles.flipped : ''}`}>
           <div className={styles.front}>
-            <StoryCard view={view} itemNoun={pack.copy.item} />
+            <StoryCard view={view} itemNoun={GAME.copy.item} />
           </div>
           <div className={`glow-fill ${styles.back}`} aria-hidden={!drum.done}>
             <span className={styles.backLabel}>{P.itWas}</span>

@@ -2,6 +2,7 @@ import { useId, useState } from 'react';
 import type { PlayerView } from '../../engine/redact';
 import { PlayerChip } from '../../ui/components/PlayerChip';
 import { TextArea } from '../../ui/components/TextField';
+import { GAME } from '../../content';
 import { UI_COPY } from '../../ui/copy';
 import { Form, Heading, PrimaryAction, Split } from '../components/Layout';
 import { haptics } from '../haptics';
@@ -11,13 +12,13 @@ import styles from './LobbyScreen.module.css';
 const P = UI_COPY.play;
 
 /** Seated, waiting for the host. In live intake, write your entry here. */
-export function LobbyScreen({ view, game, pack }: ScreenProps) {
+export function LobbyScreen({ view, game }: ScreenProps) {
   return (
     <Split actionsFirst aside={<WhoIsHere view={view} />}>
       <Heading>{P.youreIn}</Heading>
       <p className="text-body text-muted">{P.lobbyWait}</p>
       {view.settings.intake === 'live' && (
-        <EntryForm view={view} onSubmit={game.submit} prompt={pack.prompt} placeholder={pack.copy.item} />
+        <EntryForm view={view} onSubmit={game.submit} prompt={GAME.prompt} placeholder={GAME.copy.item} />
       )}
     </Split>
   );

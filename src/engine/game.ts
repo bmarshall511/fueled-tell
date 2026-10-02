@@ -1,6 +1,6 @@
 import { RULES } from './rules';
 import { seeded, shuffle } from './random';
-import type { Entry, EntryId, GameState, Guess, Pack, Player, PlayerId, Settings } from './types';
+import type { Entry, EntryId, GameContent, GameState, Guess, Player, PlayerId, Settings } from './types';
 
 export interface RosterRow {
   name: string;
@@ -28,16 +28,15 @@ export type GameAction =
   /** Back to the lobby with the same players and entries. */
   | { type: 'restart' };
 
-export function createGame(pack: Pack, settings: Partial<Settings> = {}): GameState {
+export function createGame(content: GameContent, settings: Partial<Settings> = {}): GameState {
   return {
     phase: 'lobby',
-    packId: pack.id,
     settings: {
-      timerSec: pack.timerSec,
-      scoring: pack.scoring,
+      timerSec: content.timerSec,
+      scoring: content.scoring,
       hostOnly: false,
       intake: 'host',
-      maxLength: pack.entry.maxLength,
+      maxLength: content.entry.maxLength,
       ...settings,
     },
     players: [],

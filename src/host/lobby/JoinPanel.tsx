@@ -7,7 +7,7 @@ import styles from './JoinPanel.module.css';
 
 const L = UI_COPY.lobby;
 
-/** How players get in: the join link, the big room code, the pack prompt, and a QR code. */
+/** How players get in: the join link, the big room code, the prompt, and a QR code. */
 export function JoinPanel({ code, prompt, status }: { code: string; prompt: string; status?: ReactNode }) {
   const url = joinUrl(code);
   const shown = displayUrl(url);

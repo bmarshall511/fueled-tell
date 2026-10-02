@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { packById } from '../packs';
 import { useDocumentTitle } from '../ui/hooks/useDocumentTitle';
 import { useScreenTransition } from '../ui/hooks/useScreenTransition';
 import { PlayerShell } from './components/PlayerShell';
@@ -31,13 +30,12 @@ export default function PlayerApp() {
   // The transition only delays the swap: render whichever screen is currently showing.
   const shownKey = useScreenTransition(target.key);
   const kind = kindOf(shownKey);
-  const pack = packById(view?.packId ?? '');
 
   const renderScreen = () => {
     if (kind === 'code') return <CodeScreen onSubmit={game.setRoom} />;
     if (!view || kind === 'connecting' || kind === 'notFound')
       return <ConnectingScreen room={identity.room ?? ''} notFound={kind === 'notFound'} onChangeCode={game.leaveRoom} />;
-    const props = { view, game, pack };
+    const props = { view, game };
     switch (kind) {
       case 'join':
         return <JoinScreen {...props} />;

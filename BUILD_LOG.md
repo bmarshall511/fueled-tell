@@ -586,3 +586,28 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - `npm run check` passes.
 
 **Approximate time:** about 10 min.
+
+## 2026-10-02 (Fri): Session 1m, one game (no packs), device-neutral copy
+
+**Goal:** the game has one use case, so the multi-pack system goes (Two Truths didn't even work as you'd expect). And the copy must not assume a laptop or a phone.
+
+**What got done**
+
+- **Packs removed:** `src/packs/` became `src/content/`.
+  - `game.json` holds the True Story content, trimmed to what's used: prompt, entry length, timer, scoring, points and copy. `GAME` is exported from `src/content`.
+  - Comfort Watch, Two Truths and the setup's "Pick a pack" step (`PackPicker`) are deleted.
+- **Types:** `Pack` / `PackCopy` became `GameContent` / `GameCopy`, and `asPack` became `asContent` (`engine/content.ts`). `packId` is gone from `GameState` and `PlayerView`.
+- **Content wiring:**
+  - The engine still takes the content as an input (`createGame(GAME, …)`), so it stays content-agnostic and testable (`TEST_CONTENT`).
+  - Host and phone screens read `GAME` directly instead of threading a `pack` prop, and `useHostGame` no longer returns one.
+  - The lobby's pack-name label is gone.
+- **Device-neutral copy:** no more "laptop", "phone" or "big screen" in the UI. It now says "the device whose screen you'll share", "the shared screen", "their own device", "when they join". The README is updated the same way.
+
+**Verification done by the AI:**
+
+- `npm run check`: 45/45 tests.
+- **Full 8-round game:** passes.
+- **axe-core:** 0 violations.
+- **References:** `src` has no "pack" left.
+
+**Approximate time:** about 25 min.

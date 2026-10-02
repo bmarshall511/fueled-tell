@@ -22,7 +22,7 @@ export default function Host() {
   const { state, create } = host;
   useEffect(() => {
     if (state || !new URLSearchParams(window.location.search).has('sample')) return;
-    void import('../packs/sample-entries.json').then((m) => create('true-story', m.default, { timerSec: 30 }));
+    void import('../content/sample-entries.json').then((m) => create(m.default, { timerSec: 30 }));
   }, [state, create]);
 
   if (!state || editing) return <Setup host={host} onDone={() => setEditing(false)} />;

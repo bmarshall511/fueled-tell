@@ -9,7 +9,7 @@ import styles from './JoinScreen.module.css';
 const P = UI_COPY.play;
 
 /** In the room, not seated: claim a name the host entered, or type a new one. */
-export function JoinScreen({ view, game }: Omit<ScreenProps, 'pack'>) {
+export function JoinScreen({ view, game }: ScreenProps) {
   const [name, setName] = useState(game.identity.name);
   const ids = { name: useId(), err: useId(), claim: useId() };
   const unclaimed = view.players.filter((p) => !p.claimed);

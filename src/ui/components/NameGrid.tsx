@@ -9,7 +9,7 @@ interface NameGridProps {
   selectedId: PlayerId | null;
   disabledIds?: readonly PlayerId[];
   onSelect: (id: PlayerId) => void;
-  /** Accessible group label, e.g. the pack's question. */
+  /** Accessible group label, e.g. the game's question. */
   legend: string;
 }
 

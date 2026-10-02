@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { PlayerId } from '../../engine/types';
 import { NameGrid } from '../../ui/components/NameGrid';
+import { GAME } from '../../content';
 import { UI_COPY } from '../../ui/copy';
 import { Countdown } from '../components/RoundStatus';
 import { Heading, PrimaryAction, Split } from '../components/Layout';
@@ -11,12 +12,12 @@ import type { ScreenProps } from './types';
 const P = UI_COPY.play;
 
 /** Whose is it? Pick a name and lock it in (picking opens once the host starts guessing). */
-export function PickScreen({ view, game, pack, onLocked }: ScreenProps & { onLocked: () => void }) {
+export function PickScreen({ view, game, onLocked }: ScreenProps & { onLocked: () => void }) {
   const [pick, setPick] = useState<PlayerId | null>(view.myGuess);
   const open = view.phase === 'guessing';
-  const question = pack.copy.question;
+  const question = GAME.copy.question;
   return (
-    <Split aside={<StoryCard view={view} itemNoun={pack.copy.item} />}>
+    <Split aside={<StoryCard view={view} itemNoun={GAME.copy.item} />}>
       <Countdown view={view} receivedAt={game.receivedAt} />
       <Heading>{question}</Heading>
       {!open && <p className="text-body text-muted">{P.opensSoon}</p>}

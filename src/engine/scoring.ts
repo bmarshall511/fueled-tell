@@ -1,4 +1,4 @@
-import type { Entry, EntryId, Guess, Pack, PlayerId } from './types';
+import type { Entry, EntryId, GameContent, Guess, PlayerId } from './types';
 
 export interface RevealSummary {
   ownerId: PlayerId;
@@ -41,7 +41,7 @@ export function computeStandings(
   entries: readonly Entry[],
   history: Readonly<Record<EntryId, readonly Guess[]>>,
   playerIds: readonly PlayerId[],
-  points: NonNullable<Pack['points']> = DEFAULT_POINTS,
+  points: NonNullable<GameContent['points']> = DEFAULT_POINTS,
 ): Standing[] {
   const tally = new Map(playerIds.map((id) => [id, { correct: 0, fooled: 0 }]));
   for (const entry of entries) {

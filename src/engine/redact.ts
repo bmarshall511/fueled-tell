@@ -17,7 +17,6 @@ export interface PublicPlayer {
  */
 export interface PlayerView {
   phase: Phase;
-  packId: string;
   settings: Pick<Settings, 'timerSec' | 'scoring' | 'hostOnly' | 'intake' | 'maxLength'>;
   me: PlayerId;
   players: PublicPlayer[];
@@ -44,7 +43,6 @@ export function redactFor(s: GameState, me: PlayerId, now: number, points?: { co
   const mine = s.entries.find((e) => e.ownerId === me);
   return {
     phase: s.phase,
-    packId: s.packId,
     settings: {
       timerSec: s.settings.timerSec,
       scoring: s.settings.scoring,

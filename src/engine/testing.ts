@@ -1,13 +1,10 @@
 import { createGame, gameReducer, type GameAction } from './game';
-import type { GameState, Pack } from './types';
+import type { GameContent, GameState } from './types';
 
 /** Test helpers (imported by *.test.ts only). */
-export const TEST_PACK: Pack = {
-  id: 'test',
-  name: 'Test',
+export const TEST_CONTENT: GameContent = {
   prompt: 'p',
-  entry: { type: 'text', maxLength: 50 },
-  guess: 'owner',
+  entry: { maxLength: 50 },
   timerSec: 30,
   scoring: 'competitive',
   points: { correct: 100, fooled: 50 },
@@ -26,7 +23,7 @@ export const run = (s: GameState, ...actions: GameAction[]) => actions.reduce(ga
 
 /** A lobby with 4 joined phones (a, b, c, d) and one entry each. */
 export function lobbyWithFour(): GameState {
-  let s = createGame(TEST_PACK, { intake: 'live' });
+  let s = createGame(TEST_CONTENT, { intake: 'live' });
   for (const id of ['a', 'b', 'c', 'd']) {
     s = run(s, { type: 'join', playerId: id, name: id.toUpperCase() }, { type: 'submit', playerId: id, text: `entry by ${id}` });
   }

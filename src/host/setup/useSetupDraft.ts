@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import type { GameState, Intake, ScoringMode } from '../../engine/types';
-import { PACKS, packById } from '../../packs';
+import { GAME } from '../../content';
 import { newRow, type DraftRow } from './draftRows';
 
 export interface SetupDraft {
-  packId: string;
   intake: Intake;
   rows: DraftRow[];
   timerSec: number;
@@ -26,7 +25,6 @@ function loadSaved(): SetupDraft | null {
 /** The open lobby as a draft, for "Back to setup". */
 function fromGame(s: GameState): SetupDraft {
   return {
-    packId: s.packId,
     intake: s.settings.intake,
     rows: s.entries.map((e) => newRow(s.players.find((p) => p.id === e.ownerId)?.name ?? '', e.text)),
     timerSec: s.settings.timerSec,
@@ -36,8 +34,7 @@ function fromGame(s: GameState): SetupDraft {
 }
 
 function fresh(): SetupDraft {
-  const pack = PACKS[0]!;
-  return { packId: pack.id, intake: 'host', rows: [], timerSec: pack.timerSec, scoring: pack.scoring, hostOnly: false };
+  return { intake: 'host', rows: [], timerSec: GAME.timerSec, scoring: GAME.scoring, hostOnly: false };
 }
 
 /**
@@ -59,11 +56,6 @@ export function useSetupDraft(game: GameState | null) {
   }, [editing, draft]);
 
   const set = <K extends keyof SetupDraft>(key: K, value: SetupDraft[K]) => setDraft((d) => ({ ...d, [key]: value }));
-  /** Switching packs also resets timer and scoring to that pack's defaults. */
-  const choosePack = (packId: string) => {
-    const p = packById(packId);
-    setDraft((d) => ({ ...d, packId, timerSec: p.timerSec, scoring: p.scoring }));
-  };
   const clearSaved = () => {
     try {
       localStorage.removeItem(KEY);
@@ -72,5 +64,5 @@ export function useSetupDraft(game: GameState | null) {
     }
   };
 
-  return { draft, editing, set, choosePack, clearSaved };
+  return { draft, editing, set, clearSaved };
 }

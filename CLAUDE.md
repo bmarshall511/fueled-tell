@@ -7,7 +7,7 @@
 - **Simplicity over everything.** No backend, no database, no accounts, no paid services. The host's browser is the server. When in doubt, cut it.
 - **Ask before adding any dependency** not named in `PLAN.md` or `MOCKUPS-BRIEF.md`.
 - **No hex values or raw design values** (colors, font sizes, spacing, radii, durations) outside `tokens/tokens.json`. Components, CSS and Three.js materials read from the generated `src/tokens/tokens.css` / `src/tokens/tokens.ts` only.
-- **No game-specific copy outside pack JSON files** (`src/packs/*.json`). Engine, UI and scenes stay pack-agnostic: never hard-code "story".
+- **No game-specific copy outside `src/content/game.json`** (read it through `GAME` from `src/content`). There is one game; the engine takes the content as an input and stays content-agnostic, and scenes get copy via props: never hard-code "story".
 - **`/play` (phones) must never import Three.js**, directly or transitively. Scenes are lazy-loaded on host routes only.
 - **Strict TypeScript, small focused modules, DRY shared primitives.** Shared UI lives in `src/ui/`; scenes differ only in their scene component and implement the shared `Scene` props interface.
 - **Append to `BUILD_LOG.md` at the end of every session**: goal, what you generated, decisions you made on your own, what the user needs to verify by hand, approximate time. Keep it factual.

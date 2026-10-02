@@ -3,7 +3,7 @@ import { createGame, gameReducer, markAllDisconnected, type GameAction, type Ros
 import { makeId } from '../../engine/random';
 import { isRoomCode, makeRoomCode } from '../../engine/roomCode';
 import type { Settings } from '../../engine/types';
-import { packById } from '../../packs';
+import { GAME } from '../../content';
 import { loadSession, saveSession, type HostSession } from './storage';
 
 /** `?room=K7QF` forces a room code (local demos and tests). */
@@ -34,8 +34,8 @@ export function useHostSession() {
   }, []);
 
   /** Setup -> lobby. */
-  const create = useCallback((packId: string, rows: RosterRow[], settings: Partial<Settings>) => {
-    const game = gameReducer(createGame(packById(packId), settings), { type: 'setRoster', rows, ids: rows.map(() => makeId('p')) });
+  const create = useCallback((rows: RosterRow[], settings: Partial<Settings>) => {
+    const game = gameReducer(createGame(GAME, settings), { type: 'setRoster', rows, ids: rows.map(() => makeId('p')) });
     setSession({ version: 1, roomCode: forcedRoom() ?? makeRoomCode(), state: game });
   }, []);
 

@@ -1,6 +1,6 @@
 import { expectedGuessers } from '../../engine/game';
 import type { RevealSummary } from '../../engine/scoring';
-import type { GameState, PackCopy, Player, PlayerId } from '../../engine/types';
+import type { GameState, GameCopy, Player, PlayerId } from '../../engine/types';
 import { UI_COPY } from '../../ui/copy';
 import { GuessTicker } from './GuessTicker';
 import { HostTally } from './HostTally';
@@ -9,7 +9,7 @@ import styles from './RoundFooter.module.css';
 
 interface RoundFooterProps {
   state: GameState;
-  copy: PackCopy;
+  copy: GameCopy;
   /** Drumroll number while counting down, else null. */
   drumroll: number | null;
   revealed: { owner: Player; summary: RevealSummary } | null;

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type ClipboardEvent } from 'react';
 import { validateRows } from '../../engine/intake';
-import sampleEntries from '../../packs/sample-entries.json';
+import sampleEntries from '../../content/sample-entries.json';
 import { Button } from '../../ui/components/Button';
 import { UI_COPY } from '../../ui/copy';
 import { plural } from '../../ui/lib/format';

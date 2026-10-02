@@ -1,6 +1,6 @@
 # Tell
 
-A party game for video calls, built by DOM lab for Fueled. Everyone shares a short true story; one laptop shares its screen; players guess **whose story it is** on their phones. Drumroll, reveal, points, podium.
+A party game for video calls, built by DOM lab for Fueled. Everyone shares a short true story; the host shares their screen; players guess **whose story it is** on their own devices. Drumroll, reveal, points, podium.
 
 No accounts, no servers, no cost. The host's browser runs the game; phones connect to it directly (WebRTC via the free PeerJS broker).
 
@@ -8,18 +8,17 @@ No accounts, no servers, no cost. The host's browser runs the game; phones conne
 
 ## Running a game with your pod (for the host)
 
-**You need:** a laptop on the call that can share its screen, and everyone's phone (or laptop) on a normal network.
+**You need:** a device on the call that can share its screen, and a phone, tablet or computer for each player, on a normal network.
 
 ### Before the call (5 minutes)
 
 1. Ask everyone for a short true story (1–3 sentences, weird or funny). DMs are fine.
-2. Open **`/host`** on the laptop you'll share. **Don't share your screen yet**: setup shows who wrote what.
-3. Pick a pack (True Story, Comfort Watch, Two Truths).
-4. Add entries, either way:
+2. Open **`/host`** on the device whose screen you'll share. **Don't share your screen yet**: setup shows who wrote what.
+3. Add entries, either way:
    - Type them in, one row per person (Enter jumps to the entry; Cmd/Ctrl+Enter adds the next row).
    - **Paste a list** from Slack, a doc or a spreadsheet: `Name | story`, `Name: story`, `Name - story`, two spreadsheet columns, or a name on its own line with the story underneath. You'll see a preview of every row before anything is added, and rows that need a fix are highlighted, never dropped.
    - Or choose **Players type them on their phones** and they'll write their entry in the lobby.
-5. Pick a timer and scoring (**Points & places** is the default), then **Open lobby**.
+4. Pick a timer and scoring (**Points & places** is the default), then **Open lobby**.
 
 ### On the call
 
@@ -74,7 +73,7 @@ npm run build      # production build (PWA) in dist/
 - `src/host/`: the shared-screen app, in `setup/`, `lobby/`, `game/` and `state/` (`useHostGame`, split into session, room, timers and bots hooks).
 - `src/player/`: the phone app. `screenFor.ts` picks the screen, `screens/` holds one file per screen, and `components/` the layout pieces.
 - `src/ui/`: shared components, hooks, copy and base styles. `src/scenes/`: Deck (Three.js, lazy) and the flat fallback.
-- Packs are JSON in `src/packs/`. Add one: drop in a file shaped like `true-story.json` and list it in `src/packs/index.ts`.
+- All game copy, the prompt, entry length, timer and scoring defaults and points live in one file, `src/content/game.json`.
 
 See `PLAN.md` for the design, `CLAUDE.md` for conventions, `BUILD_LOG.md` for how it was built.
 

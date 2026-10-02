@@ -10,13 +10,13 @@ import {
   nextStep,
   validateJoin,
 } from './game';
-import { lobbyWithFour, run, TEST_PACK } from './testing';
+import { lobbyWithFour, run, TEST_CONTENT } from './testing';
 
 const started = () => run(lobbyWithFour(), { type: 'start', seed: 1 });
 
 describe('lobby', () => {
   it('adds players on join and re-joins without duplicating', () => {
-    let s = createGame(TEST_PACK);
+    let s = createGame(TEST_CONTENT);
     s = run(s, { type: 'join', playerId: 'a', name: '  Ada  Lovelace ' });
     s = run(s, { type: 'disconnect', playerId: 'a' }, { type: 'join', playerId: 'a', name: 'Ada' });
     expect(s.players).toHaveLength(1);
@@ -24,13 +24,13 @@ describe('lobby', () => {
   });
 
   it('rejects a name already claimed by another phone, case-insensitively', () => {
-    const s = run(createGame(TEST_PACK), { type: 'join', playerId: 'a', name: 'Ada' });
+    const s = run(createGame(TEST_CONTENT), { type: 'join', playerId: 'a', name: 'Ada' });
     expect(validateJoin(s, 'b', 'ada')).toBe('nameTaken');
     expect(run(s, { type: 'join', playerId: 'b', name: 'ada' }).players).toHaveLength(1);
   });
 
   it('lets a phone claim a host-imported name and keeps their entry', () => {
-    let s = createGame(TEST_PACK);
+    let s = createGame(TEST_CONTENT);
     s = run(s, {
       type: 'setRoster',
       rows: [
@@ -50,7 +50,7 @@ describe('lobby', () => {
   });
 
   it('accepts live submissions only in live intake, and replaces a resubmission', () => {
-    let s = run(createGame(TEST_PACK), { type: 'join', playerId: 'a', name: 'A' });
+    let s = run(createGame(TEST_CONTENT), { type: 'join', playerId: 'a', name: 'A' });
     expect(run(s, { type: 'submit', playerId: 'a', text: 'x' }).entries).toHaveLength(0);
     s = run(s, { type: 'updateSettings', settings: { intake: 'live' } });
     s = run(s, { type: 'submit', playerId: 'a', text: 'first' }, { type: 'submit', playerId: 'a', text: 'second' });
@@ -60,7 +60,7 @@ describe('lobby', () => {
 
   it('needs at least 3 playable entries to start', () => {
     let s = run(
-      createGame(TEST_PACK, { intake: 'live' }),
+      createGame(TEST_CONTENT, { intake: 'live' }),
       { type: 'join', playerId: 'a', name: 'A' },
       { type: 'submit', playerId: 'a', text: 't' },
     );
@@ -88,7 +88,7 @@ describe('roster edits and seats', () => {
   });
 
   it('a seat with a key can only be re-joined by the same phone', () => {
-    let s = run(createGame(TEST_PACK), { type: 'join', playerId: 'a', name: 'Ada', key: 'k1' });
+    let s = run(createGame(TEST_CONTENT), { type: 'join', playerId: 'a', name: 'Ada', key: 'k1' });
     expect(validateJoin(s, 'a', '', undefined, 'other')).toBe('notYou');
     expect(validateJoin(s, 'a', '', undefined, 'k1')).toBeNull();
     s = run(s, { type: 'disconnect', playerId: 'a' }, { type: 'join', playerId: 'a', name: '', key: 'nope' });

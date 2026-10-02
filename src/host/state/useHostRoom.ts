@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { validateJoin, type GameAction } from '../../engine/game';
 import { redactFor } from '../../engine/redact';
 import type { GameState, PlayerId } from '../../engine/types';
-import { packById } from '../../packs';
+import { GAME } from '../../content';
 import { HEARTBEAT_MS, parseClientMsg, type ClientMsg, type HostMsg } from '../../transport/protocol';
 import { hostRoom, RoomTakenError, type Connection, type HostTransport } from '../../transport/Transport';
 
@@ -17,7 +17,7 @@ interface Peer {
 
 const send = (peer: Peer, msg: HostMsg) => peer.conn.send(msg);
 const sendView = (peer: Peer, s: GameState) =>
-  send(peer, { type: 'state', view: redactFor(s, peer.playerId ?? '', Date.now(), packById(s.packId).points) });
+  send(peer, { type: 'state', view: redactFor(s, peer.playerId ?? '', Date.now(), GAME.points) });
 
 /** Turn one phone message into a reducer action (or a direct reply). */
 function handleMessage(msg: ClientMsg, peer: Peer, s: GameState, dispatch: (a: GameAction) => void): void {

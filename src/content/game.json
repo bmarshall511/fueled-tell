@@ -1,12 +1,8 @@
 {
-  "id": "true-story",
-  "name": "True Story",
   "prompt": "A short, true story from your life. Weird, funny, or 'wait, really?'",
   "entry": {
-    "type": "text",
     "maxLength": 280
   },
-  "guess": "owner",
   "timerSec": 45,
   "scoring": "competitive",
   "points": {
@@ -18,7 +14,7 @@
     "question": "Whose story is it?",
     "reveal": "It was…",
     "yours": "This one's yours. Act natural.",
-    "waiting": "Guess locked in. Eyes on the big screen.",
+    "waiting": "Guess locked in. Eyes on the shared screen.",
     "finale": "Final standings",
     "winner": "Winner"
   }

@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useRef } from 'react';
+import { GAME } from '../../content';
 import { currentEntry, guessersForReveal, isLastEntry } from '../../engine/game';
 import { computeStandings, summarizeReveal } from '../../engine/scoring';
 import type { PlayerId } from '../../engine/types';
@@ -34,7 +35,7 @@ import styles from './GameScreen.module.css';
 /** The shared screen from the first entry to the finale. */
 export function GameScreen({ host }: { host: HostGame }) {
   const s = host.state!;
-  const copy = host.pack!.copy;
+  const copy = GAME.copy;
   const reducedMotion = usePrefersReducedMotion();
   const [fullscreen, toggleFullscreen] = useFullscreen();
   const [muted, toggleMute] = useMuted();
@@ -75,10 +76,10 @@ export function GameScreen({ host }: { host: HostGame }) {
             s.entries.filter((e) => s.order.includes(e.id)),
             s.history,
             s.players.map((p) => p.id),
-            host.pack?.points,
+            GAME.points,
           )
         : [],
-    [finale, s.entries, s.order, s.history, s.players, host.pack?.points],
+    [finale, s.entries, s.order, s.history, s.players],
   );
 
   const nextLabel = {

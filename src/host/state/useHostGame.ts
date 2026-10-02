@@ -1,6 +1,5 @@
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { nextStep } from '../../engine/game';
-import { packById } from '../../packs';
 import { useBots } from './useBots';
 import { useHostRoom } from './useHostRoom';
 import { useHostSession } from './useHostSession';
@@ -26,12 +25,9 @@ export function useHostGame() {
     if (action) session.dispatch(action);
   }, [session.dispatch]);
 
-  const pack = useMemo(() => (state ? packById(state.packId) : null), [state]);
-
   return {
     session: session.session,
     state,
-    pack,
     roomCode,
     link: room.link,
     linkError: room.linkError,

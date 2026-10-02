@@ -1,4 +1,4 @@
-/** Generic UI chrome strings (mechanic-level, not game-specific; game copy lives in packs). */
+/** Generic UI chrome strings (mechanic-level, not game-specific; game copy lives in src/content/game.json). */
 export const UI_COPY = {
   /** The app's name. One place to rename it. */
   appName: 'Tell',
@@ -40,40 +40,39 @@ export const UI_COPY = {
 
   landing: {
     host: 'Host a game',
-    hostHint: 'On the laptop you’ll share on the call.',
+    hostHint: 'On the device whose screen you’ll share on the call.',
     join: 'Join a game',
-    joinHint: 'Got a room code from the big screen? Enter it here.',
+    joinHint: 'Got a room code from the shared screen? Enter it here.',
     demo: 'See how it works',
-    demoHint: 'The host screen and a phone, side by side.',
+    demoHint: 'The shared screen and a player’s screen, side by side.',
     install: 'Install Tell',
     how: [
-      'Everyone sends a short true story (or plays live from their phone).',
+      'Everyone sends a short true story (or types it in live when they join).',
       'The host shares their screen. Players join with a 4-letter code.',
-      'Each story is dealt to the big screen. Guess whose it is on your phone.',
+      'Each story is dealt to the shared screen. Everyone guesses whose it is on their own device.',
       'Reveal, points, and a podium at the end.',
     ],
   },
 
   setup: {
     title: 'New game',
-    intro: 'Set this up before you share your screen. Entries stay on this laptop.',
-    stepPack: 'Pick a pack',
+    intro: 'Set this up before you share your screen. Entries stay on this device.',
     stepEntries: 'Entries',
     stepSettings: 'Settings',
     intakeHost: 'I’ll add them here',
-    intakeLive: 'Players type them on their phones',
+    intakeLive: 'Players type them when they join',
     liveHint: 'Players write their entry in the lobby. You can still add some here for people who sent them ahead.',
     timer: 'Guess timer',
     seconds: 's',
     scoring: 'Scoring',
     scoringModes: { competitive: 'Points & places', none: 'Just for fun' },
     hostOnly: 'Host-only mode',
-    hostOnlyHint: 'No phones. Players shout guesses and you tick who got it. Works on any network.',
+    hostOnlyHint: 'Nobody else needs to join. Players shout guesses and you tick who got it. Works on any network.',
     open: 'Open lobby',
     save: 'Save and return to lobby',
     loadFile: 'Load a saved game',
     loadError: 'That file isn’t a saved Tell game.',
-    needMore: 'Add at least 3 entries, or let players submit on their phones.',
+    needMore: 'Add at least 3 entries, or let players submit their own when they join.',
     fixFirst: 'Fix the highlighted rows first.',
     shareWarning: 'Not sharing your screen yet? Good. This page shows who wrote what.',
   },
@@ -105,7 +104,7 @@ export const UI_COPY = {
     issues: {
       missingName: 'Add a name',
       missingText: 'Add their entry',
-      tooLong: 'Too long for this pack',
+      tooLong: 'Too long',
       duplicateName: 'Same name as another row',
     },
   },
@@ -135,7 +134,7 @@ export const UI_COPY = {
     newCode: 'Get a new code',
     useHostOnly: 'Switch to host-only',
     hostOnlyTitle: 'Host-only game',
-    hostOnlyHint: 'No phones needed. Read each entry out, let people shout, then tick who got it.',
+    hostOnlyHint: 'Nobody needs to join. Read each entry out, let people shout, then tick who got it.',
   },
 
   game: {
@@ -151,11 +150,11 @@ export const UI_COPY = {
 
   play: {
     enterCode: 'Enter the room code',
-    codeHint: '4 letters and numbers, on the big screen',
+    codeHint: '4 letters and numbers, on the shared screen',
     go: 'Join',
     hostInstead: 'Hosting? Start a game',
     connecting: 'Connecting to the room…',
-    notFound: 'No game with that code yet. Check the big screen, or wait for the host to open the lobby.',
+    notFound: 'No game with that code yet. Check the shared screen, or wait for the host to open the lobby.',
     reconnecting: 'Reconnecting…',
     changeCode: 'Use a different code',
     whoAreYou: 'Who are you?',
@@ -166,10 +165,10 @@ export const UI_COPY = {
     errors: {
       nameRequired: 'Type your name to join.',
       nameTaken: 'Someone already joined with that name. Add an initial?',
-      notYou: 'That seat belongs to another phone. Join with your own name.',
+      notYou: 'That seat belongs to another device. Join with your own name.',
     },
     youreIn: 'You’re in.',
-    lobbyWait: 'Watch the big screen. The host starts the game.',
+    lobbyWait: 'Watch the shared screen. The host starts the game.',
     yourEntry: 'Your entry',
     submit: 'Send my entry',
     update: 'Update my entry',
@@ -190,17 +189,17 @@ export const UI_COPY = {
 
   demo: {
     title: 'How a game runs',
-    intro: 'A real game in this browser: the host screen and one player’s phone, side by side. The other players are bots.',
-    host: 'Shared screen · the host laptop on the call',
-    phone: 'A player’s phone',
+    intro: 'A real game in this browser: the shared screen and one player’s screen, side by side. The other players are bots.',
+    host: 'Shared screen · the host’s screen on the call',
+    phone: 'A player’s screen',
     restart: 'Restart demo',
     steps: [
-      { who: 'Host', what: 'Pick a pack, add entries, open the lobby' },
-      { who: 'Players', what: 'Join on their phones with the room code' },
-      { who: 'Host', what: 'Start. Each entry is dealt to the big screen' },
-      { who: 'Players', what: 'Read it on the phone and guess whose it is' },
+      { who: 'Host', what: 'Add entries, open the lobby' },
+      { who: 'Players', what: 'Join on their own devices with the room code' },
+      { who: 'Host', what: 'Start. Each entry is dealt to the shared screen' },
+      { who: 'Players', what: 'Read it on their screen and guess whose it is' },
       { who: 'Everyone', what: 'Drumroll, reveal, then the podium' },
     ],
-    hint: 'On the phone, type a name and tap Join. Then press Start game on the host (or Space).',
+    hint: 'On the player’s screen, type a name and tap Join. Then press Start game on the shared screen (or Space).',
   },
 } as const;

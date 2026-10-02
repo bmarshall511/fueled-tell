@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import type { Standing } from '../../engine/scoring';
-import type { PackCopy, PlayerId } from '../../engine/types';
+import type { GameCopy, PlayerId } from '../../engine/types';
 import { tokens } from '../../tokens/tokens';
 import { UI_COPY } from '../../ui/copy';
 import { formatScore, ordinal } from '../../ui/lib/format';
@@ -12,7 +12,7 @@ import styles from './Finale.module.css';
 interface FinaleProps {
   standings: readonly Standing[];
   players: readonly SeatedPlayer[];
-  copy: PackCopy;
+  copy: GameCopy;
   /** Points & places: podium and ranked standings. Otherwise a simple "thanks for playing". */
   scored: boolean;
 }

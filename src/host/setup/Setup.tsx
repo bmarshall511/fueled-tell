@@ -1,7 +1,7 @@
 import { validateRows } from '../../engine/intake';
 import { RULES } from '../../engine/rules';
 import type { ScoringMode } from '../../engine/types';
-import { packById } from '../../packs';
+import { GAME } from '../../content';
 import { Backdrop } from '../../ui/components/Backdrop';
 import { BrandHeader } from '../../ui/components/BrandHeader';
 import { Button } from '../../ui/components/Button';
@@ -15,7 +15,6 @@ import type { HostGame } from '../state/useHostGame';
 import { filledRows } from './draftRows';
 import { EntriesEditor } from './EntriesEditor';
 import { LoadSavedGame } from './LoadSavedGame';
-import { PackPicker } from './PackPicker';
 import { SetupStep } from './SetupStep';
 import { useSetupDraft } from './useSetupDraft';
 import styles from './Setup.module.css';
@@ -26,11 +25,10 @@ const SCORING: ScoringMode[] = ['competitive', 'none'];
 
 /** Host setup (not for sharing: it shows who wrote what). Creates the game, or edits the open lobby. */
 export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void }) {
-  const { draft, editing, set, choosePack, clearSaved } = useSetupDraft(host.state);
-  const pack = packById(draft.packId);
+  const { draft, editing, set, clearSaved } = useSetupDraft(host.state);
   useDocumentTitle(S.title);
 
-  const rows = filledRows(validateRows(draft.rows, pack.entry.maxLength));
+  const rows = filledRows(validateRows(draft.rows, GAME.entry.maxLength));
   const problems = rows.filter((r) => r.issues.length > 0);
   const live = draft.intake === 'live' && !draft.hostOnly;
   const ready = (live || rows.length >= RULES.minEntries) && problems.length === 0;
@@ -43,13 +41,13 @@ export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void })
       scoring: draft.scoring,
       hostOnly: draft.hostOnly,
       intake: draft.hostOnly ? ('host' as const) : draft.intake,
-      maxLength: pack.entry.maxLength,
+      maxLength: GAME.entry.maxLength,
     };
     if (editing) {
       host.dispatch({ type: 'updateSettings', settings });
       host.dispatch({ type: 'setRoster', rows: clean, ids: clean.map((_, i) => `p_${Date.now().toString(36)}${i}`) });
     } else {
-      host.create(draft.packId, clean, settings);
+      host.create(clean, settings);
       clearSaved();
     }
     onDone?.();
@@ -76,12 +74,6 @@ export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void })
           submit();
         }}
       >
-        {!editing && (
-          <SetupStep number={++step} title={S.stepPack}>
-            <PackPicker value={draft.packId} onChange={choosePack} />
-          </SetupStep>
-        )}
-
         <SetupStep number={++step} title={S.stepEntries}>
           {!draft.hostOnly && (
             <Segmented
@@ -95,7 +87,7 @@ export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void })
             />
           )}
           {live && <p className="text-hint">{S.liveHint}</p>}
-          <EntriesEditor rows={draft.rows} onChange={(r) => set('rows', r)} maxLength={pack.entry.maxLength} itemNoun={pack.copy.item} />
+          <EntriesEditor rows={draft.rows} onChange={(r) => set('rows', r)} maxLength={GAME.entry.maxLength} itemNoun={GAME.copy.item} />
         </SetupStep>
 
         <SetupStep number={++step} title={S.stepSettings}>

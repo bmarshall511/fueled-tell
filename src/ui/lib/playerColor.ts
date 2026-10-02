@@ -6,5 +6,5 @@ const PLAYER_VARS = Object.keys(tokens.color.player).map((k) => `var(--color-pla
 /** Resolved color value for Three.js materials. */
 export const playerColor = (index: number): string => PLAYER_COLORS[index % PLAYER_COLORS.length] ?? tokens.color.accent;
 
-/** CSS custom property reference, so UI follows live token edits and pack overrides. */
+/** CSS custom property reference, so UI follows live token edits. */
 export const playerColorVar = (index: number): string => PLAYER_VARS[index % PLAYER_VARS.length] ?? 'var(--color-accent)';
