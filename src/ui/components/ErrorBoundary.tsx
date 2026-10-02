@@ -1,5 +1,5 @@
 import { Component, type ReactNode } from 'react';
-import { UI_COPY } from './copy';
+import { UI_COPY } from '../copy';
 import styles from './ErrorBoundary.module.css';
 
 interface State {

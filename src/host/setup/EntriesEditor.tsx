@@ -1,9 +1,9 @@
 import { useEffect, useId, useMemo, useRef, useState, type ClipboardEvent } from 'react';
-import { parseEntries, validateRows, type RowIssue } from '../engine/intake';
-import sampleEntries from '../packs/sample-entries.json';
-import { Button } from '../ui/Button';
-import { plural } from '../ui/format';
-import { UI_COPY } from '../ui/copy';
+import { parseEntries, validateRows, type RowIssue } from '../../engine/intake';
+import sampleEntries from '../../packs/sample-entries.json';
+import { Button } from '../../ui/components/Button';
+import { plural } from '../../ui/lib/format';
+import { UI_COPY } from '../../ui/copy';
 import styles from './EntriesEditor.module.css';
 
 const E = UI_COPY.editor;

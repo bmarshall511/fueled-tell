@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import type { PlayerId } from '../engine/types';
-import { PlayerChip } from './PlayerChip';
-import type { SeatedPlayer } from './types';
+import type { PlayerId } from '../../engine/types';
+import { PlayerChip } from '../../ui/components/PlayerChip';
+import type { SeatedPlayer } from '../../ui/lib/types';
 import styles from './RevealPanel.module.css';
 
 interface RevealPanelProps {

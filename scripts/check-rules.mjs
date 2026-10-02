@@ -47,7 +47,7 @@ const resolveImport = (from, spec) => {
   return null;
 };
 const seen = new Set();
-const stack = [[join(src, 'routes', 'Play.tsx'), ['routes/Play.tsx']]];
+const stack = [[join(src, 'player', 'PlayerApp.tsx'), ['player/PlayerApp.tsx']]];
 while (stack.length) {
   const [file, chain] = stack.pop();
   if (seen.has(file)) continue;

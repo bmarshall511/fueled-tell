@@ -1,7 +1,7 @@
 import { useId } from 'react';
-import type { PlayerId } from '../engine/types';
-import { playerColorVar } from './playerColor';
-import type { SeatedPlayer } from './types';
+import type { PlayerId } from '../../engine/types';
+import { playerColorVar } from '../lib/playerColor';
+import type { SeatedPlayer } from '../lib/types';
 import styles from './NameGrid.module.css';
 
 interface NameGridProps {

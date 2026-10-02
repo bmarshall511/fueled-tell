@@ -1,4 +1,4 @@
-import { tokens } from '../tokens/tokens';
+import { tokens } from '../../tokens/tokens';
 
 const PLAYER_COLORS = Object.values(tokens.color.player);
 const PLAYER_VARS = Object.keys(tokens.color.player).map((k) => `var(--color-player-${k})`);

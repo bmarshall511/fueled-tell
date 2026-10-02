@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { GameScreen } from '../host/GameScreen';
-import { Lobby } from '../host/Lobby';
-import { Setup } from '../host/Setup';
-import { useHostGame } from '../host/useHostGame';
-import { unlock } from '../ui/sound';
+import { GameScreen } from './game/GameScreen';
+import { Lobby } from './lobby/Lobby';
+import { Setup } from './setup/Setup';
+import { useHostGame } from './useHostGame';
+import { unlock } from './sound';
 
 /**
  * /host: the laptop that shares its screen. Setup (private) -> Lobby (shared)

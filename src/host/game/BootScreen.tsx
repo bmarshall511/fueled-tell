@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { tokens } from '../tokens/tokens';
-import { UI_COPY } from './copy';
-import { BuiltBy, FueledWordmark } from './Logo';
+import { tokens } from '../../tokens/tokens';
+import { UI_COPY } from '../../ui/copy';
+import { BuiltBy, FueledWordmark } from '../../ui/components/Logo';
 import styles from './BootScreen.module.css';
 
 interface BootScreenProps {

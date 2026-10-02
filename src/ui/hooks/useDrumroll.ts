@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { RULES } from '../engine/rules';
-import { sound } from '../ui/sound';
+import { RULES } from '../../engine/rules';
+import { sound } from '../../host/sound';
 
 const STEPS = 3;
 

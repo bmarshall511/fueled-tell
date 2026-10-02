@@ -1,19 +1,19 @@
 import { useEffect, useRef, type CSSProperties } from 'react';
-import { canStart, playableEntries } from '../engine/game';
-import { RULES } from '../engine/rules';
-import { tokens } from '../tokens/tokens';
-import { Button } from '../ui/Button';
-import { CodeChip } from '../ui/CodeChip';
-import { UI_COPY } from '../ui/copy';
-import { BuiltBy, FueledWordmark } from '../ui/Logo';
-import { plural } from '../ui/format';
-import { playerColorVar } from '../ui/playerColor';
-import { QrCode } from '../ui/qr/QrCode';
-import { sound } from '../ui/sound';
-import { stageCssVars, useStageLayout } from '../ui/stage';
-import { useDocumentTitle } from '../ui/useHostChrome';
-import type { HostGame } from './useHostGame';
-import styles from './screens.module.css';
+import { canStart, playableEntries } from '../../engine/game';
+import { RULES } from '../../engine/rules';
+import { tokens } from '../../tokens/tokens';
+import { Button } from '../../ui/components/Button';
+import { CodeChip } from '../../ui/components/CodeChip';
+import { UI_COPY } from '../../ui/copy';
+import { BuiltBy, FueledWordmark } from '../../ui/components/Logo';
+import { plural } from '../../ui/lib/format';
+import { playerColorVar } from '../../ui/lib/playerColor';
+import { QrCode } from '../../ui/components/qr/QrCode';
+import { sound } from '../sound';
+import { stageCssVars, useStageLayout } from '../../ui/lib/stage';
+import { useDocumentTitle } from '../../ui/hooks/useHostChrome';
+import type { HostGame } from '../useHostGame';
+import styles from '../screens.module.css';
 
 const L = UI_COPY.lobby;
 

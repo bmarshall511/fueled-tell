@@ -1,11 +1,11 @@
 import { useId, useState } from 'react';
 import { normalizeRoomCode, ROOM_CODE_LENGTH } from '../engine/roomCode';
 import { tokens } from '../tokens/tokens';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/components/Button';
 import { UI_COPY } from '../ui/copy';
-import { BuiltBy, FueledLockup } from '../ui/Logo';
-import { useDocumentTitle } from '../ui/useHostChrome';
-import { useInstallPrompt } from '../ui/useInstallPrompt';
+import { BuiltBy, FueledLockup } from '../ui/components/Logo';
+import { useDocumentTitle } from '../ui/hooks/useHostChrome';
+import { useInstallPrompt } from '../ui/hooks/useInstallPrompt';
 import styles from './Landing.module.css';
 
 const L = UI_COPY.landing;

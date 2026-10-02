@@ -1,12 +1,12 @@
 import type { CSSProperties } from 'react';
-import type { Standing } from '../engine/scoring';
-import type { PackCopy, PlayerId } from '../engine/types';
-import { tokens } from '../tokens/tokens';
-import { UI_COPY } from './copy';
-import { formatScore, ordinal } from './format';
-import { PlayerChip } from './PlayerChip';
-import { playerColorVar } from './playerColor';
-import type { SeatedPlayer } from './types';
+import type { Standing } from '../../engine/scoring';
+import type { PackCopy, PlayerId } from '../../engine/types';
+import { tokens } from '../../tokens/tokens';
+import { UI_COPY } from '../../ui/copy';
+import { formatScore, ordinal } from '../../ui/lib/format';
+import { PlayerChip } from '../../ui/components/PlayerChip';
+import { playerColorVar } from '../../ui/lib/playerColor';
+import type { SeatedPlayer } from '../../ui/lib/types';
 import styles from './Finale.module.css';
 
 interface FinaleProps {

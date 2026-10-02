@@ -1,13 +1,13 @@
 import { lazy, StrictMode, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import './tokens/tokens.css';
-import './ui/base.css';
-import { ErrorBoundary } from './ui/ErrorBoundary';
+import './ui/styles/base.css';
+import { ErrorBoundary } from './ui/components/ErrorBoundary';
 
-const Landing = lazy(() => import('./routes/Landing'));
-const Host = lazy(() => import('./routes/Host'));
-const Play = lazy(() => import('./routes/Play'));
-const Demo = lazy(() => import('./routes/Demo'));
+const Landing = lazy(() => import('./landing/Landing'));
+const Host = lazy(() => import('./host/HostApp'));
+const Play = lazy(() => import('./player/PlayerApp'));
+const Demo = lazy(() => import('./demo/Demo'));
 
 /** A pathname switch is all the routing four pages need. */
 function Route() {

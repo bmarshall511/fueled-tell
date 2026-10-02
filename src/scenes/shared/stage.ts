@@ -1,6 +1,6 @@
 import { useThree } from '@react-three/fiber';
 import { MathUtils } from 'three';
-import { stageFor, type StageLayout } from '../../ui/stage';
+import { stageFor, type StageLayout } from '../../ui/lib/stage';
 
 /** Shared camera so every scene maps stage pixels to world units the same way. */
 export const CAMERA = { fov: 40, distance: 10 } as const;

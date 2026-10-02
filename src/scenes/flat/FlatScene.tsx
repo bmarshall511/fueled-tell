@@ -1,6 +1,6 @@
 import { useContext, useEffect, type CSSProperties } from 'react';
-import { ItemText } from '../../ui/ItemText';
-import { playerColorVar } from '../../ui/playerColor';
+import { ItemText } from '../../ui/components/ItemText';
+import { playerColorVar } from '../../ui/lib/playerColor';
 import type { SceneProps } from '../Scene';
 import { SceneReadyContext } from '../sceneReady';
 import { SceneOverlay } from '../shared/SceneOverlay';

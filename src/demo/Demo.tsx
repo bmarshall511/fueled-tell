@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { makeRoomCode } from '../engine/roomCode';
 import { sessionKey } from '../host/storage';
 import { tokens } from '../tokens/tokens';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/components/Button';
 import { UI_COPY } from '../ui/copy';
-import { BuiltBy, FueledLockup } from '../ui/Logo';
-import { useDocumentTitle } from '../ui/useHostChrome';
+import { BuiltBy, FueledLockup } from '../ui/components/Logo';
+import { useDocumentTitle } from '../ui/hooks/useHostChrome';
 import styles from './Demo.module.css';
 
 const D = UI_COPY.demo;

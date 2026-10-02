@@ -1,6 +1,6 @@
-import domLab from '../../assets/brand/DOMlab-logo-white.svg?mono';
-import fueledWordmark from '../../assets/brand/fueled-wordmark-white.svg?mono';
-import fueledLockupWhite from '../../assets/brand/fueled-lockup-white.svg';
+import domLab from '../../../assets/brand/DOMlab-logo-white.svg?mono';
+import fueledWordmark from '../../../assets/brand/fueled-wordmark-white.svg?mono';
+import fueledLockupWhite from '../../../assets/brand/fueled-lockup-white.svg';
 import styles from './Logo.module.css';
 
 interface MonoLogoProps {

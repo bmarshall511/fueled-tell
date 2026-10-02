@@ -1,5 +1,5 @@
 import { useEffect, useState, type CSSProperties } from 'react';
-import { tokens } from '../tokens/tokens';
+import { tokens } from '../../tokens/tokens';
 
 export type Orientation = 'landscape' | 'portrait';
 
