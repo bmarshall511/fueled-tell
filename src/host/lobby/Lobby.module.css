@@ -20,7 +20,8 @@
   position: sticky;
   bottom: 0;
   padding: var(--space-3) 0;
-  background: var(--color-bg);
+  /* Fades the roster out beneath the bar instead of a hard black strip over the glow. */
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--color-bg) 70%, transparent) 50%);
 }
 
 [data-orientation='portrait'].lobby {

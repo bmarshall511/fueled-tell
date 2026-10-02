@@ -7,7 +7,7 @@ import { buildTokens } from './build-tokens.ts';
 export function tokensPlugin(root: string): Plugin {
   const source = resolve(root, 'tokens/tokens.json');
   return {
-    name: 'whose-is-it:tokens',
+    name: 'tell:tokens',
     buildStart() {
       buildTokens(root);
     },
@@ -23,7 +23,8 @@ export function tokensPlugin(root: string): Plugin {
         { tag: 'meta', attrs: { name: 'color-scheme', content: 'dark' }, injectTo: 'head' },
         { tag: 'meta', attrs: { name: 'apple-mobile-web-app-capable', content: 'yes' }, injectTo: 'head' },
         { tag: 'meta', attrs: { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' }, injectTo: 'head' },
-        { tag: 'style', children: `html,body{background:${bg}}`, injectTo: 'head' },
+        // html only: a body background would paint over the glow backdrop (z-index -1).
+        { tag: 'style', children: `html{background:${bg}}`, injectTo: 'head' },
       ];
     },
     configureServer(server) {
@@ -48,7 +49,7 @@ export function tokensPlugin(root: string): Plugin {
 export function monoSvgPlugin(): Plugin {
   const SUFFIX = '?mono';
   return {
-    name: 'whose-is-it:mono-svg',
+    name: 'tell:mono-svg',
     enforce: 'pre',
     async resolveId(id, importer) {
       if (!id.endsWith(SUFFIX)) return null;

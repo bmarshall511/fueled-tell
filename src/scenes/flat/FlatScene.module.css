@@ -26,7 +26,7 @@
 }
 
 .face {
-  --cut: calc(var(--chamfer-lg) * 2 * var(--stage));
+  border-radius: calc(var(--radius-card) * 1.5 * var(--stage));
   position: absolute;
   inset: 0;
   display: grid;
@@ -45,7 +45,7 @@
 }
 
 .back {
-  background: var(--color-accent);
+  background: var(--gradient-glow);
   transform: rotateY(180deg);
   text-align: center;
   align-content: center;
@@ -89,10 +89,12 @@
 }
 
 .chip {
-  --cut: calc(var(--chamfer-sm) * 2 * var(--stage));
+  border-radius: calc(var(--radius-tile) * var(--stage));
   width: calc(var(--size-chip) * var(--stage));
   height: calc(var(--size-chip) * var(--stage));
   background: var(--color-surface-raised);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
   transition:
     background-color var(--duration-base) var(--easing-standard),
     transform var(--duration-slow) var(--easing-emphasized),

@@ -1,17 +1,20 @@
+/* Pills, as on fueled.com: white for the main action, glass for everything else. */
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-3);
   border: 0;
+  border-radius: var(--radius-pill);
   cursor: pointer;
   transition:
     background-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard),
     transform var(--duration-fast) var(--easing-standard);
 }
 
 .button:active {
-  transform: translateY(var(--border-width-base));
+  transform: scale(0.97);
 }
 
 .button:disabled {
@@ -20,24 +23,35 @@
 }
 
 .primary {
-  background: var(--color-accent);
-  color: var(--color-text);
+  background: var(--color-text);
+  color: var(--color-text-inverse);
+}
+
+/* A Nebula halo on hover, like the site's CTAs. */
+.primary:hover:not(:disabled) {
+  box-shadow:
+    0 0 0 var(--border-width-base) var(--color-bg),
+    0 0 0 calc(var(--border-width-base) * 2) var(--color-accent);
 }
 
 .secondary {
   background: var(--color-surface-raised);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
+  box-shadow: inset 0 0 0 var(--border-width-hairline) var(--color-border);
   color: var(--color-text);
 }
 
 .secondary:hover:not(:disabled) {
   background: var(--color-border);
+  box-shadow: inset 0 0 0 var(--border-width-hairline) var(--color-border-strong);
 }
 
-/* For use on raised surfaces (banners, cards), where a secondary fill would disappear. */
+/* For use on raised surfaces (banners, cards), where a glass fill would disappear. */
 .outline {
   background: transparent;
   color: var(--color-text);
-  box-shadow: inset 0 0 0 var(--border-width-base) var(--color-border-strong);
+  box-shadow: inset 0 0 0 var(--border-width-hairline) var(--color-border-strong);
 }
 
 .outline:hover:not(:disabled) {
@@ -48,15 +62,13 @@
   min-height: var(--size-tap-target);
   padding: 0 var(--space-5);
   font-size: var(--font-size-phone-body);
-  --cut: var(--chamfer-sm);
 }
 
 .host {
   /* Never below a real tap target, even when the stage is scaled down on a phone. */
   min-height: max(var(--size-tap-target), calc(var(--size-tap-target) * 1.25 * var(--stage)));
-  padding: 0 max(var(--space-4), calc(var(--space-5) * var(--stage)));
+  padding: 0 max(var(--space-5), calc(var(--space-6) * var(--stage)));
   font-size: max(var(--font-size-phone-label), calc(var(--font-size-host-label) * 0.75 * var(--stage)));
-  --cut: calc(var(--chamfer-md) * var(--stage));
   white-space: nowrap;
 }
 
@@ -64,11 +76,13 @@
   font: inherit;
   font-size: 0.75em;
   padding: 0 var(--space-2);
-  border: var(--border-width-base) solid currentColor;
-  opacity: var(--opacity-muted);
+  border-radius: var(--radius-pill);
+  background: var(--color-border);
+  color: var(--color-text-muted);
 }
 
-/* On the accent fill, the muted hint fails contrast: keep it full strength. */
+/* On the white fill: a dark hint at full strength. */
 .primary .kbd {
-  opacity: 1;
+  background: var(--color-text-inverse);
+  color: var(--color-text);
 }

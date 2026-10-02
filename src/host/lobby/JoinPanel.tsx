@@ -22,7 +22,7 @@ export function JoinPanel({ code, prompt, status }: { code: string; prompt: stri
         {status}
       </div>
       <figure className={styles.qr}>
-        <span className={`chamfer ${styles.qrCode}`}>
+        <span className={styles.qrCode}>
           <QrCode value={url} label={`${L.scan}: ${shown}`} />
         </span>
         <figcaption className="t-label">{L.scan}</figcaption>

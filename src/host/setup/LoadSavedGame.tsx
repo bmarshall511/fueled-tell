@@ -9,7 +9,7 @@ export function LoadSavedGame({ onLoad }: { onLoad: (session: HostSession) => vo
   const [failed, setFailed] = useState(false);
   return (
     <>
-      <label className={`chamfer ${styles.button}`} htmlFor={id}>
+      <label className={styles.button} htmlFor={id}>
         {UI_COPY.setup.loadFile}
         <input
           id={id}

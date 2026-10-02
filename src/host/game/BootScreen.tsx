@@ -11,7 +11,7 @@ interface BootScreenProps {
 }
 
 /**
- * Branded boot screen: a chamfered deck riffles while the heavy chunk loads,
+ * Branded boot screen: a rounded deck riffles while the heavy chunk loads,
  * then the deck squares up and the screen wipes away on the DOM lab diagonal.
  * Stays at least `duration.bootMin` once shown so it never just flickers.
  */
@@ -36,9 +36,9 @@ export function BootScreen({ ready, title = UI_COPY.appName }: BootScreenProps) 
   return (
     <div className={`${styles.boot} ${state === 'leaving' ? styles.leaving : ''}`} role="status" aria-live="polite">
       <div className={styles.deck} aria-hidden="true">
-        <span className={`chamfer ${styles.card} ${styles.c3}`} />
-        <span className={`chamfer ${styles.card} ${styles.c2}`} />
-        <span className={`chamfer ${styles.card} ${styles.c1}`} />
+        <span className={`${styles.card} ${styles.c3}`} />
+        <span className={`${styles.card} ${styles.c2}`} />
+        <span className={`${styles.card} ${styles.c1}`} />
       </div>
       <h1 className={`t-display ${styles.title}`}>{title}</h1>
       <p className={`t-label ${styles.status}`}>
@@ -49,7 +49,7 @@ export function BootScreen({ ready, title = UI_COPY.appName }: BootScreenProps) 
           <span>.</span>
         </span>
       </p>
-      <span className={`chamfer ${styles.bar}`} aria-hidden="true">
+      <span className={styles.bar} aria-hidden="true">
         <span />
       </span>
       <footer className={styles.footer}>

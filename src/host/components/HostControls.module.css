@@ -6,10 +6,12 @@
   gap: calc(var(--space-4) * var(--stage));
 }
 
+/* Endorsement and join line: one row when it fits, two when the bar is tight (the dock is in flow, so that's safe). */
 .info {
+  flex: 0 1 auto;
   display: flex;
   align-items: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: calc(var(--space-3) * var(--stage)) calc(var(--space-6) * var(--stage));
   min-width: 0;
 }

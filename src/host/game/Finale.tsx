@@ -73,7 +73,7 @@ export function Finale({ standings, players, copy, scored }: FinaleProps) {
           return (
             <li
               key={p.id}
-              className={`chamfer ${styles.step} ${styles[`p${Math.min(s.place, 3)}`] ?? ''} ${s.place === 1 ? styles.first : ''}`}
+              className={`${styles.step} ${styles[`p${Math.min(s.place, 3)}`] ?? ''} ${s.place === 1 ? styles.first : ''}`}
               style={{ ...delay(rise), ['--player' as string]: playerColorVar(p.colorIndex) }}
             >
               <span className={`t-display ${styles.place}`}>{ordinal(s.place)}</span>

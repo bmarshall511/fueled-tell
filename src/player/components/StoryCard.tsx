@@ -6,7 +6,7 @@ import styles from './StoryCard.module.css';
 export function StoryCard({ view, itemNoun, compact }: { view: PlayerView; itemNoun: string; compact?: boolean }) {
   if (!view.item) return null;
   return (
-    <figure className={`chamfer ${styles.card} ${compact ? styles.compact : ''}`}>
+    <figure className={`${styles.card} ${compact ? styles.compact : ''}`}>
       <figcaption className={styles.label}>
         {itemNoun} {view.index + 1} {UI_COPY.of} {view.total}
       </figcaption>

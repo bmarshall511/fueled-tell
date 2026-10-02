@@ -6,7 +6,7 @@ import styles from './Layout.module.css';
 /** A screen's title. Focusable so the shell can move focus to it on screen changes. */
 export function Heading({ children, accent }: { children: ReactNode; accent?: boolean }) {
   return (
-    <h1 tabIndex={-1} className={`${styles.heading} ${accent ? styles.accent : ''}`}>
+    <h1 tabIndex={-1} className={`${styles.heading} ${accent ? 'text-glow' : ''}`}>
       {children}
     </h1>
   );
@@ -43,14 +43,14 @@ export const PrimaryAction = (props: Omit<ComponentProps<typeof Button>, 'classN
 export function Hero() {
   return (
     <div className={styles.hero}>
-      <p className={styles.heroName}>{UI_COPY.appName}</p>
+      <p className={`text-glow ${styles.heroName}`}>{UI_COPY.appName}</p>
       <p className="text-body text-muted">{UI_COPY.tagline}</p>
     </div>
   );
 }
 
 /** A soft pulsing tile for "waiting on someone else" states. */
-export const Pulse = () => <span className={`chamfer-all ${styles.pulse}`} aria-hidden="true" />;
+export const Pulse = () => <span className={styles.pulse} aria-hidden="true" />;
 
 /** A label over a player chip ("Your guess", "It was"). */
 export function Labelled({ label, children }: { label: string; children: ReactNode }) {

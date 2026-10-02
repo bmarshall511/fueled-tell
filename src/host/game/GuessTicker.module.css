@@ -15,10 +15,12 @@
 }
 
 .slot {
-  --cut: calc(var(--chamfer-sm) * var(--stage));
+  border-radius: var(--radius-pill);
   width: calc(var(--font-size-host-label) * 1.25 * var(--stage));
   height: calc(var(--font-size-host-label) * 1.25 * var(--stage));
   background: var(--color-surface-raised);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
   transition:
     background-color var(--duration-base) var(--easing-standard),
     transform var(--duration-base) var(--easing-emphasized);

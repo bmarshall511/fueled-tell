@@ -13,7 +13,7 @@ interface NoticeProps {
 /** A highlighted message bar (warning tone), with room for action buttons. */
 export function Notice({ children, role, size = 'page', className }: NoticeProps) {
   return (
-    <div className={`chamfer ${styles.notice} ${styles[size]} ${className ?? ''}`} role={role}>
+    <div className={`${styles.notice} ${styles[size]} ${className ?? ''}`} role={role}>
       {children}
     </div>
   );

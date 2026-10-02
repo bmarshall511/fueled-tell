@@ -5,12 +5,14 @@
 }
 
 .pack {
-  --cut: var(--chamfer-lg);
+  border-radius: var(--radius-panel);
   display: grid;
   align-content: start;
   gap: var(--space-2);
   padding: var(--space-5);
   background: var(--color-surface-raised);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
   cursor: pointer;
   transition: background-color var(--duration-fast) var(--easing-standard);
 }

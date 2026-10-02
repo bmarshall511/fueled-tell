@@ -27,7 +27,7 @@ export function JoinScreen({ view, game }: Omit<ScreenProps, 'pack'>) {
               <li key={p.id}>
                 <button
                   type="button"
-                  className={`chamfer ${styles.claim}`}
+                  className={styles.claim}
                   onClick={() => {
                     haptics.tap();
                     game.join(p.name, p.id);

@@ -45,6 +45,8 @@
 }
 
 .qrCode {
+  border-radius: max(var(--radius-tile), calc(var(--radius-card) * var(--stage)));
+  overflow: hidden;
   display: block;
   width: calc(var(--size-item-height) * 0.6 * var(--stage));
   max-width: 60vw;

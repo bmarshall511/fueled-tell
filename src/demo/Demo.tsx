@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { makeRoomCode } from '../engine/roomCode';
 import { sessionKey } from '../host/state/storage';
 import { identityKey } from '../player/identity';
+import { Backdrop } from '../ui/components/Backdrop';
 import { BrandHeader } from '../ui/components/BrandHeader';
 import { Button } from '../ui/components/Button';
 import { UI_COPY } from '../ui/copy';
@@ -44,6 +45,7 @@ export default function Demo() {
   useDocumentTitle(D.title);
   return (
     <main className={styles.demo}>
+      <Backdrop />
       <BrandHeader />
 
       <div className={styles.intro}>
@@ -53,7 +55,7 @@ export default function Demo() {
 
       <ol className={styles.steps}>
         {D.steps.map((s, i) => (
-          <li key={s.what} className={`chamfer ${styles.step}`}>
+          <li key={s.what} className={styles.step}>
             <span className={styles.stepNum} aria-hidden="true">
               {i + 1}
             </span>
@@ -80,13 +82,13 @@ export default function Demo() {
         <div className={styles.panes} key={run}>
           <figure className={styles.hostPane}>
             <figcaption className="text-label">{D.host}</figcaption>
-            <div className={`chamfer ${styles.hostFrame}`}>
+            <div className={styles.hostFrame}>
               <iframe title={D.host} src={src.host} allow="fullscreen; screen-wake-lock" />
             </div>
           </figure>
           <figure className={styles.phonePane}>
             <figcaption className="text-label">{D.phone}</figcaption>
-            <div className={`chamfer ${styles.phoneFrame}`}>
+            <div className={styles.phoneFrame}>
               <iframe title={D.phone} src={src.phone} />
             </div>
           </figure>

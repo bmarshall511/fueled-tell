@@ -1,6 +1,16 @@
 import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef, type CSSProperties } from 'react';
-import { Color, ExtrudeGeometry, Shape, ShapeGeometry, type Group, type Mesh, type MeshBasicMaterial } from 'three';
+import {
+  CanvasTexture,
+  Color,
+  ExtrudeGeometry,
+  SRGBColorSpace,
+  Shape,
+  ShapeGeometry,
+  type Group,
+  type Mesh,
+  type MeshBasicMaterial,
+} from 'three';
 import { tokens } from '../../tokens/tokens';
 import { ItemText } from '../../ui/components/ItemText';
 import { playerColor } from '../../ui/lib/playerColor';
@@ -16,20 +26,55 @@ export const rendersOwnerName = true;
 const CARD_DEPTH = 0.08;
 const CHIP = { depth: 0.14, spacing: 1.3, columns: 2, dropHeight: 3, sideShade: 0.5, maxJitter: 0.18 };
 const TABLE_Z = -0.6;
+const GRADIENT_SIZE = 256;
 /** Where cards come from and go to, in card widths. */
 const DEAL_FROM = { x: 1.6, y: 1.2, rot: -0.5 };
 
-/** Card outline with the DOM lab chamfer: cut top-left and bottom-right corners. */
-function chamferShape(w: number, h: number, cut: number): Shape {
+/** Rounded-rectangle outline, centered on the origin. */
+function roundedShape(w: number, h: number, r: number): Shape {
+  const x = -w / 2;
+  const y = -h / 2;
   const s = new Shape();
-  s.moveTo(-w / 2 + cut, h / 2);
-  s.lineTo(w / 2, h / 2);
-  s.lineTo(w / 2, -h / 2 + cut);
-  s.lineTo(w / 2 - cut, -h / 2);
-  s.lineTo(-w / 2, -h / 2);
-  s.lineTo(-w / 2, h / 2 - cut);
-  s.closePath();
+  s.moveTo(x + r, y);
+  s.lineTo(x + w - r, y);
+  s.quadraticCurveTo(x + w, y, x + w, y + r);
+  s.lineTo(x + w, y + h - r);
+  s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  s.lineTo(x + r, y + h);
+  s.quadraticCurveTo(x, y + h, x, y + h - r);
+  s.lineTo(x, y + r);
+  s.quadraticCurveTo(x, y, x + r, y);
   return s;
+}
+
+/** ShapeGeometry UVs are in shape units; map them to 0..1 so a texture fills the face. */
+function normalizeUvs(g: ShapeGeometry, w: number, h: number): ShapeGeometry {
+  const pos = g.attributes.position;
+  const uv = g.attributes.uv;
+  if (!pos || !uv) return g;
+  for (let i = 0; i < uv.count; i++) uv.setXY(i, pos.getX(i) / w + 0.5, pos.getY(i) / h + 0.5);
+  uv.needsUpdate = true;
+  return g;
+}
+
+/** The glow gradient (Solar → Nebula → deep violet, 135°) as a texture for the card back. */
+function glowTexture(): CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = GRADIENT_SIZE;
+  const ctx = canvas.getContext('2d');
+  if (ctx) {
+    const c = tokens.color.fueled;
+    // Canvas y runs down, the UVs run up: top-left to bottom-right on the card.
+    const g = ctx.createLinearGradient(0, 0, GRADIENT_SIZE, GRADIENT_SIZE);
+    g.addColorStop(0, c.solar);
+    g.addColorStop(0.6, c.nebula);
+    g.addColorStop(1, c.deepViolet);
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, GRADIENT_SIZE, GRADIENT_SIZE);
+  }
+  const t = new CanvasTexture(canvas);
+  t.colorSpace = SRGBColorSpace;
+  return t;
 }
 
 function Card({ phase, itemId, reducedMotion }: { phase: SceneProps['phase']; itemId: string; reducedMotion: boolean }) {
@@ -37,16 +82,18 @@ function Card({ phase, itemId, reducedMotion }: { phase: SceneProps['phase']; it
   const w = toWorld(layout.cardWidth);
   const h = toWorld(layout.itemHeight);
   const offsetY = -toWorld(layout.itemOffsetY);
-  const cut = toWorld(tokens.chamfer.lg * 2);
+  const radius = toWorld(tokens.radius.card * 2);
 
   const { body, face } = useMemo(() => {
-    const shape = chamferShape(w, h, cut);
+    const shape = roundedShape(w, h, radius);
     return {
       body: new ExtrudeGeometry(shape, { depth: CARD_DEPTH, bevelEnabled: false }),
-      face: new ShapeGeometry(shape),
+      face: normalizeUvs(new ShapeGeometry(shape, 12), w, h),
     };
-  }, [w, h, cut]);
+  }, [w, h, radius]);
+  const back = useMemo(glowTexture, []);
   useEffect(() => () => [body, face].forEach((g) => g.dispose()), [body, face]);
+  useEffect(() => () => back.dispose(), [back]);
 
   const group = useRef<Group>(null);
   const flip = useRef<Group>(null);
@@ -95,7 +142,7 @@ function Card({ phase, itemId, reducedMotion }: { phase: SceneProps['phase']; it
           <meshBasicMaterial color={tokens.color.fueled.perfectWhite} toneMapped={false} />
         </mesh>
         <mesh geometry={face} position-z={-CARD_DEPTH / 2 - 0.001} rotation-y={Math.PI}>
-          <meshBasicMaterial color={tokens.color.accent} toneMapped={false} />
+          <meshBasicMaterial map={back} toneMapped={false} />
         </mesh>
       </group>
     </group>
@@ -132,7 +179,7 @@ function Chips({ guesses, players, reveal, reducedMotion, slots }: ChipsProps) {
   const offTable: [number, number] = portrait ? [0, -toWorld(layout.refHeight)] : [toWorld(layout.refWidth), 0];
 
   const geometry = useMemo(
-    () => new ExtrudeGeometry(chamferShape(size, size, size * 0.28), { depth: CHIP.depth, bevelEnabled: false }),
+    () => new ExtrudeGeometry(roundedShape(size, size, size * 0.32), { depth: CHIP.depth, bevelEnabled: false }),
     [size],
   );
   useEffect(() => () => geometry.dispose(), [geometry]);
@@ -203,11 +250,6 @@ export default function DeckScene(props: SceneProps) {
       <SceneCanvas camera={{ position: [0, 0, CAMERA.distance], fov: CAMERA.fov }}>
         <ambientLight intensity={tokens.scene.ambientIntensity * 2} />
         <directionalLight position={[3, 5, 8]} intensity={tokens.scene.lightIntensity} />
-        {/* The table */}
-        <mesh position-z={TABLE_Z}>
-          <planeGeometry args={[60, 40]} />
-          <meshStandardMaterial color={tokens.color.surface} roughness={1} />
-        </mesh>
         <Card phase={phase} itemId={item.id} reducedMotion={reducedMotion} />
         <Chips guesses={props.guesses} players={players} reveal={reveal} reducedMotion={reducedMotion} slots={players.length - 1} />
       </SceneCanvas>

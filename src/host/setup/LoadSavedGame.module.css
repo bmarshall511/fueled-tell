@@ -1,11 +1,13 @@
 .button {
-  --cut: var(--chamfer-sm);
+  border-radius: var(--radius-pill);
   display: inline-flex;
   align-items: center;
   min-height: var(--size-tap-target);
   padding: 0 var(--space-4);
   margin-right: auto;
   background: var(--color-surface-raised);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
   font-size: var(--font-size-phone-body);
   cursor: pointer;
 }

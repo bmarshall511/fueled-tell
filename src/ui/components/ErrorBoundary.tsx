@@ -27,7 +27,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, State> {
       <main className={styles.crash} role="alert">
         <h1 className={styles.title}>{UI_COPY.crash.title}</h1>
         <p className={styles.body}>{UI_COPY.crash.body}</p>
-        <button type="button" className={`chamfer ${styles.button}`} onClick={() => window.location.reload()}>
+        <button type="button" className={styles.button} onClick={() => window.location.reload()}>
           {UI_COPY.crash.reload}
         </button>
       </main>

@@ -15,7 +15,7 @@ interface NameGridProps {
 
 /**
  * Phone guess picker: native radio buttons (arrow keys, screen readers and
- * form semantics for free), styled as big chamfered tap targets.
+ * form semantics for free), styled as big rounded tap targets.
  */
 export function NameGrid({ players, selectedId, disabledIds = [], onSelect, legend }: NameGridProps) {
   const name = useId();
@@ -23,7 +23,7 @@ export function NameGrid({ players, selectedId, disabledIds = [], onSelect, lege
     <fieldset className={styles.grid}>
       <legend className="visually-hidden">{legend}</legend>
       {players.map((p) => (
-        <label key={p.id} className={`chamfer ${styles.cell}`} style={{ ['--player' as string]: playerColorVar(p.colorIndex) }}>
+        <label key={p.id} className={styles.cell} style={{ ['--player' as string]: playerColorVar(p.colorIndex) }}>
           <input
             type="radio"
             name={name}

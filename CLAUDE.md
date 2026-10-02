@@ -15,6 +15,7 @@
 ## Other constraints
 
 - The repo is public (github.com/bmarshall511/fueled-tell) so others at Fueled can use it, and it includes everything the app needs, including the Aeonik web fonts in `assets/fonts/` (CoType EULA alongside). Don't add secrets or personal data.
+- Look (matches fueled.com): rounded everywhere via `radius.*` tokens (pills for controls, soft cards); glass surfaces (`color.surface-raised` + `blur.glass` backdrop blur, hairline `color.border`); white pill for the main action, glass pills for the rest; the `Backdrop` glow is vivid on landing, lobby and finale, calm during rounds and on phones. Gradient text (`text-glow`) is for large display text only.
 - Brand: Fueled is primary, DOM lab is the "built by" endorsement. "Fueled" always has a capital F. Never stack the lockup vertically, recolor the logo with secondaries, or skew/stretch it. Nebula is for large text/accents only (about 4.2:1 on black).
 - Screen-share first: big type, high contrast, nothing that depends on fine detail or high frame rates.
 - Respect `prefers-reduced-motion`, cap DPR at 2, pause rendering when the tab is hidden.
@@ -39,7 +40,8 @@ Organized by feature; each component owns its `*.module.css` next to it. Keep fi
   - `hooks/`: keyboard shortcuts, screen transitions, drumroll, wake lock, and so on.
   - `lib/`: `stage.ts` is the single host layout source (landscape or portrait stage) for both the HUD and 3D.
   - `copy.ts`: all UI strings, with plural tuples for `plural()`.
-  - `styles/base.css`: resets, chamfer, focus ring, and the `t-*` (host stage) and `text-*` (pages and phone) type utilities.
+  - `styles/base.css`: resets, focus ring, `text-glow`, and the `t-*` (host stage) and `text-*` (pages and phone) type utilities.
+  - `components/Backdrop`: the animated glow behind every page (`vivid` or `calm`).
 - `src/scenes/`: the `Scene.ts` interface, plus `deck/` (Three.js, lazy) and `flat/` (2D fallback). Routes never import `scenes/SceneCanvas` or anything R3F. Use `scenes/sceneReady.ts` / `scenes/registry.ts` so Three.js stays lazy.
 - Run `npm run check` before committing: typecheck, `scripts/check-rules.mjs` (no hex outside tokens; /play never reaches Three.js), and tests.
-- Accessibility bar: axe-core clean (WCAG 2.2 AA) on every route and game state; chamfered controls use the inset focus ring in `ui/base.css`; never put faded text on Nebula.
+- Accessibility bar: axe-core clean (WCAG 2.2 AA) on every route and game state; focus rings follow each control's rounded shape (`ui/base.css`); never put faded text on Nebula.

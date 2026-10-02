@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode, type RefObject } from 'react';
 import type { PublicPlayer } from '../../engine/redact';
+import { Backdrop } from '../../ui/components/Backdrop';
 import { BuiltBy, FueledWordmark } from '../../ui/components/Logo';
 import { Notice } from '../../ui/components/Notice';
 import { PlayerChip } from '../../ui/components/PlayerChip';
@@ -13,15 +14,18 @@ interface PlayerShellProps {
   me?: PublicPlayer;
   room: string | null;
   reconnecting: boolean;
+  /** Vivid glow on the bookends (code, join, final); calm while playing. */
+  backdrop: 'vivid' | 'calm';
   children: ReactNode;
 }
 
 /** The phone app frame: brand bar (you + room), reconnect notice, the screen, the endorsement. */
-export function PlayerShell({ screenKey, me, room, reconnecting, children }: PlayerShellProps) {
+export function PlayerShell({ screenKey, me, room, reconnecting, backdrop, children }: PlayerShellProps) {
   const main = useRef<HTMLElement>(null);
   useFocusHeadingOnChange(main, screenKey);
   return (
     <div className={styles.app}>
+      <Backdrop tone={backdrop} />
       <header className={styles.bar}>
         <a href="/" className={styles.brand} aria-label={`${UI_COPY.appName} home`}>
           <FueledWordmark size="compact" />

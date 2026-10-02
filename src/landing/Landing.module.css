@@ -36,7 +36,7 @@
 }
 
 .card {
-  --cut: var(--chamfer-lg);
+  border-radius: var(--radius-card);
   min-width: 0;
   display: grid;
   grid-template-rows: auto auto 1fr;
@@ -44,6 +44,8 @@
   gap: var(--space-2);
   padding: var(--space-6);
   background: var(--color-surface-raised);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
   text-decoration: none;
   transition:
     background-color var(--duration-fast) var(--easing-standard),
@@ -54,8 +56,11 @@ a.card:hover {
   transform: translateY(calc(var(--space-1) * -1));
 }
 
+/* The main way in is white, like the primary buttons. */
 .primary {
-  background: var(--color-accent);
+  background: var(--color-text);
+  color: var(--color-text-inverse);
+  box-shadow: none;
 }
 
 .cardTitle {
@@ -68,7 +73,7 @@ a.card:hover {
 }
 
 .primary .cardHint {
-  color: var(--color-text);
+  color: var(--color-text-inverse);
 }
 
 .joinRow {

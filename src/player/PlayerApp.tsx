@@ -3,7 +3,7 @@ import { packById } from '../packs';
 import { useDocumentTitle } from '../ui/hooks/useDocumentTitle';
 import { useScreenTransition } from '../ui/hooks/useScreenTransition';
 import { PlayerShell } from './components/PlayerShell';
-import { kindOf, screenFor } from './screenFor';
+import { kindOf, screenFor, type ScreenKind } from './screenFor';
 import { CodeScreen } from './screens/CodeScreen';
 import { ConnectingScreen } from './screens/ConnectingScreen';
 import { FinalScreen } from './screens/FinalScreen';
@@ -16,6 +16,9 @@ import { YoursScreen } from './screens/YoursScreen';
 import { usePlayerGame } from './usePlayerGame';
 
 /** /play: the player app. Phones first, but a proper two-column layout on desktop. Never loads Three.js. */
+/** Screens that get the full glow; the rest keep it calm so the entry and names read cleanly. */
+const VIVID: readonly ScreenKind[] = ['code', 'join', 'final'];
+
 export default function PlayerApp() {
   const game = usePlayerGame();
   const { view, identity } = game;
@@ -59,6 +62,7 @@ export default function PlayerApp() {
       me={view?.players.find((p) => p.id === view.me)}
       room={identity.room}
       reconnecting={game.status === 'reconnecting' && !!view}
+      backdrop={VIVID.includes(kind) ? 'vivid' : 'calm'}
     >
       {renderScreen()}
     </PlayerShell>

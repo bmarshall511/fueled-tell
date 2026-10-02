@@ -18,7 +18,7 @@ export function GuessTicker({ received, expected, label }: GuessTickerProps) {
       </span>
       <span className={styles.slots} aria-hidden="true">
         {Array.from({ length: expected }, (_, i) => (
-          <span key={i} className={`chamfer-all ${styles.slot} ${i < received ? styles.filled : ''}`} />
+          <span key={i} className={`${styles.slot} ${i < received ? styles.filled : ''}`} />
         ))}
       </span>
     </div>

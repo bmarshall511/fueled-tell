@@ -2,6 +2,7 @@ import { validateRows } from '../../engine/intake';
 import { RULES } from '../../engine/rules';
 import type { ScoringMode } from '../../engine/types';
 import { packById } from '../../packs';
+import { Backdrop } from '../../ui/components/Backdrop';
 import { BrandHeader } from '../../ui/components/BrandHeader';
 import { Button } from '../../ui/components/Button';
 import { Notice } from '../../ui/components/Notice';
@@ -57,6 +58,7 @@ export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void })
   let step = 0;
   return (
     <main className={styles.setup}>
+      <Backdrop />
       <BrandHeader />
       <h1 className={`text-headline ${styles.title}`}>{editing ? S.save : S.title}</h1>
       {editing && host.roomCode && !host.state?.settings.hostOnly && (

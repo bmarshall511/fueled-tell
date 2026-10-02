@@ -8,7 +8,9 @@ export const tokens = {
       "techGrey": "#EAEAEA",
       "cryo": "#00A6FF",
       "solar": "#FF52B7",
-      "nova": "#FBBC09"
+      "nova": "#FBBC09",
+      "lilac": "#B9AEFF",
+      "deepViolet": "#4A3BD6"
     },
     "neutral": {
       "300": "#B4B4BC",
@@ -18,10 +20,11 @@ export const tokens = {
       "900": "#0D0D10"
     },
     "bg": "#000000",
-    "surface": "#0D0D10",
-    "surfaceRaised": "#17171C",
-    "border": "#26262E",
-    "borderStrong": "#55555F",
+    "surface": "rgba(255, 255, 255, 0.05)",
+    "surfaceRaised": "rgba(23, 23, 28, 0.62)",
+    "surfaceSolid": "#17171C",
+    "border": "rgba(255, 255, 255, 0.12)",
+    "borderStrong": "rgba(255, 255, 255, 0.24)",
     "text": "#F5F5F1",
     "textMuted": "#B4B4BC",
     "textInverse": "#000000",
@@ -32,6 +35,11 @@ export const tokens = {
       "2": "#FF52B7",
       "3": "#FBBC09",
       "4": "#6652FF"
+    },
+    "glow": {
+      "pink": "#FF52B7",
+      "violet": "#6652FF",
+      "lilac": "#B9AEFF"
     }
   },
   "font": {
@@ -98,14 +106,25 @@ export const tokens = {
     "logoHost": 29,
     "builtbyCompact": 20
   },
-  "chamfer": {
-    "sm": 6,
-    "md": 12,
-    "lg": 24
+  "radius": {
+    "pill": 999,
+    "card": 32,
+    "panel": 24,
+    "field": 18,
+    "tile": 16
+  },
+  "blur": {
+    "glass": 24,
+    "glow": 80
+  },
+  "gradient": {
+    "glow": "linear-gradient(135deg, var(--color-fueled-solar), var(--color-fueled-nebula) 60%, var(--color-fueled-deep-violet))",
+    "text": "linear-gradient(90deg, var(--color-fueled-lilac), var(--color-fueled-solar))"
   },
   "borderWidth": {
     "base": 2,
-    "strong": 4
+    "strong": 4,
+    "hairline": 1
   },
   "duration": {
     "fast": 150,
@@ -114,7 +133,8 @@ export const tokens = {
     "entrance": 1400,
     "reveal": 1800,
     "bootMin": 1400,
-    "stagger": 220
+    "stagger": 220,
+    "drift": 22000
   },
   "easing": {
     "standard": [
@@ -132,7 +152,9 @@ export const tokens = {
   },
   "opacity": {
     "dim": 0.35,
-    "muted": 0.6
+    "muted": 0.6,
+    "glow": 0.85,
+    "glowCalm": 0.32
   },
   "scene": {
     "lightIntensity": 1.4,

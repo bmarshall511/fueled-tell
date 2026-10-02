@@ -1,10 +1,12 @@
 .menu {
-  --cut: var(--chamfer-lg);
+  border-radius: var(--radius-card);
   border: 0;
   padding: var(--space-7);
   width: min(90vw, max(calc(var(--size-phone-width) * 1.2), calc(var(--size-card-width) * 0.42 * var(--stage))));
   font-size: max(var(--font-size-phone-body), calc(var(--font-size-host-label) * 0.8 * var(--stage)));
   background: var(--color-surface-raised);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
   color: var(--color-text);
   display: none;
   gap: var(--space-3);
@@ -51,6 +53,8 @@
 }
 
 .qr {
+  border-radius: var(--radius-tile);
+  overflow: hidden;
   flex: none;
   display: block;
   width: calc(var(--size-tap-target) * 2.5);

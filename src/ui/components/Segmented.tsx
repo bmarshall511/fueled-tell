@@ -17,7 +17,7 @@ export function Segmented<T extends string | number>({ label, showLabel, options
       <legend className={showLabel ? styles.label : 'visually-hidden'}>{label}</legend>
       <div className={styles.segmented}>
         {options.map((o) => (
-          <label key={String(o.value)} className={`chamfer ${styles.seg}`}>
+          <label key={String(o.value)} className={styles.seg}>
             <input type="radio" name={name} className="visually-hidden" checked={o.value === value} onChange={() => onChange(o.value)} />
             {o.label}
           </label>

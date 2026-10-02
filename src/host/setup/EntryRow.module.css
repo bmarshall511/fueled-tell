@@ -1,5 +1,5 @@
 .row {
-  --cut: var(--chamfer-sm);
+  border-radius: var(--radius-panel);
   display: grid;
   grid-template-columns: var(--space-6) minmax(140px, 1fr) minmax(0, 3fr) var(--size-tap-target);
   align-items: start;
@@ -53,6 +53,8 @@
 .remove:hover {
   color: var(--color-text);
   background: var(--color-surface-raised);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
 }
 
 /* Phones: name and remove on one line, the entry full width below. */

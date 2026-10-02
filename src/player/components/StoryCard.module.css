@@ -1,5 +1,5 @@
 .card {
-  --cut: var(--chamfer-md);
+  border-radius: var(--radius-panel);
   margin: 0;
   padding: var(--space-5);
   background: var(--color-fueled-perfect-white);
@@ -8,6 +8,8 @@
 
 .compact {
   background: var(--color-surface-raised);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
   color: var(--color-text);
 }
 

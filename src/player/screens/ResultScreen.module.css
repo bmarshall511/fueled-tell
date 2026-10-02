@@ -14,13 +14,13 @@
 }
 
 .back {
-  --cut: var(--chamfer-md);
+  border-radius: var(--radius-panel);
   display: grid;
   align-content: center;
   justify-items: center;
   gap: var(--space-2);
   padding: var(--space-5);
-  background: var(--color-accent);
+  background: var(--gradient-glow);
   transform: rotateY(180deg);
   text-align: center;
 }

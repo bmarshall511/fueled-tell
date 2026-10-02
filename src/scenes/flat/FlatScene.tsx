@@ -26,10 +26,10 @@ export default function FlatScene({ phase, item, copy, reveal, players, guesses,
       <SceneOverlay>
         <div className={styles.table}>
           <div key={item.id} className={`${styles.card} ${flipped ? styles.flipped : ''} ${phase === 'locked' ? styles.pressed : ''}`}>
-            <div className={`chamfer ${styles.face} ${styles.front}`} aria-hidden={flipped}>
+            <div className={`${styles.face} ${styles.front}`} aria-hidden={flipped}>
               <ItemText text={item.text} label={`${copy.item} ${item.index + 1}`} />
             </div>
-            <div className={`chamfer ${styles.face} ${styles.back}`} aria-hidden={!flipped}>
+            <div className={`${styles.face} ${styles.back}`} aria-hidden={!flipped}>
               {owner && (
                 <>
                   <p className="t-label">{copy.reveal}</p>
@@ -47,7 +47,7 @@ export default function FlatScene({ phase, item, copy, reveal, players, guesses,
               return (
                 <li
                   key={g?.playerId ?? `empty-${i}`}
-                  className={`chamfer-all ${styles.chip} ${g ? styles.landed : ''} ${gone ? styles.gone : ''}`}
+                  className={`${styles.chip} ${g ? styles.landed : ''} ${gone ? styles.gone : ''}`}
                   style={style}
                 />
               );

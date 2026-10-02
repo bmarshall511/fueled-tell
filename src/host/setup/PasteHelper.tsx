@@ -26,7 +26,7 @@ export function PasteHelper({ initial, maxLength, onCancel, onApply }: PasteHelp
   useEffect(() => areaRef.current?.focus(), []);
 
   return (
-    <section className={`chamfer ${styles.panel}`} aria-labelledby={ids.title}>
+    <section className={styles.panel} aria-labelledby={ids.title}>
       <h3 id={ids.title} className={styles.title}>
         {E.pasteTitle}
       </h3>
@@ -62,7 +62,7 @@ export function PasteHelper({ initial, maxLength, onCancel, onApply }: PasteHelp
           </span>
           <ol className={styles.preview}>
             {parsed.map((r) => (
-              <li key={`${r.line}-${r.name}`} className={`chamfer ${styles.previewRow} ${r.issues.length ? styles.bad : ''}`}>
+              <li key={`${r.line}-${r.name}`} className={`${styles.previewRow} ${r.issues.length ? styles.bad : ''}`}>
                 <span className={styles.previewName}>{r.name || '—'}</span>
                 <span className="text-body">{r.text || '—'}</span>
                 {r.issues.length > 0 && <span className="text-hint text-error">{describeIssues(r.issues)}</span>}

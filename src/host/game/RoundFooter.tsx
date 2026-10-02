@@ -55,7 +55,7 @@ export function RoundFooter({ state, copy, drumroll, revealed, sceneShowsOwner, 
 
   return (
     <>
-      <p className={`t-title ${styles.question}`}>{copy.question}</p>
+      <p className={`t-title text-glow ${styles.question}`}>{copy.question}</p>
       {hostOnly ? (
         <p className={`t-title ${styles.shout}`}>{UI_COPY.game.shout}</p>
       ) : (

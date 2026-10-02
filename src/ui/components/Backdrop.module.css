@@ -1,0 +1,91 @@
+/* Sits behind everything in its stacking context (pages, the host stage). */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--color-bg);
+}
+
+.backdrop i {
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: var(--radius-pill);
+  filter: blur(var(--blur-glow));
+  opacity: var(--opacity-glow);
+  transition: opacity var(--duration-slow) var(--easing-standard);
+  animation: var(--duration-drift) var(--easing-standard) infinite alternate;
+}
+
+/* Sized off the larger side, rising from the bottom like the site's orb. */
+.pink {
+  width: 70vmax;
+  left: -15vmax;
+  bottom: -42vmax;
+  background: radial-gradient(circle at 40% 40%, var(--color-glow-pink), transparent 62%);
+  animation-name: drift-pink;
+}
+
+.violet {
+  width: 80vmax;
+  right: -25vmax;
+  bottom: -50vmax;
+  background: radial-gradient(circle at 50% 40%, var(--color-glow-violet), transparent 60%);
+  animation-name: drift-violet;
+  animation-duration: calc(var(--duration-drift) * 1.25);
+}
+
+.lilac {
+  width: 55vmax;
+  left: 30%;
+  bottom: -40vmax;
+  background: radial-gradient(circle, var(--color-glow-lilac), transparent 60%);
+  animation-name: drift-lilac;
+  animation-duration: calc(var(--duration-drift) * 1.5);
+}
+
+.calm i {
+  opacity: var(--opacity-glow-calm);
+}
+
+.calm .lilac {
+  opacity: calc(var(--opacity-glow-calm) * 0.5);
+}
+
+/* Top fade keeps headers and the brand bar on near-black. */
+.backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, var(--color-bg), transparent 45%);
+  opacity: var(--opacity-muted);
+}
+
+.still i {
+  animation-play-state: paused;
+}
+
+@keyframes drift-pink {
+  to {
+    transform: translate(18%, -10%) scale(1.15);
+  }
+}
+
+@keyframes drift-violet {
+  to {
+    transform: translate(-16%, -8%) scale(0.92);
+  }
+}
+
+@keyframes drift-lilac {
+  to {
+    transform: translate(-22%, -14%) scale(1.25);
+  }
+}
+
+@media (forced-colors: active) {
+  .backdrop i {
+    display: none;
+  }
+}

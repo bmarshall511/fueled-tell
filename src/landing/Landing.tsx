@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 import { normalizeRoomCode, ROOM_CODE_LENGTH } from '../engine/roomCode';
+import { Backdrop } from '../ui/components/Backdrop';
 import { BrandHeader } from '../ui/components/BrandHeader';
 import { Button } from '../ui/components/Button';
 import { TextInput } from '../ui/components/TextField';
@@ -17,6 +18,7 @@ export default function Landing() {
   useDocumentTitle();
   return (
     <main className={styles.landing}>
+      <Backdrop />
       <BrandHeader />
 
       <section className={styles.hero}>
@@ -30,7 +32,7 @@ export default function Landing() {
       </section>
 
       <div className={styles.cards}>
-        <a className={`chamfer ${styles.card} ${styles.primary}`} href="/host">
+        <a className={`${styles.card} ${styles.primary}`} href="/host">
           <span className={styles.cardTitle}>{L.host}</span>
           <span className={`text-body ${styles.cardHint}`}>{L.hostHint}</span>
           <span className={styles.arrow} aria-hidden="true">
@@ -38,7 +40,7 @@ export default function Landing() {
           </span>
         </a>
         <form
-          className={`chamfer ${styles.card}`}
+          className={styles.card}
           onSubmit={(e) => {
             e.preventDefault();
             if (code.length === ROOM_CODE_LENGTH) window.location.assign(`/play?room=${code}`);
@@ -65,7 +67,7 @@ export default function Landing() {
             </Button>
           </span>
         </form>
-        <a className={`chamfer ${styles.card}`} href="/demo">
+        <a className={styles.card} href="/demo">
           <span className={styles.cardTitle}>{L.demo}</span>
           <span className={`text-body ${styles.cardHint}`}>{L.demoHint}</span>
           <span className={styles.arrow} aria-hidden="true">

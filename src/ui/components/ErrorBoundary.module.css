@@ -22,12 +22,12 @@
 }
 
 .button {
-  --cut: var(--chamfer-sm);
+  border-radius: var(--radius-pill);
   min-height: var(--size-tap-target);
   padding: 0 var(--space-6);
   border: 0;
-  background: var(--color-accent);
-  color: var(--color-text);
+  background: var(--color-text);
+  color: var(--color-text-inverse);
   font-size: var(--font-size-phone-body);
   cursor: pointer;
 }

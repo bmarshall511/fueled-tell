@@ -12,7 +12,7 @@ export function Switch({ label, hint, checked, onChange }: SwitchProps) {
   return (
     <label className={styles.toggle}>
       <input type="checkbox" role="switch" checked={checked} onChange={(e) => onChange(e.target.checked)} />
-      <span className={`chamfer ${styles.track}`} aria-hidden="true" />
+      <span className={styles.track} aria-hidden="true" />
       <span>
         <span className={styles.label}>{label}</span>
         {hint && <span className="text-hint">{hint}</span>}

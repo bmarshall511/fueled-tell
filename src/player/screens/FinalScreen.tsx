@@ -32,7 +32,7 @@ export function FinalScreen({ view, pack }: Omit<ScreenProps, 'game'>) {
         </>
       )}
       {winners.length > 0 && (
-        <div className={`chamfer ${styles.winner}`}>
+        <div className={styles.winner}>
           <span className={styles.winnerLabel}>{UI_COPY.winnerIs}</span>
           <span className={styles.winnerName}>{winners.join(' & ')}</span>
         </div>

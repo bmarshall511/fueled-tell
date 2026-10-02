@@ -409,3 +409,59 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **Portrait reveal:** the 3D guess tokens sit just behind the "100%" line. This will be handled in the retheme layout pass.
 
 **Approximate time:** about 35 min of wall-clock AI time.
+
+## 2026-10-02 (Fri): Session 1h, retheme to match fueled.com
+
+**Goal:** apply the approved retheme mockup (`docs/mockups/retheme.html`): rounded, glassy, animated gradient backgrounds, one design system for host and phone.
+
+**What got done**
+
+- **Tokens:**
+  - New `radius.*` tokens (pill, card, panel, field, tile) replace `chamfer.*`.
+  - New `blur.glass` and `blur.glow`, plus `gradient.glow` and `gradient.text`.
+  - New colors: `color.glow.*`, and `fueled.lilac` / `fueled.deep-violet` for the gradient ends.
+  - New `opacity.glow` / `glow-calm` and `duration.drift`.
+  - `surface-raised` is now translucent glass, `border` is a white hairline, and `surface-solid` is the opaque fallback.
+- **Shape:** the chamfer `clip-path` utilities and every `--cut` are gone. Each component uses a radius token: pills for buttons, chips, tags, toggles and the step badges; fields, tiles, panels and cards for the rest.
+- **Buttons:** the main action is a white pill with black text and a Nebula halo on hover; secondary buttons are glass pills with a hairline. Key hints are pills.
+- **Glass:** every raised surface gets a backdrop blur (with the `-webkit-` prefix for iOS) and a hairline.
+- **Backdrop** (new shared component): three blurred blobs (Solar, Nebula, lilac) drifting behind the page.
+  - It's vivid on the landing page, setup, demo, lobby and finale, and on the phone's code, join and final screens. It's calm during rounds and the other phone screens.
+  - It pauses when the tab is hidden, holds still with reduced motion, and is hidden in forced-colors mode.
+- **3D deck:**
+  - The canvas is transparent and the opaque table is gone, so the glow shows through.
+  - The card and guess tokens are rounded rectangles.
+  - The card back is the glow gradient (a canvas texture on normalized UVs).
+  - The flat scene and the boot deck match.
+- **Gradient text:** used for the question, the phone's result headings and the "Tell" hero. Small labels on dark use lilac, not Nebula.
+- **Root cause found while testing:** the Vite plugin injected `html,body{background}` to avoid a white flash, and the body background painted over the glow. Black now lives on `html` only.
+- **Fixes along the way:**
+  - The host bottom bar's endorsement and join line wrap onto two lines when tight (safe now that the dock is in flow).
+  - The finale's other standings are capped at two columns and drop to one before names get squeezed.
+  - The roster × is a round badge inside the pill.
+  - Your own row in the phone standings gets a rounded highlight.
+- **Docs:** CLAUDE.md has the new look rules and the Backdrop. MOCKUPS-BRIEF notes that the chamfer motif is superseded. `docs/screens/` is refreshed.
+
+**Decisions the AI made on its own**
+
+- **White primary pills, not Nebula fills:** small text on Nebula fails AA, and white with black text is how fueled.com reads.
+- **Calm glow on phones and during rounds:** this keeps the entry and names crisp on a screen share, and saves battery.
+- **The chamfer is gone entirely, including the 3D cards,** so the app reads as one system.
+
+**Verification done by the AI**
+
+- `npm run check`: 45/45 tests; no hex outside tokens; the /play graph is still free of Three.js.
+- `vite build` is clean.
+- **axe-core:** 0 violations on `/`, `/host`, `/demo` and `/play` at phone and desktop sizes, and in every live host and phone game state.
+- **Full 8-round game:** passes.
+- **Overflow probe:** 41/41 clean.
+- **Host layout probe:** checked at narrow sizes against screenshots.
+- **Screenshot review:** every host and phone state.
+- **Test harness note:** a stale headless Chrome had been answering as an old host, so all phone shots showed the finale. The process was killed, and the harness now leaves none behind.
+
+**What you need to verify by hand**
+
+- **Real phones (especially iOS Safari):** backdrop blur, the glow drift, and battery and heat over a full game.
+- **The glow on a real screen share** (Meet/Zoom compression), and whether calm is calm enough.
+
+**Approximate time:** about 40 min of wall-clock AI time (≈14:05–14:45 CT).

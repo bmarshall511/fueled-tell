@@ -1,7 +1,11 @@
 .tag {
   flex: none;
   padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
   background: var(--color-surface-raised);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
+  box-shadow: inset 0 0 0 var(--border-width-hairline) var(--color-border);
   color: var(--color-text);
   letter-spacing: var(--font-letter-spacing-label);
   font-variant-numeric: tabular-nums;
@@ -13,7 +17,6 @@
 }
 
 .stage {
-  --cut: calc(var(--chamfer-sm) * var(--stage));
   padding: max(var(--space-1), calc(var(--space-1) * var(--stage))) max(var(--space-2), calc(var(--space-3) * var(--stage)));
   font-size: max(var(--font-size-phone-body), calc(var(--font-size-host-label) * var(--stage)));
 }

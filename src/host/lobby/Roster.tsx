@@ -52,7 +52,7 @@ interface RosterChipProps {
 /** A player's name chip; the remove control is a divided segment at its end. */
 function RosterChip({ player, away, status, entry, onRemove }: RosterChipProps) {
   return (
-    <span className={`chamfer ${styles.chip} ${away ? styles.away : ''}`}>
+    <span className={`${styles.chip} ${away ? styles.away : ''}`}>
       <span className={styles.dot} style={{ background: playerColorVar(player.colorIndex) }} aria-hidden="true" />
       {/* Name and status tags wrap as a group, so the chip always fits the screen. */}
       <span className={styles.text}>

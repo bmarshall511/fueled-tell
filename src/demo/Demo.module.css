@@ -25,12 +25,14 @@
 }
 
 .step {
-  --cut: var(--chamfer-md);
+  border-radius: var(--radius-panel);
   display: grid;
   align-content: start;
   gap: var(--space-1);
   padding: var(--space-4);
   background: var(--color-surface-raised);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
   font-size: var(--font-size-phone-body);
 }
 
@@ -64,13 +66,14 @@
 
 .hostFrame,
 .phoneFrame {
-  --cut: var(--chamfer-lg);
+  border-radius: var(--radius-card);
   background: var(--color-surface);
   padding: var(--space-2);
 }
 
 .hostFrame iframe,
 .phoneFrame iframe {
+  border-radius: calc(var(--radius-card) - var(--space-2));
   display: block;
   width: 100%;
   border: 0;

@@ -29,7 +29,7 @@ export function EntryRow({ row, index, issues, maxLength, itemNoun, onChange, on
   const textRef = useRef<HTMLTextAreaElement>(null);
 
   return (
-    <li className={`chamfer ${styles.row} ${nameProblems.length || textProblems.length ? styles.bad : ''}`} data-key={row.key}>
+    <li className={`${styles.row} ${nameProblems.length || textProblems.length ? styles.bad : ''}`} data-key={row.key}>
       <span className={styles.num} aria-hidden="true">
         {index + 1}
       </span>

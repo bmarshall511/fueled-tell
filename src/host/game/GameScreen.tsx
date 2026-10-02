@@ -89,7 +89,11 @@ export function GameScreen({ host }: { host: HostGame }) {
   }[s.phase];
 
   return (
-    <HostStage className={`${styles.screen} ${finale ? styles.ended : ''}`} busy={!scene.ready && !finale}>
+    <HostStage
+      className={`${styles.screen} ${finale ? styles.ended : ''}`}
+      busy={!scene.ready && !finale}
+      backdrop={finale ? 'vivid' : 'calm'}
+    >
       <SceneReadyContext.Provider value={scene.onReady}>
         {scene.Scene && sceneProps && !finale && <scene.Scene {...sceneProps} />}
       </SceneReadyContext.Provider>

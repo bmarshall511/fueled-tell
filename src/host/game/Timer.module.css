@@ -20,13 +20,15 @@
 .track {
   width: 100%;
   height: calc(var(--space-2) * var(--stage));
+  border-radius: var(--radius-pill);
+  overflow: hidden;
   background: var(--color-border);
 }
 
 .fill {
   display: block;
   height: 100%;
-  background: var(--color-highlight);
+  background: linear-gradient(90deg, var(--color-fueled-cryo), var(--color-fueled-nebula));
   transform-origin: left;
   transition: transform 250ms linear;
 }

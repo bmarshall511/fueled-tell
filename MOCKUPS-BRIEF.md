@@ -40,6 +40,7 @@ Feel free to push each one further than I described, as long as each stays reada
 ## Brand
 
 **Fueled** (primary brand):
+
 - Colors (token names should match):
   - Perfect Black `#000000` (primary)
   - Perfect White `#F5F5F1` (primary)
@@ -55,9 +56,10 @@ Feel free to push each one further than I described, as long as each stays reada
 - Contrast: Nebula on black is about 4.2:1, so use it for large text and accents only; body text is Perfect White.
 
 **DOM lab** (sub-brand, "built by"):
+
 - Logo files: `assets/brand/DOMlab-logo-white.svg` and `-black.svg`. It's a single-color wordmark with chamfered (cut-corner) letterforms. Convert it to a component that uses `currentColor`.
 - Use it as an endorsement ("built by DOM lab") on the picker page, the host lobby and the end screen. Fueled stays the primary brand.
-- Pick up the chamfered-corner motif in the UI (cards, buttons, code chips via `clip-path`) so the sub-brand shows in the system, not just the logo.
+- (Superseded by the 2026-10-02 retheme: the UI is now rounded and glassy to match fueled.com.) Pick up the chamfered-corner motif in the UI (cards, buttons, code chips via `clip-path`) so the sub-brand shows in the system, not just the logo.
 
 ## Mock data
 

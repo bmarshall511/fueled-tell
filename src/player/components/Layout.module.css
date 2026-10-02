@@ -10,10 +10,6 @@
   outline: none;
 }
 
-.accent {
-  color: var(--color-accent);
-}
-
 .centered {
   flex: 1;
   display: flex;
@@ -70,11 +66,10 @@
   font-size: calc(var(--font-size-page-display) * 1.4);
   line-height: var(--font-line-height-tight);
   letter-spacing: var(--font-letter-spacing-tight);
-  color: var(--color-accent);
 }
 
 .pulse {
-  --cut: var(--chamfer-md);
+  border-radius: var(--radius-pill);
   width: var(--space-8);
   height: var(--space-8);
   background: var(--color-highlight);

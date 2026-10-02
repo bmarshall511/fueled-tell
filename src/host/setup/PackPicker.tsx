@@ -9,7 +9,7 @@ export function PackPicker({ value, onChange }: { value: string; onChange: (pack
   return (
     <div className={styles.packs}>
       {PACKS.map((p) => (
-        <label key={p.id} className={`chamfer ${styles.pack}`}>
+        <label key={p.id} className={styles.pack}>
           <input type="radio" name="pack" className="visually-hidden" checked={p.id === value} onChange={() => onChange(p.id)} />
           <span className={styles.name}>{p.name}</span>
           {/* Muted with opacity, so it works on both the dark and the white (selected) card. */}

@@ -29,7 +29,7 @@ export const HostMenu = forwardRef<HTMLDialogElement, HostMenuProps>(function Ho
   return (
     <dialog
       ref={ref}
-      className={`chamfer ${styles.menu}`}
+      className={styles.menu}
       aria-label={UI_COPY.menu}
       // A click on the backdrop (the dialog element itself) closes it.
       onClick={(e) => e.target === e.currentTarget && e.currentTarget.close()}
@@ -62,7 +62,7 @@ function JoinInfo({ code }: { code: string }) {
   const shown = displayUrl(url);
   return (
     <section className={styles.join} aria-label={UI_COPY.roomCode}>
-      <span className={`chamfer ${styles.qr}`}>
+      <span className={styles.qr}>
         <QrCode value={url} label={`${UI_COPY.lobby.scan}: ${shown}`} />
       </span>
       <span className={styles.joinText}>

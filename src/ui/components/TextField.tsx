@@ -12,9 +12,9 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & { fieldSize?: FieldSiz
 type AreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & { fieldSize?: FieldSize; tone?: Tone; autoGrow?: boolean };
 
 const cls = (size: FieldSize, tone: Tone, extra?: string) =>
-  `chamfer ${styles.field} ${styles[size]} ${tone === 'sunken' ? styles.sunken : ''} ${extra ?? ''}`;
+  `${styles.field} ${styles[size]} ${tone === 'sunken' ? styles.sunken : ''} ${extra ?? ''}`;
 
-/** The one text input style: raised, chamfered, token-sized; `aria-invalid` shows the error rule. */
+/** The one text input style: glass, rounded, token-sized; `aria-invalid` shows the error rule. */
 export const TextInput = forwardRef<HTMLInputElement, InputProps>(function TextInput(
   { fieldSize = 'body', tone = 'raised', className, ...rest },
   ref,

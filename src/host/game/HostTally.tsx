@@ -14,7 +14,7 @@ export function HostTally({ players, correctIds, onToggle }: HostTallyProps) {
     <fieldset className={styles.tally}>
       <legend className="visually-hidden">{UI_COPY.game.whoGotIt}</legend>
       {players.map((p) => (
-        <label key={p.id} className={`chamfer ${styles.chip}`}>
+        <label key={p.id} className={styles.chip}>
           <input type="checkbox" checked={correctIds.includes(p.id)} onChange={() => onToggle(p.id)} />
           {p.name}
         </label>
