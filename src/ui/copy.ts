@@ -107,7 +107,6 @@ export const UI_COPY = {
       tooLong: 'Too long for this pack',
       duplicateName: 'Same name as another row',
     },
-    pastedSplit: 'Looks like a list: open it in the paste helper?',
   },
 
   lobby: {
@@ -170,7 +169,6 @@ export const UI_COPY = {
     update: 'Update my entry',
     sent: 'Got it. You can change it until the game starts.',
     here: 'Here so far',
-    getReady: 'Get ready…',
     opensSoon: 'Guessing opens in a moment.',
     lockGuess: 'Lock in guess',
     changeGuess: 'Change my guess',

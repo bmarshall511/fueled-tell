@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Plugin } from 'vite';
-import { buildTokens } from './build-tokens';
+import { buildTokens } from './build-tokens.ts';
 
 /** Regenerates src/tokens/* on start and whenever tokens/tokens.json is saved. */
 export function tokensPlugin(root: string): Plugin {

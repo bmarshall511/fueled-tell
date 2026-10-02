@@ -2,8 +2,8 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
-import { buildTokens } from './scripts/build-tokens';
-import { monoSvgPlugin, tokensPlugin } from './scripts/vite-plugins';
+import { buildTokens } from './scripts/build-tokens.ts';
+import { monoSvgPlugin, tokensPlugin } from './scripts/vite-plugins.ts';
 
 const root = fileURLToPath(new URL('.', import.meta.url));
 const { color } = buildTokens(root) as { color: { bg: string } };

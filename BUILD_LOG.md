@@ -9,6 +9,7 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 **Goal:** Set up the repo and conventions. Then build three distinct host concepts (Orbit, Signal, Deck) plus a phone mockup on one shared token file, UI primitives, mock round and scene interface, with the shared parts clean enough to carry into Phase 1.
 
 **What the AI generated**
+
 - Repo setup: `git init`, `.gitignore`, `CLAUDE.md` (conventions from PLAN.md), this log.
 - Vite + React 19 + TypeScript (strict) project. Dependencies, all named in the brief: react, react-dom, three, @react-three/fiber, @react-three/drei, vite, @vitejs/plugin-react, typescript, plus @types packages.
 - `tokens/tokens.json` (DTCG) and `scripts/build-tokens.ts`. The token build runs from a Vite plugin and generates `src/tokens/tokens.css` and `tokens.ts`, rebuilding live on save. Also added a `?mono` SVG import plugin, so the logos render in `currentColor`.
@@ -21,6 +22,7 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - 5 commits: setup, foundation + Deck, Orbit, Signal, phone.
 
 **Decisions the AI made on its own**
+
 - **Fonts:** committed to the local repo as asked. Added a "never push this repo anywhere public" rule to CLAUDE.md, because the Aeonik files are licensed.
 - **Generated token files are committed,** so a fresh clone typechecks without running Vite first. `npm run build` runs `vite build` (which regenerates them) and then `tsc`.
 - **No router dependency** (a 10-line pathname switch). **No `tsx` dependency:** the token script runs inside the Vite plugin.
@@ -34,6 +36,7 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **Mock pacing:** 3.5 s showing, guesses land in the first half of the timer, and the round auto-locks once all are in. Added `?timer`, `?at`, `?item`, `?motion=reduced` and `/play?screen=` deep links for review.
 
 **Verification done by the AI**
+
 - `tsc` (strict) passes and `vite build` succeeds.
 - Confirmed from the build output that the `/play` chunk graph contains no Three.js (~76 KB gzipped JS).
 - Captured 1920×1080 screenshots of every concept in guessing and reveal, and the phone at 390×844, using headless Chrome with SwiftShader WebGL. The in-app browser pane doesn't produce animation frames while it's hidden, so WebGL couldn't be checked there.
@@ -41,6 +44,7 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - Checked reduced motion on Signal (it snaps, no drift).
 
 **What you need to verify by hand**
+
 - **Animation feel and timing at a real frame rate,** in a normal browser window: the deal and flip, planet pull and moons, particle assembly. I only saw still frames from headless Chrome.
 - **Keyboard controls** (Space / L / R) on a host route. They're wired in code but weren't exercised in a browser.
 - **A real Meet screen-share of each concept.** In particular, how Signal's particle field and Orbit's glows hold up under compression.
@@ -59,6 +63,7 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 **Goal:** You picked Deck. Then, in order: give mobile real attention and fix the chip stack, make "built by DOM lab" bigger, make everything accessible, explore "native app" polish (e.g. a loading screen), add a create-a-game mockup, add scoring with places and a winner, brainstorm app names, make the workflow clear, make the screens responsive on desktop too, and show the entry on the phone's guess screen.
 
 **What the AI generated**
+
 - `ui/stage.ts`: landscape and portrait host stages, shared by the HUD (CSS vars) and the scenes (`scenes/shared/stage.ts`).
 - Deck: a portrait layout and the chip "pot".
 - `ui/BootScreen`, `ui/Finale` (podium, standings, awards) and `ui/useHostChrome` (full screen, wake lock, document title).
@@ -69,9 +74,10 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - 11 new screenshots in `docs/mockups/`. 2 commits.
 
 **Decisions the AI made on its own**
+
 - **Scoring rule:** 100 per correct guess, plus 50 to the owner per player fooled.
   - Equal scores share a place. Ties are ordered by correct guesses, but the place stays shared.
-  - **This departs from PLAN.md**, which says "light" scoring shows awards *instead of* a ranking. Now `competitive` (the True Story default) shows the podium, `light` is labelled "Awards only" in the create UI (the finale component doesn't branch on it yet), and `none` hides points. **Please confirm.**
+  - **This departs from PLAN.md**, which says "light" scoring shows awards _instead of_ a ranking. Now `competitive` (the True Story default) shows the podium, `light` is labelled "Awards only" in the create UI (the finale component doesn't branch on it yet), and `none` hides points. **Please confirm.**
 - **The finale is a host screen, not a scene phase.** Scenes never see `finale`; the reducer moves there after the last reveal.
 - **The guess ticker stays anonymous** (decided in session 1).
 - **The phone shows the entry text** on the guess, waiting and yours screens. It's the same text that's on the shared screen, so it doesn't affect anonymity.
@@ -82,6 +88,7 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **Ran axe-core in headless Chrome from cdnjs** for the audit. This is a test-time script only, not a project dependency.
 
 **Verification done by the AI**
+
 - `tsc` passes and `vite build` succeeds.
 - The build output shows Three.js only in the lazy scene chunk. `/play`, `/create` and `/demo` don't load it.
   - Mid-session the Host chunk had pulled in Three.js through a React context import. It was caught in the build output and fixed by moving the context to `scenes/sceneReady.ts`.
@@ -92,6 +99,7 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **Screenshots** at 1920×1080, 1440×900, 1280×720, 2560×1080, 390×844 and landscape 844×390.
 
 **What you need to verify by hand**
+
 - **Real devices:** iOS Safari and Android Chrome for `/play`. Check View Transitions, safe areas, keyboard behavior on join, and the haptic tick (Android only; iOS ignores `vibrate`).
 - **Timing feel at a real frame rate:** deal, chip drop, flip, boot wipe, podium rise. I only saw still frames.
 - **The scoring rule and the "light" vs "competitive" behavior** (see above). Should True Story default to places?
@@ -107,6 +115,7 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 ## 2026-10-02 (Fri): Session 1c, building the whole app (Tell)
 
 **Goal:** You said: no deferred phases, build everything now. That covered the real game end to end (networking, QR, host-only mode, persistence, PWA, flat fallback, tests). Plus:
+
 - `/play` fully responsive on desktop.
 - A much less error-prone way to add entries.
 - PLAN.md updated so scoring includes a ranking.
@@ -115,6 +124,7 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - You also gave the GitHub repo (bmarshall511/fueled-tell).
 
 **What the AI generated**
+
 - **Engine:**
   - `game.ts`: the full lobby → showing → guessing → locked → reveal → finale → lobby machine. It handles joins and re-joins, players claiming host-imported names, live submissions, the host-only tally, and removing players.
   - `redact.ts`: each phone's view. It never includes the owner before the reveal, never shows other entries, and sends remaining time instead of the host clock.
@@ -146,6 +156,7 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **Removed:** the mock round, Orbit, Signal, the mockup picker and `/create`. They're still in git history.
 
 **Decisions the AI made on its own**
+
 - **ESLint isn't installed.** `typescript-eslint` doesn't support TypeScript 7 yet: npm refused the peer dependency, and I didn't force it. Instead, `scripts/check-rules.mjs` enforces the two project rules that matter: no hex colors outside tokens, and Three.js never reachable from `/play`. Both were tested by deliberately breaking them. Prettier is installed and has been run.
 - **I wrote the QR encoder myself** rather than add a QR library (CLAUDE.md asks before new dependencies). It was verified by decoding.
 - **PeerJS host ID:** `fueled-tell-<CODE>`. Room alphabet: `ACDEFGHJKMNPQRTUVWXY34679`, with no O/0, I/1/L, S/5, Z/2 or B/8.
@@ -157,6 +168,7 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **The Deck card label on Nebula is now full strength,** because faded text there failed contrast.
 
 **Verification done by the AI**
+
 - `npm run check` is clean: `tsc` (strict), the rule checks and 35/35 tests. `vite build` produces the PWA (41 precached files).
 - **Local end to end (headless Chrome, two frames or tabs):**
   - The phone joins, bots claim the imported names, the host starts, and the phone shows the story.
@@ -173,6 +185,7 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
   - The parser missed quoted CSV rows inside mixed pastes.
 
 **What you need to verify by hand**
+
 - **Real phones on different networks** (cellular plus home Wi-Fi), per PLAN.md's Tue test. I only tested PeerJS between two tabs on one machine. Strict NATs may need TURN; if they fail, host-only mode is the fallback.
 - **Feel at a real frame rate:** deal, chip drop, flip, drumroll, and the phone mini-flip.
 - **Sound:** whether the levels work on a Meet tab share, and whether the cues are too much or too little.
@@ -188,6 +201,7 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 ## 2026-10-02 (Fri): Session 1d, production hardening
 
 **Goal:**
+
 - The repo goes public (github.com/bmarshall511/fueled-tell) with everything the app needs, fonts included.
 - Fix the roster "×" ambiguity.
 - A full visual audit for alignment and padding.
@@ -198,7 +212,8 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - An end-to-end audit so it's production-ready.
 
 **What the AI did**
-- **Removed** awards (engine, finale, pack copy, tests) and the "Awards only" scoring mode. Scoring is now *Points & places* or *Just for fun*. Also removed the editor's "Import a file".
+
+- **Removed** awards (engine, finale, pack copy, tests) and the "Awards only" scoring mode. Scoring is now _Points & places_ or _Just for fun_. Also removed the editor's "Import a file".
 - **Visual audit:** a CDP harness seeds every game state through the real engine and screenshots host and phone at 1920×1080, 1280×720, 1440×900, 2560×1080 and 390×844 (about 45 states). Every capture was reviewed and fixed:
   - **Lobby:** the remove "×" is now a divided segment inside each name chip.
   - **Buttons:** the outline variant is used where secondary buttons vanished (room-in-use banner, paste helper, menu).
@@ -233,12 +248,14 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **Screenshots** refreshed in `docs/screens/`.
 
 **Decisions the AI made on its own**
+
 - **Host-only scoring:** only correct guesses score, because the host just ticks who got it right, so there are no "fooled" points. Written into PLAN.md.
 - **"Load a saved game" stays:** it restores a backup download, and backups are in PLAN.md. Only the entries "Import a file" was removed.
 - **Imported players who never join** still appear in standings and can earn "fooled" points. Their story was played, so they're part of the game.
 - **One host tab per game** is the supported model. A second tab shows "in use".
 
 **Verification done by the AI**
+
 - `npm run check`: `tsc`, the rule checks, and 40/40 tests (6 new: roster dedupe, seat keys, reload disconnect, host-only ratio, 3 parser cases).
 - **axe-core** (WCAG 2.2 AA): 0 violations on every route and in every live host and phone state.
 - **Full 8-round local game:** to the finale, with the phone's place shown.
@@ -252,9 +269,63 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
   - **Wrong code:** shows "not found" within 4 s.
 
 **What you need to verify by hand**
+
 - **Real phones on cellular and Wi-Fi** against the Vercel deploy, including a host refresh mid-round. The connection service can hold an old room for about 10 s after a refresh.
 - **Feel at a real frame rate,** and sound levels on a Meet tab share.
 - **VoiceOver / NVDA** passes.
 - **Font licence:** you decided to publish the Aeonik files in a public repo, so check the CoType EULA permits that distribution.
 
 **Approximate time:** about 50 min of wall-clock AI time (≈11:52–12:43 CT), including the parallel QA agent (about 27 min).
+
+## 2026-10-02 (Fri): Session 1e, cleanup and code-quality audit
+
+**Goal:** make the codebase very well organized, component-driven, DRY and maintainable, with no change in behaviour.
+
+**What got done**
+
+- **Feature folders:** `landing/`, `demo/`, `host/{setup,lobby,game,state,components}`, `player/{screens,components}`, plus `ui/{components,hooks,lib,styles}`.
+  - The three biggest files were split: `Play.tsx` (574 lines), `Play.module.css` (597) and `host/screens.module.css` (586).
+  - The largest app file is now `GameScreen.tsx`, at 169 lines.
+- **Host:**
+  - `useHostGame` is split into session, room, round-timer and bot hooks.
+  - The phase-advance logic moved into the engine as a pure `nextStep`.
+  - Setup, Lobby and GameScreen are now short composition components, with one file per part (header, footer, tally, menu, roster, join panel, entries editor, entry row, paste helper).
+- **Player:**
+  - `screenFor.ts` is a pure, typed and tested function that picks the screen. It replaced string keys, which earlier caused the blank "not found" bug.
+  - Each of the nine screens is now its own file.
+  - The shared layout is `PlayerShell`, `Split`, `Heading`, `PrimaryAction`, `StoryCard` and `RoundStatus`.
+  - Seat storage lives in `identity.ts`, so the demo no longer hard-codes the key or pulls in PeerJS.
+  - Vibration lives in `haptics.ts`.
+- **Shared UI, de-duplicated:**
+  - One `TextInput`/`TextArea` (sizes and tone) replaces four hand-styled inputs.
+  - `Notice` replaces three banner styles, and `BrandHeader` three page headers.
+  - Logo `size` presets replace inline calc strings.
+  - One `useKeyboardShortcuts` replaces two key handlers, and `useScreenTransition` / `useDrumroll` are hooks.
+  - Page type utilities (`text-headline`, `text-lede`, `text-label`, `text-hint`, `text-body`, `text-subhead`, `text-ok/muted/error`) replace about 20 copied rules.
+- **Dead code removed:**
+  - Unused classes, the Orbit/Signal tokens, the copy keys `getReady` and `pastedSplit`, and `useStageToWorld`.
+  - A portrait-lobby font rule that had never matched; fixing its selector during the move would have changed the look.
+- **Config:** `.ts` extensions on the config imports, which silences Vite's native config-loader warning.
+- **Docs:** CLAUDE.md "Where things live" and the README structure section rewritten for the new layout.
+
+**Decisions the AI made on its own**
+
+- **Host-screen wordmark:** it now has a floor at the phone-bar size, so it no longer shrinks to about 13px in portrait. This is the only intended visual change.
+- **One input style everywhere:** the phone's text fields use the shared padding, which makes them a few pixels shorter than before.
+
+**Verification done by the AI**
+
+- `npm run check`: `tsc`, the rule checks (the /play graph is still Three.js-free), and 45/45 tests, including the new `screenFor` tests.
+- `vite build` is clean.
+- **Before/after screenshot diff** of 22 phone states and 30+ host, landing and demo states:
+  - Identical, apart from the wordmark floor and field padding noted above, and a mid-animation drumroll frame.
+- **axe-core:** 0 violations in the live host and phone states.
+- **Full 8-round local game:** to the finale and restart.
+- **PeerJS game on the real broker:** join, story, guess counted.
+  - The first run timed out on the broker and the rerun passed. The broker is public, so check this on real phones.
+
+**What you need to verify by hand**
+
+- **A quick play-through on a real phone,** to confirm that screen transitions and haptics feel the same.
+
+**Approximate time:** about 30 min of wall-clock AI time (≈12:45–13:15 CT).

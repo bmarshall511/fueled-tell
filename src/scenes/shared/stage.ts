@@ -18,9 +18,6 @@ export function useStage(): { layout: StageLayout; toWorld: (px: number) => numb
   return { layout, toWorld: (px) => px * worldPerRefPx };
 }
 
-/** Back-compat helper for scenes that only need the converter. */
-export const useStageToWorld = () => useStage().toWorld;
-
 /** Frame-rate independent easing toward a target; snaps when motion is reduced. */
 export const approach = (current: number, target: number, dt: number, reducedMotion: boolean, lambda = 6) =>
   reducedMotion ? target : MathUtils.damp(current, target, lambda, dt);
