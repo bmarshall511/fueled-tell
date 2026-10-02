@@ -676,3 +676,57 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **Transitions:** in Safari 18.2+ and Chrome. Firefox falls back to instant changes.
 
 **Approximate time:** about 70 min of wall-clock AI time.
+
+## 2026-10-02 (Fri): Session 1p, setup studio, button states, cursor effects (approved mockup)
+
+**Goal:** build the approved `docs/mockups/setup.html`: setup as an app-like studio, the new button states, and cursor-reactive effects. The cursor effects go on pages, not the shared host screen, as proposed.
+
+**What got done**
+
+- **Setup studio** (`src/host/setup/`): `EntriesEditor`, `EntryRow` and `SetupStep` are replaced by small components.
+  - **`SetupBar`:** compact lockup, "New game" / "Edit lobby", the room tag when editing, and a privacy pill instead of the yellow banner.
+  - **`StartChoices`:** the empty state offers Paste a list, Add one by one, and Players add their own (hidden in host-only mode), plus "Try it with sample entries".
+  - **`Composer`:** quick add. Enter moves from name to entry, Enter adds (Shift+Enter for a new line), the entry grows to 6 lines then scrolls, and a pasted list opens the sheet.
+  - **`PeopleList` + `PersonCard`:** people as cards with a color-ring avatar, editing in place (new `bare` text-field tone), an inline problem and count, a remove icon button, and a count with "Show me".
+  - **`SetupPanel`:** sticky. It holds a `MiniStage` live preview, the timer, host-only mode, a `ReadyMeter`, Open lobby, and Load saved game or Cancel.
+  - **Phones:** the meter and Open lobby are pinned in a dock.
+  - **`PasteSheet`:** a modal dialog around `PasteHelper` (a bottom sheet on phones).
+  - **Toolbar:** Paste a list, Players add their own (a pressed toggle), Sample entries, Clear all.
+  - **Unchanged:** parsing, validation, the draft autosave, and editing an open lobby. Pasted-list detection moved to `pasteDetect.ts`.
+- **Buttons:**
+  - **Rotating gradient ring:** on hover (main action) and on keyboard focus (every button). An `@property --ring-angle`.
+  - **Hover:** a light sweep, and a soft glow under the main action.
+  - **Press:** a ripple from the press point, plus the existing darken.
+  - **Toggles:** a Cryo tint when pressed (`aria-pressed`).
+  - Nothing moves or resizes.
+- **Other controls:**
+  - **Icon buttons:** custom tooltips (label + shortcut) instead of `title`. They take no space until shown, after one widened the phone layout.
+  - **Segmented:** a single glass track with a white thumb that springs to the choice.
+  - **Switch:** springs.
+- **Cursor effects** (`ui/lib/pointerFx.ts`, mouse only, off with reduced motion):
+  - An eased `--pointer-x` / `--pointer-y` drives a glow that trails the pointer and a gentle parallax on the Backdrop blobs.
+  - `.spot` cards get a spotlight under the pointer: landing cards, setup cards and panel, the name grid, and claim tiles.
+  - The host stage passes `interactive={false}`.
+- **New tokens:** `easing.spring`, `duration.ring` / `sweep`, `size.spotlight` / `follow`, `opacity.ripple` / `spot`.
+- **Copy:** the setup and editor strings are rewritten for the studio.
+
+**Decisions the AI made on its own**
+
+- **No busy/done button states in the app:** nothing in the app waits on a network action yet, so there's nowhere to use them. They'd be easy to add later.
+- **People cards are always editable** (bare fields that show their box on hover or focus) instead of having a separate edit mode.
+
+**Verification done by the AI**
+
+- `npm run check`: 45/45 tests.
+- `vite build` is clean.
+- **axe-core:** 0 violations on setup (empty, with people, paste sheet open, at 1440 and 390), all pages, and every live game state.
+- **Overflow probe:** 43/43, now including setup with people at 320 and 360.
+- **Full 8-round game:** passes.
+- **Screenshots:** setup reviewed on desktop and phone. `docs/screens` setup and paste shots refreshed.
+
+**What you need to verify by hand**
+
+- **The studio on a real phone:** the dock, the paste sheet, and typing in the cards.
+- **The cursor glow and spotlights with a real mouse.**
+
+**Approximate time:** about 55 min of wall-clock AI time (≈17:50–18:45 CT).

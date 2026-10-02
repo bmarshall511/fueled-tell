@@ -61,3 +61,21 @@
 .sunken {
   background: var(--color-surface);
 }
+
+/* Edit in place: no box until you point at it or type in it. */
+.bare {
+  background: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.bare:hover:not(:focus) {
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 var(--border-width-hairline) var(--color-border);
+}
+
+.bare:focus-visible,
+.bare:focus {
+  background: var(--color-surface);
+}

@@ -5,14 +5,14 @@ import styles from './TextField.module.css';
 /** `body` for forms; `title` for one big field (a name); `code` for the room code. */
 type FieldSize = 'body' | 'title' | 'code';
 
-/** `sunken` for a field that sits on a raised surface (a card). */
-type Tone = 'raised' | 'sunken';
+/** `sunken` sits on a glass card; `bare` reads as plain text until hovered or focused (edit in place). */
+type Tone = 'raised' | 'sunken' | 'bare';
 
 type InputProps = InputHTMLAttributes<HTMLInputElement> & { fieldSize?: FieldSize; tone?: Tone };
 type AreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & { fieldSize?: FieldSize; tone?: Tone; autoGrow?: boolean };
 
 const cls = (size: FieldSize, tone: Tone, extra?: string) =>
-  `${styles.field} ${styles[size]} ${tone === 'sunken' ? styles.sunken : ''} ${extra ?? ''}`;
+  `${styles.field} ${styles[size]} ${tone === 'raised' ? '' : styles[tone]} ${extra ?? ''}`;
 
 /** The one text input style: glass, rounded, token-sized; `aria-invalid` shows the error rule. */
 export const TextInput = forwardRef<HTMLInputElement, InputProps>(function TextInput(

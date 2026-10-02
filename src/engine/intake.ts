@@ -153,11 +153,11 @@ export function parseEntries(input: string, maxLength: number): ParsedRow[] {
   return validateRows(rows, maxLength);
 }
 
+/** A row with its validation issues attached. */
+export type ValidatedRow<T> = T & { issues: RowIssue[] };
+
 /** Recompute issues for editor rows (also used after hand edits). */
-export function validateRows<T extends { name: string; text: string }>(
-  rows: readonly T[],
-  maxLength: number,
-): (T & { issues: RowIssue[] })[] {
+export function validateRows<T extends { name: string; text: string }>(rows: readonly T[], maxLength: number): ValidatedRow<T>[] {
   const counts = new Map<string, number>();
   for (const r of rows) {
     const key = r.name.trim().toLowerCase();

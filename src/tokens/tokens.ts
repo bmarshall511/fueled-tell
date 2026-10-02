@@ -105,7 +105,9 @@ export const tokens = {
     "logoCompact": 20,
     "logoHost": 29,
     "builtbyCompact": 20,
-    "content": 1280
+    "content": 1280,
+    "spotlight": 280,
+    "follow": "40vmax"
   },
   "radius": {
     "pill": 999,
@@ -136,7 +138,9 @@ export const tokens = {
     "bootMin": 1400,
     "stagger": 220,
     "drift": 14000,
-    "shimmer": 6000
+    "shimmer": 6000,
+    "ring": 3200,
+    "sweep": 900
   },
   "easing": {
     "standard": [
@@ -150,13 +154,21 @@ export const tokens = {
       0,
       0,
       1.3
+    ],
+    "spring": [
+      0.34,
+      1.56,
+      0.64,
+      1
     ]
   },
   "opacity": {
     "dim": 0.35,
     "muted": 0.6,
     "glow": 0.85,
-    "glowCalm": 0.32
+    "glowCalm": 0.32,
+    "ripple": 0.28,
+    "spot": 0.09
   },
   "scene": {
     "lightIntensity": 1.4,

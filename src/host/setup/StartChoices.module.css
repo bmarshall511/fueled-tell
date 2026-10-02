@@ -1,0 +1,99 @@
+.start {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.choices {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: var(--space-3);
+}
+
+.choice {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  border: 0;
+  border-radius: var(--radius-card);
+  background: var(--color-surface-raised);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
+  box-shadow: inset 0 0 0 var(--border-width-hairline) var(--color-border);
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--easing-standard),
+    box-shadow var(--duration-fast) var(--easing-standard),
+    filter var(--duration-fast) var(--easing-standard);
+}
+
+.choice:hover {
+  background: var(--color-border);
+  box-shadow: inset 0 0 0 var(--border-width-hairline) var(--color-border-strong);
+}
+
+.choice:active {
+  filter: brightness(0.86);
+}
+
+.featured {
+  background: var(--color-text);
+  color: var(--color-text-inverse);
+  box-shadow: none;
+}
+
+.featured:hover {
+  background: var(--color-text);
+  box-shadow:
+    0 0 0 var(--border-width-base) var(--color-bg),
+    0 0 0 calc(var(--border-width-base) * 2) var(--color-accent);
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: calc(var(--size-tap-target) * 1.1);
+  height: calc(var(--size-tap-target) * 1.1);
+  border-radius: var(--radius-field);
+  background: var(--color-border);
+}
+
+.featured .icon {
+  background: var(--color-text-inverse);
+  color: var(--color-text);
+}
+
+.title {
+  font-size: var(--font-size-phone-title);
+}
+
+.body {
+  font-size: var(--font-size-phone-body);
+  color: var(--color-text-muted);
+}
+
+.featured .body {
+  color: color-mix(in srgb, var(--color-text-inverse) 65%, transparent);
+}
+
+.link {
+  min-height: var(--size-tap-target);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--color-border-strong);
+  text-decoration-thickness: var(--border-width-hairline);
+  text-underline-offset: 0.3em;
+  cursor: pointer;
+}

@@ -1,17 +1,19 @@
+/* A quiet secondary action under the main one. */
 .button {
-  border-radius: var(--radius-pill);
   display: inline-flex;
   align-items: center;
   min-height: var(--size-tap-target);
   padding: 0 var(--space-4);
-  margin-right: auto;
-  background: var(--color-surface-raised);
-  -webkit-backdrop-filter: blur(var(--blur-glass));
-  backdrop-filter: blur(var(--blur-glass));
+  border-radius: var(--radius-pill);
   font-size: var(--font-size-phone-body);
+  color: var(--color-text-muted);
   cursor: pointer;
+  transition:
+    color var(--duration-fast) var(--easing-standard),
+    background-color var(--duration-fast) var(--easing-standard);
 }
 
 .button:hover {
+  color: var(--color-text);
   background: var(--color-border);
 }

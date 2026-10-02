@@ -32,7 +32,7 @@ export default function Landing() {
       </section>
 
       <div className={styles.cards}>
-        <a className={`${styles.card} ${styles.primary}`} href="/host">
+        <a className={`spot ${styles.card} ${styles.primary}`} href="/host">
           <span className={styles.cardTitle}>{L.host}</span>
           <span className={`text-body ${styles.cardHint}`}>{L.hostHint}</span>
           <span className={styles.arrow} aria-hidden="true">
@@ -40,7 +40,7 @@ export default function Landing() {
           </span>
         </a>
         <form
-          className={styles.card}
+          className={`spot ${styles.card}`}
           onSubmit={(e) => {
             e.preventDefault();
             if (code.length === ROOM_CODE_LENGTH) window.location.assign(`/play?room=${code}`);
@@ -67,7 +67,7 @@ export default function Landing() {
             </Button>
           </span>
         </form>
-        <a className={styles.card} href="/demo">
+        <a className={`spot ${styles.card}`} href="/demo">
           <span className={styles.cardTitle}>{L.demo}</span>
           <span className={`text-body ${styles.cardHint}`}>{L.demoHint}</span>
           <span className={styles.arrow} aria-hidden="true">

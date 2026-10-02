@@ -1,3 +1,10 @@
+/* Animatable angle for the buttons' rotating gradient ring. */
+@property --ring-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
 @font-face {
   font-family: 'Aeonik';
   src:
@@ -133,6 +140,33 @@ label:has(> input:focus-visible) {
   .page {
     --page-gutter: var(--space-8);
   }
+}
+
+/*
+ * Cursor spotlight for glass cards (pages only, never the shared host screen): a soft light
+ * follows the pointer across the hovered card. Positions come from ui/lib/pointerFx.ts.
+ */
+.spot {
+  position: relative;
+}
+
+.spot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    var(--size-spotlight) circle at var(--mx, -100%) var(--my, -100%),
+    color-mix(in srgb, var(--color-text) calc(var(--opacity-spot) * 100%), transparent),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--easing-standard);
+  pointer-events: none;
+}
+
+.pointer-live .spot:hover::after {
+  opacity: 1;
 }
 
 /* Shared elements that morph between pages and screens (see transitions.css). One per page. */

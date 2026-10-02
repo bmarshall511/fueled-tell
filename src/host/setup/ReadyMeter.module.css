@@ -1,0 +1,27 @@
+.meter {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.line {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: var(--font-size-phone-body);
+}
+
+.bar {
+  height: var(--space-2);
+  border-radius: var(--radius-pill);
+  background: var(--color-border);
+  overflow: hidden;
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--color-fueled-cryo), var(--color-fueled-nebula));
+  transition: width var(--duration-slow) var(--easing-emphasized);
+}

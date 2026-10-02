@@ -1,44 +1,66 @@
+import { useRef, useState } from 'react';
+import { GAME } from '../../content';
 import { validateRows } from '../../engine/intake';
 import { RULES } from '../../engine/rules';
-import { GAME } from '../../content';
+import sampleEntries from '../../content/sample-entries.json';
 import { Backdrop } from '../../ui/components/Backdrop';
-import { BrandHeader } from '../../ui/components/BrandHeader';
 import { Button } from '../../ui/components/Button';
-import { Notice } from '../../ui/components/Notice';
-import { RoomTag } from '../../ui/components/RoomTag';
-import { Segmented } from '../../ui/components/Segmented';
-import { Switch } from '../../ui/components/Switch';
 import { UI_COPY } from '../../ui/copy';
 import { useDocumentTitle } from '../../ui/hooks/useDocumentTitle';
+import { plural } from '../../ui/lib/format';
 import type { HostGame } from '../state/useHostGame';
-import { filledRows } from './draftRows';
-import { EntriesEditor } from './EntriesEditor';
+import { Composer } from './Composer';
+import { filledRows, newRow, type DraftRow } from './draftRows';
 import { LoadSavedGame } from './LoadSavedGame';
-import { SetupStep } from './SetupStep';
+import { pasteListInto } from './pasteDetect';
+import { PasteSheet } from './PasteSheet';
+import { PeopleList } from './PeopleList';
+import { ReadyMeter } from './ReadyMeter';
+import { SetupBar } from './SetupBar';
+import { SetupPanel } from './SetupPanel';
+import { StartChoices } from './StartChoices';
 import { useSetupDraft } from './useSetupDraft';
 import styles from './Setup.module.css';
 
 const S = UI_COPY.setup;
-const TIMERS = [20, 30, 45, 60, 90];
+const E = UI_COPY.editor;
+const MAX = GAME.entry.maxLength;
 
-/** Host setup (not for sharing: it shows who wrote what). Creates the game, or edits the open lobby. */
+/**
+ * Host setup, as a studio: who's playing is the main stage; the preview, settings and the way
+ * forward sit in a sticky panel (a pinned dock on phones). Private: it shows who wrote what.
+ * Creates the game, or edits the open lobby.
+ */
 export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void }) {
   const { draft, editing, set, clearSaved } = useSetupDraft(host.state);
-  useDocumentTitle(S.title);
+  useDocumentTitle(editing ? S.editTitle : S.title);
+  const [pasting, setPasting] = useState<string | null>(null);
+  const [composing, setComposing] = useState(false);
+  const nameRef = useRef<HTMLInputElement>(null);
 
-  const rows = filledRows(validateRows(draft.rows, GAME.entry.maxLength));
-  const problems = rows.filter((r) => r.issues.length > 0);
+  const validated = validateRows(draft.rows, MAX);
+  const people = filledRows(validated);
+  const problems = people.filter((r) => r.issues.length > 0);
+  const ready = people.length - problems.length;
   const live = draft.intake === 'live' && !draft.hostOnly;
-  const ready = (live || rows.length >= RULES.minEntries) && problems.length === 0;
+  const canOpen = (live || people.length >= RULES.minEntries) && problems.length === 0;
+  const empty = draft.rows.length === 0;
+
+  const setRows = (rows: DraftRow[]) => set('rows', rows);
+  const onPaste = pasteListInto(setPasting);
+  const startComposing = () => {
+    setComposing(true);
+    requestAnimationFrame(() => nameRef.current?.focus());
+  };
 
   const submit = () => {
-    if (!ready) return;
-    const clean = rows.map((r) => ({ name: r.name, text: r.text }));
+    if (!canOpen) return;
+    const clean = people.map((r) => ({ name: r.name, text: r.text }));
     const settings = {
       timerSec: draft.timerSec,
       hostOnly: draft.hostOnly,
-      intake: draft.hostOnly ? ('host' as const) : draft.intake,
-      maxLength: GAME.entry.maxLength,
+      intake: live ? ('live' as const) : ('host' as const),
+      maxLength: MAX,
     };
     if (editing) {
       host.dispatch({ type: 'updateSettings', settings });
@@ -50,73 +72,119 @@ export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void })
     onDone?.();
   };
 
-  let step = 0;
+  // Readiness and the main action: in the panel on wide screens, pinned to the bottom on small ones.
+  const go = (
+    <>
+      <ReadyMeter
+        ready={ready}
+        total={people.length}
+        needed={RULES.minEntries}
+        live={live}
+        problem={problems.length ? plural(problems.length, E.needsFix) : null}
+      />
+      <Button type="submit" className={styles.open} disabled={!canOpen}>
+        {editing ? S.save : S.open}
+      </Button>
+    </>
+  );
+  const secondary =
+    editing && onDone ? (
+      <Button variant="outline" onClick={onDone}>
+        {E.cancel}
+      </Button>
+    ) : (
+      <LoadSavedGame onLoad={host.replace} />
+    );
+
   return (
     <main className={`page ${styles.setup}`}>
       <Backdrop />
-      <BrandHeader />
-      <h1 className={`text-headline ${styles.title}`}>{editing ? S.save : S.title}</h1>
-      {editing && host.roomCode && !host.state?.settings.hostOnly && (
-        <p className={`text-label ${styles.room}`}>
-          {UI_COPY.roomCode} <RoomTag code={host.roomCode} />
-        </p>
-      )}
-      <p className={`text-lede ${styles.intro}`}>{S.intro}</p>
-      <Notice className={styles.warning}>{S.shareWarning}</Notice>
-
+      <SetupBar editing={editing} roomCode={editing ? host.roomCode : null} />
       <form
-        className={styles.form}
+        className={styles.studio}
         onSubmit={(e) => {
           e.preventDefault();
           submit();
         }}
       >
-        <SetupStep number={++step} title={S.stepEntries}>
-          {!draft.hostOnly && (
-            <Segmented
-              label={S.stepEntries}
-              options={[
-                { value: 'host', label: S.intakeHost },
-                { value: 'live', label: S.intakeLive },
-              ]}
-              value={draft.intake}
-              onChange={(v) => set('intake', v)}
-            />
-          )}
-          {live && <p className="text-hint">{S.liveHint}</p>}
-          <EntriesEditor rows={draft.rows} onChange={(r) => set('rows', r)} maxLength={GAME.entry.maxLength} itemNoun={GAME.copy.item} />
-        </SetupStep>
-
-        <SetupStep number={++step} title={S.stepSettings}>
-          <div className={styles.settings}>
-            <Segmented
-              label={S.timer}
-              showLabel
-              options={TIMERS.map((t) => ({ value: t, label: `${t}${S.seconds}` }))}
-              value={draft.timerSec}
-              onChange={(v) => set('timerSec', v)}
-            />
-            <Switch label={S.hostOnly} hint={S.hostOnlyHint} checked={draft.hostOnly} onChange={(v) => set('hostOnly', v)} />
+        <div className={styles.main}>
+          <div className={styles.hello}>
+            <h1 className={styles.heading}>
+              {S.headingLead} <span className="text-glow">{S.headingGlow}</span>
+            </h1>
+            <p className="text-lede">{S.lede}</p>
           </div>
-        </SetupStep>
 
-        <div className={styles.submit}>
-          {!editing && <LoadSavedGame onLoad={host.replace} />}
-          {!ready && (
-            <p className="text-hint" aria-live="polite">
-              {problems.length ? S.fixFirst : S.needMore}
-            </p>
+          {empty && !composing && !live ? (
+            <StartChoices
+              onPaste={() => setPasting('')}
+              onOneByOne={startComposing}
+              onLive={draft.hostOnly ? undefined : () => set('intake', 'live')}
+              onSample={() => setRows(sampleEntries.map((s) => newRow(s.name, s.text)))}
+            />
+          ) : (
+            <>
+              {live && <p className={styles.liveInfo}>{S.liveInfo}</p>}
+              <Composer ref={nameRef} onPaste={onPaste} onAdd={(name, text) => setRows([...filledRows(draft.rows), newRow(name, text)])} />
+              <div className={styles.toolbar}>
+                <Button variant="secondary" onClick={() => setPasting('')}>
+                  {E.paste}
+                </Button>
+                {!draft.hostOnly && (
+                  <Button variant="secondary" aria-pressed={live} onClick={() => set('intake', live ? 'host' : 'live')}>
+                    {S.liveToggle}
+                  </Button>
+                )}
+                <Button
+                  variant="secondary"
+                  onClick={() => setRows([...filledRows(draft.rows), ...sampleEntries.map((s) => newRow(s.name, s.text))])}
+                >
+                  {E.sample}
+                </Button>
+                {!empty && (
+                  <Button variant="secondary" onClick={() => window.confirm(E.clearConfirm) && setRows([])}>
+                    {E.clear}
+                  </Button>
+                )}
+              </div>
+              <PeopleList
+                rows={validated}
+                maxLength={MAX}
+                onPaste={onPaste}
+                onUpdate={(key, patch) => setRows(draft.rows.map((r) => (r.key === key ? { ...r, ...patch } : r)))}
+                onRemove={(key) => setRows(draft.rows.filter((r) => r.key !== key))}
+              />
+            </>
           )}
-          {editing && onDone && (
-            <Button variant="secondary" onClick={onDone}>
-              {UI_COPY.editor.cancel}
-            </Button>
-          )}
-          <Button type="submit" disabled={!ready}>
-            {editing ? S.save : S.open}
-          </Button>
         </div>
+
+        <SetupPanel
+          previewText={people[0]?.text ?? null}
+          total={people.length}
+          timerSec={draft.timerSec}
+          onTimer={(t) => set('timerSec', t)}
+          hostOnly={draft.hostOnly}
+          onHostOnly={(on) => set('hostOnly', on)}
+          go={go}
+          secondary={secondary}
+        />
+
+        {/* Phones and narrow windows: readiness and the main action stay pinned to the bottom. */}
+        <div className={styles.dock}>{go}</div>
       </form>
+
+      {pasting !== null && (
+        <PasteSheet
+          initial={pasting}
+          maxLength={MAX}
+          onClose={() => setPasting(null)}
+          onApply={(parsed, mode) => {
+            const incoming = parsed.map((p) => newRow(p.name, p.text));
+            setRows([...(mode === 'add' ? filledRows(draft.rows) : []), ...incoming]);
+            setPasting(null);
+          }}
+        />
+      )}
     </main>
   );
 }

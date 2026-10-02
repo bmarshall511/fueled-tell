@@ -1,0 +1,46 @@
+.panel {
+  position: sticky;
+  top: var(--space-5);
+  display: grid;
+  gap: var(--space-5);
+  padding: var(--space-5);
+  border-radius: var(--radius-card);
+  background: var(--color-surface-raised);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
+  box-shadow: inset 0 0 0 var(--border-width-hairline) var(--color-border);
+}
+
+.rule {
+  width: 100%;
+  height: var(--border-width-hairline);
+  margin: 0;
+  border: 0;
+  background: var(--color-border);
+}
+
+.go {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.secondary {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+}
+
+.builtBy {
+  justify-self: center;
+}
+
+/* Small screens: the panel flows under the people; its actions live in the pinned dock instead. */
+@media (max-width: 959px) {
+  .panel {
+    position: static;
+  }
+
+  .go {
+    display: none;
+  }
+}

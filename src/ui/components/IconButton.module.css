@@ -3,3 +3,72 @@
   aspect-ratio: 1;
   padding: 0;
 }
+
+.glyph {
+  display: grid;
+  place-items: center;
+  color: var(--color-text-muted);
+  transition: color var(--duration-fast) var(--easing-standard);
+}
+
+.icon:hover .glyph,
+.icon:focus-visible .glyph,
+.icon[aria-pressed='true'] .glyph {
+  color: var(--color-text);
+}
+
+.tip {
+  position: absolute;
+  left: 50%;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-tile);
+  background: var(--color-text);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-phone-label);
+  white-space: nowrap;
+  translate: -50% 0;
+  pointer-events: none;
+  /* Takes no space until shown, so a tooltip near an edge never widens the page. */
+  display: none;
+}
+
+.above {
+  bottom: calc(100% + var(--space-3));
+  --tip-from: var(--space-2);
+}
+
+.below {
+  top: calc(100% + var(--space-3));
+  --tip-from: calc(var(--space-2) * -1);
+}
+
+.icon:hover .tip,
+.icon:focus-visible .tip {
+  display: inline-flex;
+  animation: tip-in var(--duration-base) var(--easing-spring);
+}
+
+@keyframes tip-in {
+  from {
+    opacity: 0;
+    translate: -50% var(--tip-from);
+  }
+}
+
+.key {
+  font: inherit;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-text-inverse) 10%, transparent);
+}
+
+/* Touch screens: no hover, so no tooltip (the menu lists every control by name). */
+@media (hover: none) {
+  .tip {
+    display: none;
+  }
+}

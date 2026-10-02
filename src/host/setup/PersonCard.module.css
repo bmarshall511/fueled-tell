@@ -1,0 +1,71 @@
+.card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface-raised);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
+  box-shadow: inset 0 0 0 var(--border-width-hairline) var(--color-border);
+}
+
+.bad {
+  box-shadow: inset 0 0 0 var(--border-width-hairline) var(--color-fueled-nova);
+}
+
+/* Their color as a ring and tint; the initial stays full-contrast text. */
+.avatar {
+  display: grid;
+  place-items: center;
+  width: calc(var(--size-tap-target) * 0.95);
+  aspect-ratio: 1;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--player) 22%, transparent);
+  box-shadow: inset 0 0 0 var(--border-width-base) var(--player);
+  font-size: var(--font-size-phone-title);
+  margin-top: var(--space-1);
+}
+
+.fields {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+/* Bare fields line up with the avatar: pull them flush to the card's text column. */
+.name,
+.text {
+  margin-left: calc(var(--space-3) * -1);
+  width: calc(100% + var(--space-3));
+  min-height: 0;
+  padding-block: var(--space-1);
+}
+
+.text {
+  font-size: var(--font-size-phone-body);
+  color: color-mix(in srgb, var(--color-text) 88%, transparent);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2);
+  font-size: var(--font-size-phone-label);
+}
+
+.problem {
+  color: var(--color-fueled-nova);
+}
+
+.count {
+  margin-left: auto;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.remove {
+  min-height: calc(var(--size-tap-target) * 0.85);
+}

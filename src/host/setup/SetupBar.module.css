@@ -1,0 +1,63 @@
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: var(--size-tap-target);
+}
+
+.home {
+  display: inline-flex;
+  min-height: var(--size-tap-target);
+  align-items: center;
+}
+
+.rule {
+  align-self: stretch;
+  width: var(--border-width-hairline);
+  margin: var(--space-3) 0;
+  background: var(--color-border-strong);
+}
+
+.title {
+  font-size: var(--font-size-phone-body);
+  white-space: nowrap;
+}
+
+/* A calm reminder instead of a banner: this page shows who wrote what. */
+.privacy {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4) var(--space-2) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-raised);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
+  box-shadow: inset 0 0 0 var(--border-width-hairline) var(--color-border);
+  font-size: var(--font-size-phone-label);
+  white-space: nowrap;
+}
+
+.privacy svg {
+  color: var(--color-fueled-nova);
+}
+
+.short {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .long {
+    display: none;
+  }
+
+  .short {
+    display: inline;
+  }
+
+  .rule,
+  .title {
+    display: none;
+  }
+}

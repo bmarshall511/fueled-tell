@@ -16,31 +16,52 @@
   color: var(--color-text-muted);
 }
 
+/* One glass track; the white thumb slides to the checked option. */
 .segmented {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1);
-}
-
-.seg {
-  border-radius: var(--radius-pill);
+  position: relative;
   display: inline-flex;
-  align-items: center;
-  min-height: var(--size-tap-target);
-  padding: 0 var(--space-5);
+  flex-wrap: wrap;
+  justify-self: start;
+  max-width: 100%;
+  padding: var(--space-1);
+  border-radius: var(--radius-field);
   background: var(--color-surface-raised);
   -webkit-backdrop-filter: blur(var(--blur-glass));
   backdrop-filter: blur(var(--blur-glass));
   box-shadow: inset 0 0 0 var(--border-width-hairline) var(--color-border);
+}
+
+.thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: var(--radius-pill);
+  background: var(--color-text);
+  box-shadow: 0 var(--space-1) var(--space-4) calc(var(--space-2) * -1) var(--color-accent);
+  transition:
+    translate var(--duration-slow) var(--easing-spring),
+    width var(--duration-slow) var(--easing-spring);
+  pointer-events: none;
+}
+
+.seg {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  min-height: calc(var(--size-tap-target) - var(--space-2));
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-pill);
   font-size: var(--font-size-phone-body);
+  color: var(--color-text-muted);
   cursor: pointer;
+  transition: color var(--duration-fast) var(--easing-standard);
 }
 
 .seg:hover {
-  background: var(--color-border);
+  color: var(--color-text);
 }
 
 .seg:has(input:checked) {
-  background: var(--color-text);
   color: var(--color-text-inverse);
 }

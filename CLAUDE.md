@@ -31,6 +31,7 @@ Organized by feature; each component owns its `*.module.css` next to it. Keep fi
 - `src/engine/`: pure game logic (types, `game.ts` reducer + `nextStep`, scoring + standings, `redact.ts`, intake parser, room codes, rules). No React, no DOM. Tests live next to it (`*.test.ts`).
 - `src/transport/`: `Transport.ts` interface, `peer.ts` (PeerJS), `local.ts` (BroadcastChannel), `protocol.ts` (messages + runtime guards).
 - `src/host/`: `HostApp.tsx` routes between `setup/`, `lobby/` and `game/`.
+  - `setup/`: the studio. `Setup.tsx` composes `SetupBar`, `StartChoices` (empty state), `Composer` (quick add), `PeopleList` + `PersonCard` (edit in place), `SetupPanel` (`MiniStage` preview, timer, host-only, `ReadyMeter`, actions; a pinned dock on small screens) and `PasteSheet` (dialog around `PasteHelper`). Draft state is `useSetupDraft`; parsing and validation stay in `engine/intake.ts`.
   - `state/`: `useHostGame` composes `useHostSession`, `useHostRoom`, `useRoundTimers` and `useBots`. The host's browser is the server.
   - `components/`: `HostStage`, `HostBrand` (wordmark + endorsement, top-left), `HostControls` (join capsule + actions) and `JoinTag`, shared by the lobby and the game.
 - `src/player/`: `PlayerApp.tsx` is only composition.
@@ -41,6 +42,7 @@ Organized by feature; each component owns its `*.module.css` next to it. Keep fi
 - `src/ui/`: shared building blocks.
   - `components/`: Button, IconButton (+ Icon), TextInput/TextArea, Notice, Segmented, Switch, NameGrid, PlayerChip, CodeChip, RoomTag, Logo, BrandHeader, Backdrop, QR.
   - `hooks/`: keyboard shortcuts, screen transitions, drumroll, wake lock, and so on.
+  - `lib/pointerFx.ts`: the one pointer listener behind the cursor glow, parallax and `.spot` card spotlights (mouse only, never with reduced motion, never on the host stage).
   - `lib/`: `stage.ts` is the single host layout source (landscape or portrait stage) for both the HUD and 3D.
   - `copy.ts`: all UI strings, with plural tuples for `plural()`.
   - `styles/base.css`: resets, focus ring, `text-glow`, and the `t-*` (host stage) and `text-*` (pages and phone) type utilities.

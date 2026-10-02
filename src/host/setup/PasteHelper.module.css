@@ -1,17 +1,14 @@
+/* Lives inside PasteSheet, which provides the surface. */
 .panel {
-  border-radius: var(--radius-panel);
   display: grid;
   gap: var(--space-4);
-  padding: var(--space-5);
-  background: var(--color-surface-raised);
-  -webkit-backdrop-filter: blur(var(--blur-glass));
-  backdrop-filter: blur(var(--blur-glass));
 }
 
 .title {
   margin: 0;
   font-weight: inherit;
-  font-size: var(--font-size-phone-title);
+  font-size: var(--font-size-phone-display);
+  padding-right: calc(var(--size-tap-target) + var(--space-3));
 }
 
 .help {

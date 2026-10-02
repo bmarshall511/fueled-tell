@@ -51,6 +51,39 @@
   animation-duration: calc(var(--duration-drift) * 1.5);
 }
 
+/* Mouse: blobs shift gently against the pointer, and a soft glow trails it (see ui/lib/pointerFx.ts). */
+.interactive .pink,
+.interactive .violet,
+.interactive .lilac {
+  translate: calc((var(--pointer-x, 0.5) - 0.5) * var(--space-9) * -1) calc((var(--pointer-y, 0.5) - 0.5) * var(--space-9) * -1);
+}
+
+.backdrop .follow {
+  width: var(--size-follow);
+  left: 0;
+  top: 0;
+  background: radial-gradient(
+    circle,
+    var(--color-glow-pink),
+    color-mix(in srgb, var(--color-glow-violet) 70%, transparent) 40%,
+    transparent 65%
+  );
+  transform: translate(
+    calc(var(--pointer-x, 0.5) * 100vw - var(--size-follow) / 2),
+    calc(var(--pointer-y, 0.5) * 100vh - var(--size-follow) / 2)
+  );
+  opacity: 0;
+  animation: none;
+}
+
+:global(.pointer-live) .backdrop .follow {
+  opacity: var(--opacity-muted);
+}
+
+:global(.pointer-live) .calm .follow {
+  opacity: var(--opacity-glow-calm);
+}
+
 .calm i {
   opacity: var(--opacity-glow-calm);
 }

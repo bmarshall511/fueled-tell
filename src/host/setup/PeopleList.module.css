@@ -1,0 +1,30 @@
+.people {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.count {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-phone-body);
+  color: var(--color-text-muted);
+}
+
+.jump {
+  min-height: calc(var(--size-tap-target) * 0.75);
+  padding: 0 var(--space-4);
+  font-size: var(--font-size-phone-label);
+}
+
+.cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: var(--space-3);
+  align-items: start;
+}

@@ -27,9 +27,9 @@ export function PasteHelper({ initial, maxLength, onCancel, onApply }: PasteHelp
 
   return (
     <section className={styles.panel} aria-labelledby={ids.title}>
-      <h3 id={ids.title} className={styles.title}>
+      <h2 id={ids.title} className={styles.title}>
         {E.pasteTitle}
-      </h3>
+      </h2>
       <p id={ids.help} className={`text-body text-muted ${styles.help}`}>
         {E.pasteHelp}
       </p>

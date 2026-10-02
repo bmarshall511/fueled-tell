@@ -24,7 +24,7 @@ export function HostStage({ children, className, busy, backdrop = 'vivid' }: Hos
       data-orientation={layout.orientation}
       aria-busy={busy || undefined}
     >
-      <Backdrop tone={backdrop} />
+      <Backdrop tone={backdrop} interactive={false} />
       {children}
     </main>
   );
