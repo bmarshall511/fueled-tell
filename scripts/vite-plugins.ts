@@ -71,3 +71,46 @@ export function monoSvgPlugin(): Plugin {
     },
   };
 }
+
+export interface ShareMeta {
+  /** Absolute site origin, e.g. https://fueled-tell.vercel.app */
+  url: string;
+  name: string;
+  title: string;
+  description: string;
+  /** Path to the 1200x630 social card under public/. */
+  image: string;
+  imageAlt: string;
+}
+
+/** Link previews (Open Graph, Twitter/X, Slack, iMessage) and home-screen titles, from one set of values. */
+export function sharePlugin(meta: ShareMeta): Plugin {
+  const image = new URL(meta.image, meta.url).toString();
+  const tag = (attrs: Record<string, string>) => ({ tag: 'meta', attrs, injectTo: 'head' as const });
+  return {
+    name: 'tell:share',
+    transformIndexHtml() {
+      return [
+        tag({ name: 'description', content: meta.description }),
+        { tag: 'link', attrs: { rel: 'canonical', href: meta.url }, injectTo: 'head' },
+        tag({ name: 'application-name', content: meta.name }),
+        tag({ name: 'apple-mobile-web-app-title', content: meta.name }),
+        tag({ property: 'og:type', content: 'website' }),
+        tag({ property: 'og:site_name', content: meta.name }),
+        tag({ property: 'og:url', content: meta.url }),
+        tag({ property: 'og:title', content: meta.title }),
+        tag({ property: 'og:description', content: meta.description }),
+        tag({ property: 'og:image', content: image }),
+        tag({ property: 'og:image:width', content: '1200' }),
+        tag({ property: 'og:image:height', content: '630' }),
+        tag({ property: 'og:image:alt', content: meta.imageAlt }),
+        tag({ property: 'og:locale', content: 'en_US' }),
+        tag({ name: 'twitter:card', content: 'summary_large_image' }),
+        tag({ name: 'twitter:title', content: meta.title }),
+        tag({ name: 'twitter:description', content: meta.description }),
+        tag({ name: 'twitter:image', content: image }),
+        tag({ name: 'twitter:image:alt', content: meta.imageAlt }),
+      ];
+    },
+  };
+}

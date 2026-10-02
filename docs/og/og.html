@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Tell social card</title>
+<!-- Source for public/og.png (1200x630). Render this page at 1200x630 and save a screenshot; see BUILD_LOG 1o. -->
+<style>
+  @font-face { font-family: 'Aeonik'; src: url('../../assets/fonts/Aeonik-Medium.woff2') format('woff2'); font-weight: 500; }
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: #000; }
+  body { position: relative; font-family: Aeonik, sans-serif; color: #F5F5F1; -webkit-font-smoothing: antialiased; }
+  .glow i { position: absolute; border-radius: 50%; filter: blur(90px); }
+  .glow .a { width: 760px; height: 760px; left: -180px; bottom: -470px; background: radial-gradient(circle at 40% 40%, #FF52B7, transparent 62%); opacity: .95; }
+  .glow .b { width: 900px; height: 900px; right: -300px; bottom: -560px; background: radial-gradient(circle at 50% 40%, #6652FF, transparent 60%); opacity: .95; }
+  .glow .c { width: 600px; height: 600px; left: 420px; bottom: -420px; background: radial-gradient(circle, #B9AEFF, transparent 60%); opacity: .5; }
+  .fade { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,.55), transparent 55%); }
+  .content { position: absolute; inset: 64px 72px; display: grid; grid-template-rows: auto 1fr auto; }
+  .top { display: flex; justify-content: space-between; align-items: center; }
+  .top img.lockup { height: 40px; }
+  .built { display: flex; align-items: center; gap: 12px; font-size: 15px; letter-spacing: .14em; text-transform: uppercase; color: rgba(245,245,241,.7); }
+  .built img { height: 26px; }
+  .hero { align-self: center; }
+  h1 { margin: 0; font-weight: 500; font-size: 200px; line-height: .9; letter-spacing: -0.03em; }
+  p { margin: 18px 0 0; font-size: 44px; line-height: 1.15; max-width: 22ch;
+      background: linear-gradient(90deg, #B9AEFF, #FF52B7); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .foot { display: flex; gap: 12px; }
+  .pill { padding: 12px 22px; border-radius: 999px; font-size: 22px; background: rgba(23,23,28,.62); box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+</style>
+</head>
+<body>
+  <div class="glow"><i class="a"></i><i class="b"></i><i class="c"></i></div>
+  <div class="fade"></div>
+  <div class="content">
+    <div class="top">
+      <img class="lockup" src="../../assets/brand/fueled-lockup-white.svg" alt="Fueled" />
+      <span class="built">built by <img src="../../assets/brand/DOMlab-logo-white.svg" alt="DOM lab" /></span>
+    </div>
+    <div class="hero">
+      <h1>Tell</h1>
+      <p>Everyone has a story. Can you tell whose?</p>
+    </div>
+    <div class="foot"><span class="pill">A party game for video calls</span></div>
+  </div>
+</body>
+</html>
