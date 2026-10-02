@@ -1,0 +1,20 @@
+# CLAUDE.md: project conventions
+
+"Whose Is It?" is a guess-the-owner party game for video calls, built by DOM lab for Fueled. Full plan: `PLAN.md`. Phase 0 brief: `MOCKUPS-BRIEF.md`.
+
+## Rules (every session)
+
+- **Simplicity over everything.** No backend, no database, no accounts, no paid services. The host's browser is the server. When in doubt, cut it.
+- **Ask before adding any dependency** not named in `PLAN.md` or `MOCKUPS-BRIEF.md`.
+- **No hex values or raw design values** (colors, font sizes, spacing, radii, durations) outside `tokens/tokens.json`. Components, CSS and Three.js materials read from the generated `src/tokens/tokens.css` / `src/tokens/tokens.ts` only.
+- **No game-specific copy outside pack JSON files** (`src/packs/*.json`). Engine, UI and scenes stay pack-agnostic: never hard-code "story".
+- **`/play` (phones) must never import Three.js**, directly or transitively. Scenes are lazy-loaded on host routes only.
+- **Strict TypeScript, small focused modules, DRY shared primitives.** Shared UI lives in `src/ui/`; scenes differ only in their scene component and implement the shared `Scene` props interface.
+- **Append to `BUILD_LOG.md` at the end of every session**: goal, what you generated, decisions you made on your own, what the user needs to verify by hand, approximate time. Keep it factual.
+
+## Other constraints
+
+- Fonts in `assets/fonts/` are licensed (see the CoType EULA). Self-host only; this repo must not be pushed anywhere public.
+- Brand: Fueled is primary, DOM lab is the "built by" endorsement. "Fueled" always has a capital F. Never stack the lockup vertically, recolor the logo with secondaries, or skew/stretch it. Nebula is for large text/accents only (about 4.2:1 on black).
+- Screen-share first: big type, high contrast, nothing that depends on fine detail or high frame rates.
+- Respect `prefers-reduced-motion`, cap DPR at 2, pause rendering when the tab is hidden.
