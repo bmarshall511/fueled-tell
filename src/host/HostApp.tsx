@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { GameScreen } from './game/GameScreen';
 import { Lobby } from './lobby/Lobby';
 import { Setup } from './setup/Setup';
-import { useHostGame } from './useHostGame';
+import { useHostGame } from './state/useHostGame';
 import { unlock } from './sound';
 
 /**

@@ -1,0 +1,32 @@
+.lobby {
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  gap: calc(var(--space-6) * var(--stage));
+  padding: max(calc(var(--space-7) * var(--stage)), env(safe-area-inset-top))
+    max(calc(var(--space-8) * var(--stage)), env(safe-area-inset-right)) max(var(--space-4), env(safe-area-inset-bottom));
+  overflow: auto;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--color-text-muted);
+}
+
+/* Start stays reachable when the roster is long (phones, small windows). */
+.controls {
+  position: sticky;
+  bottom: 0;
+  padding: var(--space-3) 0;
+  background: var(--color-bg);
+}
+
+[data-orientation='portrait'].lobby {
+  grid-template-rows: auto auto auto auto;
+}
+
+[data-orientation='portrait'].lobby :global(.t-label),
+[data-orientation='portrait'].lobby :global(.t-body) {
+  font-size: max(var(--font-size-phone-label), calc(var(--font-size-host-label) * var(--stage)));
+}

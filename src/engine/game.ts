@@ -96,6 +96,24 @@ export function guessersForReveal(s: GameState): number {
 /** Players are only "connected" while a phone is attached: after a host reload, nobody is until they reconnect. */
 export const markAllDisconnected = (s: GameState): GameState => ({ ...s, players: s.players.map((p) => ({ ...p, connected: false })) });
 
+/** The host's one-button "next step" (Space): what it does in each phase. Null in the finale. */
+export function nextStep(s: GameState, now: number, seed: number = now): GameAction | null {
+  switch (s.phase) {
+    case 'lobby':
+      return { type: 'start', seed };
+    case 'showing':
+      return { type: 'beginGuessing', now };
+    case 'guessing':
+      return { type: 'lock' };
+    case 'locked':
+      return { type: 'reveal', now };
+    case 'reveal':
+      return { type: 'next' };
+    case 'finale':
+      return null;
+  }
+}
+
 // ---------- Reducer ----------
 
 function nextColor(players: readonly Player[]): number {

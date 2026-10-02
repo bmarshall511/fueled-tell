@@ -1,0 +1,22 @@
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: calc(var(--space-6) * var(--stage));
+}
+
+.progress {
+  color: var(--color-text-muted);
+  margin-top: calc(var(--space-2) * var(--stage));
+}
+
+/* Portrait: progress drops under the logo and timer. */
+[data-orientation='portrait'] .header {
+  flex-wrap: wrap;
+}
+
+[data-orientation='portrait'] .progress {
+  order: 3;
+  width: 100%;
+  text-align: center;
+}

@@ -1,4 +1,4 @@
-import { useNow } from '../../ui/hooks/hooks';
+import { useNow } from '../../ui/hooks/useNow';
 import styles from './Timer.module.css';
 
 interface TimerProps {

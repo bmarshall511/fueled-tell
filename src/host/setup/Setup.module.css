@@ -1,0 +1,36 @@
+.setup {
+  max-width: calc(var(--size-item-width) * 0.85);
+  margin: 0 auto;
+  padding: var(--space-7) var(--space-5) var(--space-9);
+}
+
+.title {
+  margin: var(--space-8) 0 var(--space-3);
+}
+
+.intro {
+  max-width: 40ch;
+  margin-bottom: var(--space-7);
+}
+
+.warning {
+  margin-bottom: var(--space-7);
+}
+
+.form {
+  display: grid;
+  gap: var(--space-7);
+}
+
+.settings {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.submit {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}

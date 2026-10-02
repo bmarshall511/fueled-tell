@@ -22,3 +22,7 @@
 .domlab {
   color: var(--color-text);
 }
+
+.lockup {
+  width: auto;
+}

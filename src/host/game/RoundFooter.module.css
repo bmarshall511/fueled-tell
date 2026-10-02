@@ -1,0 +1,20 @@
+.question {
+  margin: 0;
+  color: var(--color-accent);
+}
+
+.shout {
+  margin: 0;
+  color: var(--color-highlight);
+}
+
+.drumroll {
+  margin: 0 auto;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.drumroll :global(.t-label) {
+  display: block;
+  color: var(--color-text-muted);
+}

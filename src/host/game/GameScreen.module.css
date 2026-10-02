@@ -1,15 +1,10 @@
-.host {
-  position: fixed;
-  inset: 0;
+.screen {
   overflow: hidden;
-  background: var(--color-bg);
 }
 
-.top,
-.bottom,
-.controls {
+/* HUD layers over the scene, centered on the reference stage (ultrawide screens don't stretch it). */
+.hud {
   position: absolute;
-  /* Centered on the reference stage, so ultrawide screens don't stretch the HUD to the edges. */
   left: max(0px, calc((100% - var(--stage-w)) / 2));
   right: max(0px, calc((100% - var(--stage-w)) / 2));
   padding: 0 max(calc(var(--space-8) * var(--stage)), env(safe-area-inset-left));
@@ -19,15 +14,6 @@
 
 .top {
   top: max(calc(var(--space-7) * var(--stage)), env(safe-area-inset-top));
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: calc(var(--space-6) * var(--stage));
-}
-
-.progress {
-  color: var(--color-text-muted);
-  margin-top: calc(var(--space-2) * var(--stage));
 }
 
 .bottom {
@@ -38,46 +24,24 @@
   gap: calc(var(--space-6) * var(--stage));
 }
 
-.question {
-  margin: 0;
-  color: var(--color-accent);
-}
-
 .controls {
   bottom: max(calc(var(--space-5) * var(--stage)), env(safe-area-inset-bottom));
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: calc(var(--space-4) * var(--stage));
 }
 
-.buttons {
-  display: flex;
-  gap: calc(var(--space-3) * var(--stage));
-  margin-left: auto;
+.linkLost {
+  position: absolute;
+  top: calc(var(--space-9) * 1.4 * var(--stage));
+  left: 50%;
+  translate: -50% 0;
+  z-index: 4;
 }
 
-.controls button {
-  pointer-events: auto;
-}
-
-/* Portrait (phones, narrow windows): progress under the logo, HUD stacks. */
-[data-orientation='portrait'] .top {
-  flex-wrap: wrap;
-}
-
-[data-orientation='portrait'] .progress {
-  order: 3;
-  width: 100%;
-  text-align: center;
-}
-
+/* Portrait: the bottom HUD stacks and clears the stacked controls (tap-target-sized buttons). */
 [data-orientation='portrait'] .bottom {
   flex-direction: column;
   align-items: center;
   gap: var(--space-3);
   text-align: center;
-  /* Clear the stacked controls, whose buttons never shrink below a tap target. */
   bottom: calc(var(--size-tap-target) + var(--space-8) + env(safe-area-inset-bottom));
 }
 
@@ -88,141 +52,4 @@
 [data-orientation='portrait'] .bottom :global(section) {
   flex-direction: column;
   align-items: center;
-}
-
-[data-orientation='portrait'] .controls {
-  flex-direction: column-reverse;
-}
-
-[data-orientation='portrait'] .buttons {
-  margin: 0;
-  width: 100%;
-}
-
-[data-orientation='portrait'] .buttons button {
-  flex: 1;
-}
-
-/* Full screen is a laptop affordance; phones are already full-bleed. */
-@media (pointer: coarse) {
-  .fullscreen {
-    display: none;
-  }
-}
-
-.drumroll {
-  margin: 0 auto;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-}
-
-.drumroll :global(.t-label) {
-  display: block;
-  color: var(--color-text-muted);
-}
-
-.revealArea {
-  display: grid;
-  gap: calc(var(--space-4) * var(--stage));
-  width: 100%;
-}
-
-.shout {
-  margin: 0;
-  color: var(--color-highlight);
-}
-
-.tally {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  align-items: center;
-  gap: calc(var(--space-2) * var(--stage));
-  margin: 0;
-  padding: 0;
-  border: 0;
-  pointer-events: auto;
-}
-
-.tallyChip {
-  --cut: var(--chamfer-sm);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-height: var(--size-tap-target);
-  padding: 0 var(--space-4);
-  background: var(--color-surface-raised);
-  font-size: max(var(--font-size-phone-body), calc(var(--font-size-host-label) * var(--stage)));
-  cursor: pointer;
-}
-
-.tallyChip:has(input:checked) {
-  background: var(--color-highlight);
-  color: var(--color-text-inverse);
-}
-
-.tallyChip input {
-  width: var(--space-5);
-  height: var(--space-5);
-  accent-color: var(--color-accent);
-}
-
-.linkLost {
-  --cut: var(--chamfer-sm);
-  position: absolute;
-  top: calc(var(--space-9) * 1.4 * var(--stage));
-  left: 50%;
-  translate: -50% 0;
-  z-index: 4;
-  margin: 0;
-  padding: var(--space-2) var(--space-4);
-  background: var(--color-surface-raised);
-  border-left: var(--border-width-strong) solid var(--color-fueled-nova);
-  font-size: var(--font-size-phone-body);
-}
-
-.menu {
-  --cut: var(--chamfer-lg);
-  border: 0;
-  padding: var(--space-7);
-  width: min(90vw, max(calc(var(--size-phone-width) * 1.2), calc(var(--size-card-width) * 0.42 * var(--stage))));
-  font-size: max(var(--font-size-phone-body), calc(var(--font-size-host-label) * 0.8 * var(--stage)));
-  background: var(--color-surface-raised);
-  color: var(--color-text);
-  display: none;
-  gap: var(--space-3);
-}
-
-.menu[open] {
-  display: grid;
-}
-
-.menu::backdrop {
-  background: var(--color-bg);
-  opacity: var(--opacity-muted);
-}
-
-.menuTitle {
-  margin: 0;
-  font-weight: inherit;
-  font-size: max(var(--font-size-phone-title), calc(var(--font-size-host-title) * 0.75 * var(--stage)));
-}
-
-.menuHint {
-  margin: 0 0 var(--space-3);
-  font-size: inherit;
-  color: var(--color-text-muted);
-}
-
-.menu :global(button) {
-  width: 100%;
-}
-
-/* Portrait (phones): only Menu + the main action; sound and full screen live in the menu. */
-[data-orientation='portrait'] .optional {
-  display: none;
-}
-
-[data-orientation='portrait'] .controls :global(kbd) {
-  display: none;
 }

@@ -1,0 +1,15 @@
+.button {
+  --cut: var(--chamfer-sm);
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--size-tap-target);
+  padding: 0 var(--space-4);
+  margin-right: auto;
+  background: var(--color-surface-raised);
+  font-size: var(--font-size-phone-body);
+  cursor: pointer;
+}
+
+.button:hover {
+  background: var(--color-border);
+}

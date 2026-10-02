@@ -53,8 +53,8 @@ export function BootScreen({ ready, title = UI_COPY.appName }: BootScreenProps) 
         <span />
       </span>
       <footer className={styles.footer}>
-        <FueledWordmark height={`calc(${tokens.size.builtbyHost}px * var(--stage))`} />
-        <BuiltBy height={`calc(${tokens.size.builtbyHost}px * var(--stage))`} />
+        <FueledWordmark size="stage" />
+        <BuiltBy size="stage" />
       </footer>
     </div>
   );

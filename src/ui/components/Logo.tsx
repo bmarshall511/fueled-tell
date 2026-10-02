@@ -3,13 +3,33 @@ import fueledWordmark from '../../../assets/brand/fueled-wordmark-white.svg?mono
 import fueledLockupWhite from '../../../assets/brand/fueled-lockup-white.svg';
 import styles from './Logo.module.css';
 
-interface MonoLogoProps {
-  /** Height in CSS units; width follows the artwork's aspect ratio. */
-  height: string;
+/**
+ * Logo sizes, all from tokens:
+ * - `page`: landing, setup, demo
+ * - `compact`: the player app bar
+ * - `stage`: the host's shared screen (scales with the stage, never below compact)
+ */
+export type LogoSize = 'page' | 'compact' | 'stage';
+
+const WORDMARK: Record<LogoSize, string> = {
+  page: 'var(--size-logo-page)',
+  compact: 'var(--size-logo-compact)',
+  stage: 'max(var(--size-logo-compact), calc(var(--size-logo-host) * var(--stage)))',
+};
+
+const ENDORSEMENT: Record<LogoSize, string> = {
+  page: 'var(--size-builtby-page)',
+  compact: 'var(--size-builtby-compact)',
+  stage: 'max(var(--size-builtby-compact), calc(var(--size-builtby-host) * var(--stage)))',
+};
+
+interface LogoProps {
+  size: LogoSize;
   className?: string;
 }
 
-function MonoSvg({ markup, label, height, className }: MonoLogoProps & { markup: string; label: string }) {
+/** A single-color SVG logo rendered in currentColor (see the `?mono` Vite plugin). */
+function MonoSvg({ markup, label, height, className }: { markup: string; label: string; height: string; className?: string }) {
   return (
     <span
       role="img"
@@ -21,23 +41,23 @@ function MonoSvg({ markup, label, height, className }: MonoLogoProps & { markup:
   );
 }
 
-/** DOM lab wordmark in currentColor. */
-export const DomLabLogo = (props: MonoLogoProps) => <MonoSvg markup={domLab} label="DOM lab" {...props} />;
-
 /** Fueled wordmark in currentColor. Never apply secondary colors to it. */
-export const FueledWordmark = (props: MonoLogoProps) => <MonoSvg markup={fueledWordmark} label="Fueled" {...props} />;
-
-/** Horizontal Fueled lockup with the color emblem. Never stack it vertically. */
-export const FueledLockup = ({ height, className }: MonoLogoProps) => (
-  <img src={fueledLockupWhite} alt="Fueled" className={className} style={{ height, width: 'auto' }} />
+export const FueledWordmark = ({ size, className }: LogoProps) => (
+  <MonoSvg markup={fueledWordmark} label="Fueled" height={WORDMARK[size]} className={className} />
 );
 
-/** "built by DOM lab" endorsement. */
-export function BuiltBy({ height, className }: MonoLogoProps) {
+/** Horizontal Fueled lockup with the color emblem. Never stack it vertically. */
+export const FueledLockup = ({ size, className }: LogoProps) => (
+  <img src={fueledLockupWhite} alt="Fueled" className={`${styles.lockup} ${className ?? ''}`} style={{ height: WORDMARK[size] }} />
+);
+
+/** "built by DOM lab" endorsement. The DOM lab mark stays full text color: it's the endorsement. */
+export function BuiltBy({ size, className }: LogoProps) {
+  const height = ENDORSEMENT[size];
   return (
     <span className={`${styles.builtBy} ${className ?? ''}`} style={{ fontSize: `calc(${height} * 0.42)` }}>
       <span>built by</span>
-      <DomLabLogo height={height} className={styles.domlab} />
+      <MonoSvg markup={domLab} label="DOM lab" height={height} className={styles.domlab} />
     </span>
   );
 }

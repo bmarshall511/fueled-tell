@@ -1,0 +1,51 @@
+.field {
+  --cut: var(--chamfer-sm);
+  width: 100%;
+  min-height: var(--size-tap-target);
+  padding: var(--space-3) var(--space-4);
+  border: 0;
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  font: inherit;
+  line-height: var(--font-line-height-base);
+}
+
+.field::placeholder {
+  color: var(--color-text-muted);
+  opacity: var(--opacity-muted);
+}
+
+.field[aria-invalid='true'] {
+  box-shadow: inset 0 calc(var(--border-width-base) * -1) 0 var(--color-fueled-nova);
+}
+
+.body {
+  font-size: var(--font-size-phone-body);
+}
+
+.title {
+  min-height: calc(var(--size-tap-target) * 1.2);
+  font-size: var(--font-size-phone-title);
+}
+
+.code {
+  min-height: calc(var(--size-tap-target) * 1.1);
+  font-size: var(--font-size-phone-title);
+  letter-spacing: var(--font-letter-spacing-code);
+  text-transform: uppercase;
+}
+
+.area {
+  resize: vertical;
+}
+
+/* Auto-growing areas size to their content; no manual resize handle. */
+.grow {
+  resize: none;
+  overflow: hidden;
+  field-sizing: content;
+}
+
+.sunken {
+  background: var(--color-surface);
+}

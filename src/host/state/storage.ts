@@ -1,4 +1,4 @@
-import type { GameState } from '../engine/types';
+import type { GameState } from '../../engine/types';
 
 /** Everything the host needs to resume after a refresh. Lives only in this browser. */
 export interface HostSession {

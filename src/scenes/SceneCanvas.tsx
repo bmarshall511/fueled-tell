@@ -1,6 +1,6 @@
 import { Canvas, type CanvasProps } from '@react-three/fiber';
 import { useContext } from 'react';
-import { usePageVisible } from '../ui/hooks/hooks';
+import { usePageVisible } from '../ui/hooks/usePageVisible';
 import { tokens } from '../tokens/tokens';
 import { SceneReadyContext } from './sceneReady';
 

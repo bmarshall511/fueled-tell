@@ -131,6 +131,51 @@ label.chamfer:has(input:focus-visible) {
   text-transform: uppercase;
 }
 
+/*
+ * Page type utilities (setup, player app, landing, demo): fixed phone/page sizes.
+ * Use these instead of re-declaring label / hint / error styles in each module.
+ */
+.text-headline {
+  margin: 0;
+  font-weight: inherit;
+  font-size: clamp(var(--font-size-phone-display), 8vw, var(--font-size-page-display));
+  line-height: var(--font-line-height-tight);
+  letter-spacing: var(--font-letter-spacing-tight);
+}
+
+.text-lede {
+  margin: 0;
+  max-width: 44ch;
+  font-size: var(--font-size-phone-title);
+  color: var(--color-text-muted);
+}
+
+.text-label {
+  font-size: var(--font-size-phone-label);
+  letter-spacing: var(--font-letter-spacing-label);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.text-hint {
+  margin: 0;
+  font-size: var(--font-size-phone-label);
+  color: var(--color-text-muted);
+}
+
+.text-body {
+  margin: 0;
+  font-size: var(--font-size-phone-body);
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.text-error {
+  color: var(--color-fueled-nova);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

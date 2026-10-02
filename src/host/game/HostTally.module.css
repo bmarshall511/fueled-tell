@@ -1,0 +1,34 @@
+.tally {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: calc(var(--space-2) * var(--stage));
+  margin: 0;
+  padding: 0;
+  border: 0;
+  pointer-events: auto;
+}
+
+.chip {
+  --cut: var(--chamfer-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--size-tap-target);
+  padding: 0 var(--space-4);
+  background: var(--color-surface-raised);
+  font-size: max(var(--font-size-phone-body), calc(var(--font-size-host-label) * var(--stage)));
+  cursor: pointer;
+}
+
+.chip:has(input:checked) {
+  background: var(--color-highlight);
+  color: var(--color-text-inverse);
+}
+
+.chip input {
+  width: var(--space-5);
+  height: var(--space-5);
+  accent-color: var(--color-accent);
+}

@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { makeRoomCode } from '../engine/roomCode';
-import { sessionKey } from '../host/storage';
-import { tokens } from '../tokens/tokens';
+import { sessionKey } from '../host/state/storage';
 import { Button } from '../ui/components/Button';
 import { UI_COPY } from '../ui/copy';
 import { BuiltBy, FueledLockup } from '../ui/components/Logo';
-import { useDocumentTitle } from '../ui/hooks/useHostChrome';
+import { useDocumentTitle } from '../ui/hooks/useDocumentTitle';
 import styles from './Demo.module.css';
 
 const D = UI_COPY.demo;
@@ -40,12 +39,12 @@ export default function Demo() {
     setReady(true);
   }, [run]);
   const src = srcs(room);
-  useDocumentTitle(`${D.title} · ${UI_COPY.appName}`);
+  useDocumentTitle(D.title);
   return (
     <main className={styles.demo}>
       <header className={styles.header}>
-        <FueledLockup height="32px" />
-        <BuiltBy height={`${tokens.size.builtbyPage}px`} />
+        <FueledLockup size="page" />
+        <BuiltBy size="page" />
       </header>
 
       <div className={styles.intro}>

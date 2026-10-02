@@ -1,0 +1,19 @@
+.notice {
+  --cut: var(--chamfer-sm);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface-raised);
+  border-left: var(--border-width-strong) solid var(--color-fueled-nova);
+}
+
+.page {
+  font-size: var(--font-size-phone-body);
+}
+
+.stage {
+  font-size: max(var(--font-size-phone-body), calc(var(--font-size-host-label) * var(--stage)));
+}

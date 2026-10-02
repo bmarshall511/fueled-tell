@@ -1,10 +1,9 @@
 import { useId, useState } from 'react';
 import { normalizeRoomCode, ROOM_CODE_LENGTH } from '../engine/roomCode';
-import { tokens } from '../tokens/tokens';
 import { Button } from '../ui/components/Button';
 import { UI_COPY } from '../ui/copy';
 import { BuiltBy, FueledLockup } from '../ui/components/Logo';
-import { useDocumentTitle } from '../ui/hooks/useHostChrome';
+import { useDocumentTitle } from '../ui/hooks/useDocumentTitle';
 import { useInstallPrompt } from '../ui/hooks/useInstallPrompt';
 import styles from './Landing.module.css';
 
@@ -14,12 +13,12 @@ export default function Landing() {
   const [code, setCode] = useState('');
   const codeId = useId();
   const { canInstall, install } = useInstallPrompt();
-  useDocumentTitle(UI_COPY.appName);
+  useDocumentTitle();
   return (
     <main className={styles.landing}>
       <header className={styles.header}>
-        <FueledLockup height="36px" />
-        <BuiltBy height={`${tokens.size.builtbyPage}px`} />
+        <FueledLockup size="page" />
+        <BuiltBy size="page" />
       </header>
 
       <section className={styles.hero}>

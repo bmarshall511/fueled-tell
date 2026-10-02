@@ -11,11 +11,11 @@ import { Button } from '../ui/components/Button';
 import { CodeChip } from '../ui/components/CodeChip';
 import { UI_COPY } from '../ui/copy';
 import { formatScore, ordinal } from '../ui/lib/format';
-import { useNow } from '../ui/hooks/hooks';
+import { useNow } from '../ui/hooks/useNow';
 import { BuiltBy, FueledWordmark } from '../ui/components/Logo';
 import { NameGrid } from '../ui/components/NameGrid';
 import { PlayerChip } from '../ui/components/PlayerChip';
-import { useDocumentTitle } from '../ui/hooks/useHostChrome';
+import { useDocumentTitle } from '../ui/hooks/useDocumentTitle';
 import styles from './PlayerApp.module.css';
 
 const P = UI_COPY.play;
@@ -62,7 +62,7 @@ export default function Play() {
   useEffect(() => setChanging(false), [itemId]);
   const screen = useScreenTransition(screenFor(g, changing));
   const pack = packById(g.view?.packId ?? 'true-story');
-  useDocumentTitle(`${g.identity.room ? `${g.identity.room} · ` : ''}${UI_COPY.appName}`);
+  useDocumentTitle(g.identity.room ?? undefined);
 
   // Focus each new screen's heading so screen readers announce it.
   const main = useRef<HTMLElement>(null);
@@ -82,7 +82,7 @@ export default function Play() {
     <div className={styles.app}>
       <header className={styles.bar}>
         <a href="/" className={styles.brand} aria-label={`${UI_COPY.appName} home`}>
-          <FueledWordmark height="20px" />
+          <FueledWordmark size="compact" />
           <span className={styles.appName}>{UI_COPY.appName}</span>
         </a>
         <span className={styles.who}>
@@ -148,7 +148,7 @@ export default function Play() {
       </main>
 
       <footer className={styles.footer}>
-        <BuiltBy height={`${tokens.size.builtbyPage * 0.7}px`} />
+        <BuiltBy size="compact" />
       </footer>
     </div>
   );
@@ -464,7 +464,7 @@ function ResultScreen({ view, item, receivedAt }: { view: PlayerView; item: stri
   const start = useRef<{ id: string; elapsed: number } | null>(null);
   const id = view.item?.id ?? '';
   if (start.current?.id !== id) start.current = { id, elapsed: (view.revealElapsedMs ?? 0) + (Date.now() - receivedAt) };
-  const drum = useDrumroll(true, start.current.elapsed, false);
+  const drum = useDrumroll(true, start.current.elapsed);
   const reveal = view.reveal;
   const owner = view.players.find((p) => p.id === reveal?.ownerId);
   const mine = view.item?.mine;

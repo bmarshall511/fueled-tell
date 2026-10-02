@@ -7,6 +7,7 @@ import {
   gameReducer,
   guessersForReveal,
   markAllDisconnected,
+  nextStep,
   validateJoin,
 } from './game';
 import { lobbyWithFour, run, TEST_PACK } from './testing';
@@ -113,6 +114,20 @@ describe('round loop', () => {
     expect(s).toMatchObject({ phase: 'reveal', revealedAt: 5000 });
     s = run(s, { type: 'next' });
     expect(s).toMatchObject({ phase: 'showing', index: 1, guesses: [] });
+  });
+
+  it('nextStep walks the whole round and stops at the finale', () => {
+    let s = lobbyWithFour();
+    const phases: string[] = [];
+    for (let i = 0; i < 30; i++) {
+      const a = nextStep(s, i);
+      if (!a) break;
+      s = gameReducer(s, a);
+      phases.push(s.phase);
+    }
+    expect(phases.slice(0, 5)).toEqual(['showing', 'guessing', 'locked', 'reveal', 'showing']);
+    expect(s.phase).toBe('finale');
+    expect(nextStep(s, 0)).toBeNull();
   });
 
   it('can reveal straight from guessing', () => {

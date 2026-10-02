@@ -1,0 +1,41 @@
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--space-4) * var(--stage));
+}
+
+.buttons {
+  display: flex;
+  gap: calc(var(--space-3) * var(--stage));
+  margin-left: auto;
+}
+
+.controls button {
+  pointer-events: auto;
+}
+
+/* Portrait (phones): stacked, full-width buttons; only the essentials; no key hints. */
+[data-orientation='portrait'] .controls {
+  flex-direction: column-reverse;
+}
+
+[data-orientation='portrait'] .buttons {
+  margin: 0;
+  width: 100%;
+}
+
+[data-orientation='portrait'] .buttons button {
+  flex: 1;
+}
+
+[data-orientation='portrait'] .controls [data-optional],
+[data-orientation='portrait'] .controls kbd {
+  display: none;
+}
+
+@media (pointer: coarse) {
+  .controls [data-desktop-only] {
+    display: none;
+  }
+}

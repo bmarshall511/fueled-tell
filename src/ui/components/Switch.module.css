@@ -1,0 +1,53 @@
+.toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  cursor: pointer;
+}
+
+.toggle input {
+  position: absolute;
+  opacity: 0;
+  width: var(--size-tap-target);
+  height: var(--size-tap-target);
+  margin: 0;
+}
+
+.track {
+  --cut: var(--chamfer-sm);
+  flex: none;
+  position: relative;
+  width: calc(var(--size-tap-target) * 1.6);
+  height: var(--size-tap-target);
+  background: var(--color-surface-raised);
+  transition: background-color var(--duration-fast) var(--easing-standard);
+}
+
+.track::after {
+  content: '';
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  width: calc(var(--size-tap-target) - var(--space-4));
+  height: calc(var(--size-tap-target) - var(--space-4));
+  background: var(--color-text-muted);
+  transition: transform var(--duration-base) var(--easing-emphasized);
+}
+
+.toggle input:checked + .track {
+  background: var(--color-accent);
+}
+
+.toggle input:checked + .track::after {
+  background: var(--color-text);
+  transform: translateX(calc(var(--size-tap-target) * 0.6));
+}
+
+.toggle input:focus-visible + .track {
+  box-shadow: inset 0 0 0 var(--border-width-strong) var(--color-highlight);
+}
+
+.label {
+  display: block;
+  font-size: var(--font-size-phone-body);
+}

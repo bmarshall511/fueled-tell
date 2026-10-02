@@ -1,163 +1,81 @@
-import { useEffect, useRef, type CSSProperties } from 'react';
+import { useEffect, useRef } from 'react';
 import { canStart, playableEntries } from '../../engine/game';
 import { RULES } from '../../engine/rules';
-import { tokens } from '../../tokens/tokens';
 import { Button } from '../../ui/components/Button';
-import { CodeChip } from '../../ui/components/CodeChip';
+import { FueledWordmark } from '../../ui/components/Logo';
 import { UI_COPY } from '../../ui/copy';
-import { BuiltBy, FueledWordmark } from '../../ui/components/Logo';
+import { useDocumentTitle } from '../../ui/hooks/useDocumentTitle';
+import { useKeyboardShortcuts } from '../../ui/hooks/useKeyboardShortcuts';
 import { plural } from '../../ui/lib/format';
-import { playerColorVar } from '../../ui/lib/playerColor';
-import { QrCode } from '../../ui/components/qr/QrCode';
+import { HostControls } from '../components/HostControls';
+import { HostStage } from '../components/HostStage';
 import { sound } from '../sound';
-import { stageCssVars, useStageLayout } from '../../ui/lib/stage';
-import { useDocumentTitle } from '../../ui/hooks/useHostChrome';
-import type { HostGame } from '../useHostGame';
-import styles from '../screens.module.css';
+import type { HostGame } from '../state/useHostGame';
+import { HostOnlyIntro, JoinPanel } from './JoinPanel';
+import { RoomProblem } from './RoomProblem';
+import { Roster } from './Roster';
+import styles from './Lobby.module.css';
 
 const L = UI_COPY.lobby;
 
-/** The URL phones open: same origin, room in the query (keeps ?transport=local for same-browser demos). */
-export function joinUrl(code: string): string {
-  const url = new URL('/play', window.location.origin);
-  url.searchParams.set('room', code);
-  if (new URLSearchParams(window.location.search).get('transport') === 'local') url.searchParams.set('transport', 'local');
-  return url.toString();
-}
-
 /** Shared on the call: big room code, QR, and who's in. Never shows who wrote what. */
 export function Lobby({ host, onEdit }: { host: HostGame; onEdit: () => void }) {
-  const layout = useStageLayout();
   const s = host.state!;
-  const pack = host.pack!;
   const code = host.roomCode!;
   const hostOnly = s.settings.hostOnly;
-  const live = s.settings.intake === 'live';
   const entries = playableEntries(s).length;
   const joined = s.players.filter((p) => p.claimed && p.connected).length;
-  useDocumentTitle(`${code} · ${UI_COPY.appName}`);
+  const ready = canStart(s);
+  useDocumentTitle(code);
+  useKeyboardShortcuts({ Space: () => ready && host.advance() });
+  useJoinChime(joined);
 
-  // Space starts the game (the button shows the hint), unless focus is in a control.
-  const canGo = canStart(s);
-  const advance = host.advance;
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.code !== 'Space' || e.metaKey || e.ctrlKey || e.altKey) return;
-      const t = e.target instanceof Element ? e.target : null;
-      if (t?.closest('input, textarea, select, button, a, dialog')) return;
-      e.preventDefault();
-      if (canGo) advance();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [canGo, advance]);
+  const summary = [
+    hostOnly ? plural(s.players.length, L.people) : `${joined} ${L.joined}`,
+    plural(entries, L.entries),
+    entries < RULES.minEntries ? L.needMore : null,
+  ]
+    .filter(Boolean)
+    .join(' · ');
 
-  // A soft chime when someone joins.
+  return (
+    <HostStage className={styles.lobby}>
+      <header className={styles.top}>
+        <FueledWordmark size="stage" />
+        <span className="t-label">{host.pack!.name}</span>
+      </header>
+
+      {hostOnly ? (
+        <HostOnlyIntro />
+      ) : (
+        <JoinPanel
+          code={code}
+          prompt={host.pack!.prompt}
+          status={
+            host.link === 'opening' ? <p className="t-label">{L.opening}</p> : host.link === 'error' ? <RoomProblem host={host} /> : null
+          }
+        />
+      )}
+
+      <Roster state={s} summary={summary} onRemove={(p) => host.dispatch({ type: 'removePlayer', playerId: p.id })} />
+
+      <HostControls className={styles.controls}>
+        <Button size="host" variant="secondary" onClick={onEdit}>
+          {L.edit}
+        </Button>
+        <Button size="host" disabled={!ready} onClick={host.advance} shortcut="Space" aria-keyshortcuts="Space">
+          {UI_COPY.start}
+        </Button>
+      </HostControls>
+    </HostStage>
+  );
+}
+
+/** A soft chime whenever someone joins. */
+function useJoinChime(joined: number) {
   const prev = useRef(joined);
   useEffect(() => {
     if (joined > prev.current) sound.join();
     prev.current = joined;
   }, [joined]);
-
-  const url = joinUrl(code);
-  const shownUrl = url.replace(/^https?:\/\//, '').replace(/&transport=local$/, '');
-
-  return (
-    <main className={styles.lobby} style={stageCssVars(layout) as CSSProperties} data-orientation={layout.orientation}>
-      <header className={styles.lobbyTop}>
-        <FueledWordmark height={`calc(${tokens.size.tapTarget * 0.6}px * var(--stage))`} />
-        <span className="t-label">{pack.name}</span>
-      </header>
-
-      {hostOnly ? (
-        <section className={styles.lobbyMain}>
-          <div className={styles.joinBlock}>
-            <h1 className={`t-display ${styles.hostOnlyTitle}`}>{L.hostOnlyTitle}</h1>
-            <p className={`t-body ${styles.prompt}`}>{L.hostOnlyHint}</p>
-          </div>
-        </section>
-      ) : (
-        <section className={styles.lobbyMain}>
-          <div className={styles.joinBlock}>
-            <h1 className={`t-label ${styles.joinAt}`}>
-              {L.joinAt} <span className={styles.url}>{shownUrl.split('?')[0]}</span>
-            </h1>
-            <CodeChip code={code} size="host" />
-            <p className={`t-body ${styles.prompt}`}>{pack.prompt}</p>
-            {host.link === 'opening' && <p className="t-label">{L.opening}</p>}
-            {host.link === 'error' && (
-              <div className={styles.banner} role="alert">
-                <span>{host.linkError === 'taken' ? L.takenError : L.networkError}</span>
-                {host.linkError === 'taken' ? (
-                  <Button variant="outline" onClick={host.newRoomCode}>
-                    {L.newCode}
-                  </Button>
-                ) : (
-                  <Button variant="outline" onClick={() => window.location.reload()}>
-                    {L.retry}
-                  </Button>
-                )}
-                <Button variant="outline" onClick={() => host.dispatch({ type: 'updateSettings', settings: { hostOnly: true } })}>
-                  {L.useHostOnly}
-                </Button>
-              </div>
-            )}
-          </div>
-          <figure className={styles.qrBlock}>
-            <span className={`chamfer ${styles.qrSvg}`}>
-              <QrCode value={url} label={`${L.scan}: ${shownUrl}`} />
-            </span>
-            <figcaption className="t-label">{L.scan}</figcaption>
-          </figure>
-        </section>
-      )}
-
-      <section className={styles.roster} aria-label={`${joined} ${L.joined}`}>
-        <p className={`t-label ${styles.rosterCount}`} aria-live="polite">
-          {hostOnly ? plural(s.players.length, L.people) : `${joined} ${L.joined}`} · {plural(entries, L.entries)}
-          {entries < RULES.minEntries && ` · ${L.needMore}`}
-        </p>
-        <ul className={styles.rosterList}>
-          {s.players.map((p) => {
-            const hasEntry = s.entries.some((e) => e.ownerId === p.id);
-            const away = !hostOnly && !(p.claimed && p.connected);
-            return (
-              <li key={p.id} className={styles.rosterItem}>
-                <span className={`chamfer ${styles.rosterChip} ${away ? styles.away : ''}`}>
-                  <span className={styles.rosterDot} style={{ background: playerColorVar(p.colorIndex) }} aria-hidden="true" />
-                  <span className={styles.rosterName}>{p.name}</span>
-                  {!hostOnly && !p.claimed && <span className={styles.statusTag}>{L.notJoined}</span>}
-                  {live && !hostOnly && (
-                    <span className={`${styles.statusTag} ${hasEntry ? styles.statusIn : ''}`}>{hasEntry ? L.submitted : L.noEntry}</span>
-                  )}
-                  <button
-                    type="button"
-                    className={styles.rosterRemove}
-                    aria-label={`${L.remove} ${p.name}`}
-                    title={`${L.remove} ${p.name}`}
-                    onClick={() => host.dispatch({ type: 'removePlayer', playerId: p.id })}
-                  >
-                    <span aria-hidden="true">×</span>
-                  </button>
-                </span>
-              </li>
-            );
-          })}
-          {!hostOnly && joined === 0 && <li className={`t-label ${styles.waiting}`}>{L.waitingFor}</li>}
-        </ul>
-      </section>
-
-      <nav className={styles.lobbyControls} aria-label={UI_COPY.hostControls}>
-        <BuiltBy height={`max(${tokens.size.builtbyPage * 0.7}px, calc(${tokens.size.builtbyHost}px * var(--stage)))`} />
-        <span className={styles.lobbyButtons}>
-          <Button size="host" variant="secondary" onClick={onEdit}>
-            {L.edit}
-          </Button>
-          <Button size="host" disabled={!canStart(s)} onClick={host.advance} shortcut="Space" aria-keyshortcuts="Space">
-            {UI_COPY.start}
-          </Button>
-        </span>
-      </nav>
-    </main>
-  );
 }

@@ -1,0 +1,25 @@
+.step {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+  display: grid;
+  gap: var(--space-4);
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0;
+  margin-bottom: var(--space-4);
+  font-size: var(--font-size-phone-title);
+}
+
+.num {
+  display: inline-grid;
+  place-items: center;
+  width: var(--size-tap-target);
+  height: var(--size-tap-target);
+  background: var(--color-accent);
+}

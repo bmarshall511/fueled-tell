@@ -113,3 +113,6 @@ export const sound = {
     tone(NOTES.c6, 0.07, 0.18, 'sine', 0.4);
   },
 };
+
+/** Drumroll cues for the host's reveal (phones run the drumroll silently). */
+export const DRUMROLL_SOUNDS = { onStep: sound.tick, onDone: sound.flip } as const;
