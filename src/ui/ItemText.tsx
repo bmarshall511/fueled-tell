@@ -9,14 +9,17 @@ interface ItemTextProps {
   label?: string;
   className?: string;
   style?: CSSProperties;
+  /** Type step; 'auto' drops a step for long entries. */
+  scale?: 'auto' | 'title' | 'body';
 }
 
 /** The active entry, set big for screen share. Shared by every scene. */
-export function ItemText({ text, label, className, style }: ItemTextProps) {
+export function ItemText({ text, label, className, style, scale = 'auto' }: ItemTextProps) {
+  const step = scale === 'auto' ? (text.length > LONG_ITEM ? 'body' : 'title') : scale;
   return (
     <figure className={`${styles.item} ${className ?? ''}`} style={style}>
       {label && <figcaption className={`t-label ${styles.label}`}>{label}</figcaption>}
-      <blockquote className={`${text.length > LONG_ITEM ? 't-body' : 't-title'} ${styles.text}`}>{text}</blockquote>
+      <blockquote className={`t-${step} ${styles.text}`}>{text}</blockquote>
     </figure>
   );
 }

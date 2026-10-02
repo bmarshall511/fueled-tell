@@ -1,0 +1,27 @@
+.text {
+  max-width: calc(var(--size-planet-item-width) * var(--stage));
+  text-align: center;
+}
+
+.text figcaption {
+  color: var(--color-highlight);
+}
+
+.owner {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  max-width: calc(var(--size-planet-item-width) * var(--stage));
+}
+
+.owner p {
+  margin: 0;
+}
+
+.owner :global(.t-label) {
+  color: var(--color-text-muted);
+}
+
+.owner :global(.t-display) {
+  color: var(--color-highlight);
+}
