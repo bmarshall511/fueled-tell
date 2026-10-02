@@ -2,6 +2,7 @@ import { lazy, StrictMode, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import './tokens/tokens.css';
 import './ui/styles/base.css';
+import './ui/styles/transitions.css';
 import { ErrorBoundary } from './ui/components/ErrorBoundary';
 
 const Landing = lazy(() => import('./landing/Landing'));

@@ -1,0 +1,63 @@
+/*
+ * Native page and screen transitions (View Transitions API).
+ * - Between pages (landing -> host / play / demo): opt in to cross-document transitions.
+ * - Within an app: `withViewTransition` (ui/lib/viewTransition.ts) wraps the state change.
+ * Named elements (brand mark, room code, backdrop) morph between screens instead of fading.
+ */
+@view-transition {
+  navigation: auto;
+}
+
+/* Taps during a transition go to the real page, never the snapshot. */
+::view-transition {
+  pointer-events: none;
+}
+
+/* The page itself: the old screen recedes into a soft blur while the new one settles in from slightly closer. */
+::view-transition-old(root) {
+  animation: vt-recede var(--duration-slow) var(--easing-standard) both;
+}
+
+::view-transition-new(root) {
+  animation: vt-arrive calc(var(--duration-slow) * 1.4) var(--easing-emphasized) both;
+}
+
+@keyframes vt-recede {
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+    filter: blur(var(--space-2));
+  }
+}
+
+@keyframes vt-arrive {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+    filter: blur(var(--space-2));
+  }
+}
+
+/* Shared elements glide to their new place and size. */
+::view-transition-group(*) {
+  animation-duration: calc(var(--duration-slow) * 1.4);
+  animation-timing-function: var(--easing-emphasized);
+}
+
+/* The glow is continuous across every page: just blend old into new. */
+::view-transition-old(backdrop),
+::view-transition-new(backdrop) {
+  animation-duration: var(--duration-slow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

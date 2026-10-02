@@ -5,7 +5,7 @@ import styles from './BrandHeader.module.css';
 export function BrandHeader() {
   return (
     <header className={styles.header}>
-      <FueledLockup size="page" />
+      <FueledLockup size="page" className="vt-brand" />
       <BuiltBy size="page" />
     </header>
   );

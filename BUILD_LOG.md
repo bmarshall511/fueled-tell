@@ -629,3 +629,50 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **axe-core:** 0 violations.
 
 **Approximate time:** about 10 min.
+
+## 2026-10-02 (Fri): Session 1o, sharing + PWA, page transitions, no-movement feedback
+
+**Goal:** three requests:
+
+- Proper link previews and PWA metadata.
+- Modern page and screen transitions.
+- Buttons should never move when you interact with them (reported). Also fix the mockup's clipped story field (reported).
+
+**What got done**
+
+- **Sharing:**
+  - A branded 1200×630 card (`public/og.png`, rendered from `docs/og/og.html`).
+  - A `sharePlugin` in `scripts/vite-plugins.ts` injects the description, canonical URL, Open Graph, Twitter/X `summary_large_image` and iOS/Android app-title tags.
+  - Name, title, description and URL come from one `APP` object in `vite.config.ts`. The URL comes from `SITE_URL`, then Vercel's production domain, then `https://fueled-tell.vercel.app`.
+- **PWA manifest:** gains `id`, the new description, `lang`/`dir`, `display_override`, and `launch_handler: focus-existing`. Shortcuts get descriptions and icons. Wide and narrow install screenshots (`public/screenshots/`) are excluded from the precache, along with the share card.
+- **Transitions** (native View Transitions API):
+  - `@view-transition { navigation: auto }` animates navigations between pages.
+  - Host screen changes animate too: setup → lobby (create), lobby → game (Start), editing, end, and restart. HostApp wraps those actions with `transitioned` (`ui/lib/viewTransition.ts`, now shared with the player's `useScreenTransition`). Round steps don't use them; the 3D scene handles those.
+  - **The motion:** the old screen recedes into a soft blur while the new one arrives from slightly closer.
+  - **Shared elements:** the background glow (`backdrop`) blends continuously, and the brand mark (`vt-brand`) glides between pages. The lobby's big room code (`vt-room-code`) flies into the bar's join capsule when the game starts.
+  - Reduced motion turns all of it off.
+- **No movement on interaction:**
+  - The shared Button's press-scale is now `filter: brightness(.86)`, and the name grid and claim tiles do the same.
+  - Landing cards no longer lift; they brighten and light their edge, and their arrow no longer nudges.
+  - In the mockup, the lift, magnetic pull, icon scaling and press-squeeze are all removed. Ring, sweep, glow, ripple and color remain.
+- **Mockup:** the composer's story field auto-grows (`field-sizing: content`) and caps at about 6 lines with a thin dark scrollbar; it had been clipped with a bright scrollbar. A label-class mix-up from the previous mockup edit is fixed.
+- **Fix:** creating a game no longer starts two screen transitions back to back.
+
+**Verification done by the AI**
+
+- **Transition names:** unique on every page and state (`root`, `backdrop`, `brand`, `room-code`, `play-main`).
+- **A live lobby → game transition** reached `ready` with `root`, `backdrop`, `brand` and `room-code` groups animating.
+- `npm run check`: 45/45 tests.
+- `vite build` is clean.
+- **Tags and manifest:** all present in `dist/index.html` and `dist/manifest.webmanifest`. `og.png` and the screenshots are not in `sw.js`.
+- **axe-core:** 0 violations on all pages and states.
+- **Full 8-round game:** passes.
+- **Overflow probe:** 41/41 clean.
+
+**What you need to verify by hand**
+
+- **Link previews after deploying:** paste the URL into Slack, iMessage and LinkedIn. LinkedIn's Post Inspector can refresh a cached card.
+- **The install dialog** on Chrome/Android, with screenshots.
+- **Transitions:** in Safari 18.2+ and Chrome. Firefox falls back to instant changes.
+
+**Approximate time:** about 70 min of wall-clock AI time.

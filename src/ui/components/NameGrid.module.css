@@ -25,13 +25,13 @@
   cursor: pointer;
   transition:
     background-color var(--duration-fast) var(--easing-standard),
-    transform var(--duration-fast) var(--easing-standard);
+    filter var(--duration-fast) var(--easing-standard);
   -webkit-user-select: none;
   user-select: none;
 }
 
 .cell:active {
-  transform: scale(0.97);
+  filter: brightness(0.86);
 }
 
 .cell:has(input:disabled) {

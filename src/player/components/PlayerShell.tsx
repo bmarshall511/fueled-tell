@@ -28,7 +28,7 @@ export function PlayerShell({ screenKey, me, room, reconnecting, backdrop, child
       <Backdrop tone={backdrop} />
       <header className={styles.bar}>
         <a href="/" className={styles.brand} aria-label={`${UI_COPY.appName} home`}>
-          <FueledWordmark size="compact" />
+          <FueledWordmark size="compact" className="vt-brand" />
           <span className={styles.appName}>{UI_COPY.appName}</span>
         </a>
         <span className={styles.who}>

@@ -15,7 +15,7 @@
     --grad-text: linear-gradient(90deg, var(--lilac), var(--solar), var(--lilac), var(--solar));
     --grad-glow: linear-gradient(135deg, var(--solar), var(--nebula) 35%, var(--deep) 50%, var(--nebula) 65%, var(--solar));
   }
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.24) transparent; }
   body { margin: 0; background: #050507; color: var(--white); font-family: Aeonik, system-ui, sans-serif; font-weight: 500; line-height: 1.35; -webkit-font-smoothing: antialiased; }
   h1, h2, h3, p { margin: 0; font-weight: inherit; }
   .doc { max-width: 1360px; margin: 0 auto; padding: 48px 24px 96px; display: grid; gap: 64px; }
@@ -64,7 +64,11 @@
   .field { width: 100%; min-height: 52px; padding: 0 18px; border: 0; border-radius: var(--r-field); background: var(--sunken); box-shadow: inset 0 0 0 1px var(--line); color: var(--white); font: inherit; font-size: 16px; }
   .field::placeholder { color: rgba(245,245,241,.4); }
   .field.focus { box-shadow: inset 0 0 0 1px var(--nebula), 0 0 0 4px rgba(102,82,255,.3); }
-  textarea.field { padding: 14px 18px; resize: none; min-height: 52px; line-height: 1.4; }
+  /* Story fields grow with the text (no inner scrollbar); very long ones cap at ~6 lines with a thin dark scrollbar. */
+  textarea.field { display: block; padding: 14px 18px; resize: none; min-height: 52px; max-height: calc(1.4em * 6 + 28px); line-height: 1.4;
+    field-sizing: content; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--line-strong) transparent; }
+  .composer .field { min-height: 52px; }
+  .composer > .btn { align-self: end; min-height: 52px; }
   .label { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
   .muted { color: var(--muted); }
   .seg { display: inline-flex; padding: 4px; gap: 4px; border-radius: var(--r-pill); }
@@ -122,7 +126,7 @@
   /* empty state */
   .choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
   .choice { border-radius: var(--r-card); padding: 26px; display: grid; gap: 14px; align-content: start; min-height: 230px; cursor: pointer; transition: transform .2s; }
-  .choice:hover { transform: translateY(-3px); }
+  .choice:hover { box-shadow: inset 0 0 0 1px var(--line-strong); }
   .choice .ico { width: 54px; height: 54px; border-radius: 18px; display: grid; place-items: center; }
   .choice .ico svg { width: 26px; height: 26px; }
   .choice h3 { font-size: 22px; }
@@ -171,11 +175,11 @@
     background: radial-gradient(220px circle at var(--mx) var(--my), rgba(185, 174, 255, 0.9), transparent 60%);
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
   .choice.featured::before { background: radial-gradient(260px circle at var(--mx) var(--my), rgba(102, 82, 255, 0.18), transparent 60%); }
-  .btn.primary { transition: translate .25s cubic-bezier(.2,.8,.2,1), box-shadow .2s; translate: var(--tx, 0) var(--ty, 0); }
+  .btn.primary { transition: box-shadow .2s; }
   .btn.primary:hover { box-shadow: 0 0 0 2px #000, 0 0 0 4px var(--nebula), 0 10px 40px -8px rgba(102, 82, 255, 0.7); }
   @media (prefers-reduced-motion: reduce), (hover: none) {
     .aurora .follow, .glass::before, .glass::after, .choice.featured::before { display: none; }
-    .aurora i, .btn.primary { translate: none; }
+    .aurora i { translate: none; }
   }
   .try { display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 99px; font-size: 15px; }
 
@@ -207,14 +211,12 @@
   .b.g kbd { background: rgba(255,255,255,.12); color: var(--muted); }
 
   /* hover */
-  .b.p:hover, .b.p.is-hover { transform: translateY(-2px); }
-  .b.p:hover::before, .b.p.is-hover::before, .b.p:hover::after, .b.p.is-hover::after { opacity: 1; }
+    .b.p:hover::before, .b.p.is-hover::before, .b.p:hover::after, .b.p.is-hover::after { opacity: 1; }
   .b.p:hover::after, .b.p.is-hover::after { opacity: .55; }
   .b:hover .fx::before, .b.is-hover .fx::before { transform: translateX(130%); transition: transform .9s var(--ease); }
-  .b:hover kbd, .b.is-hover kbd { transform: translateX(2px); }
-  .b.g:hover, .b.g.is-hover { transform: translateY(-2px); background: rgba(40,40,52,.75); box-shadow: inset 0 0 0 1px var(--line-strong), 0 10px 30px -12px rgba(0,0,0,.8); }
+    .b.g:hover, .b.g.is-hover { background: rgba(40,40,52,.75); box-shadow: inset 0 0 0 1px var(--line-strong), 0 10px 30px -12px rgba(0,0,0,.8); }
   /* active */
-  .b:active, .b.is-active { transform: scale(.96); transition-duration: .12s; }
+  .b:active, .b.is-active { filter: brightness(.86); transition-duration: .12s; }
   .b.p:active, .b.p.is-active { box-shadow: inset 0 2px 8px rgba(0,0,0,.18); }
   .b.p:active::after, .b.p.is-active::after { opacity: .25; }
   .b.g:active, .b.g.is-active { background: rgba(14,14,18,.8); }
@@ -222,7 +224,7 @@
   .b:focus-visible, .b.is-focus { outline: none; }
   .b:focus-visible::before, .b.is-focus::before { opacity: 1; inset: -5px; padding: 3px; }
   /* disabled */
-  .b:disabled, .b.is-disabled { opacity: .35; cursor: not-allowed; transform: none; }
+  .b:disabled, .b.is-disabled { opacity: .35; cursor: not-allowed; }
   .b:disabled::before, .b:disabled::after, .b.is-disabled::before, .b.is-disabled::after { opacity: 0; }
   /* loading */
   .b .spin { position: absolute; width: 22px; height: 22px; border-radius: 50%; opacity: 0; transform: scale(.6);
@@ -244,10 +246,9 @@
 
   /* icon button + tooltip */
   .ib { width: 52px; padding: 0; }
-  .ib svg { transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
-  .ib:hover svg, .ib.is-hover svg { transform: scale(1.15); }
-  .ib:active svg, .ib.is-active svg { transform: scale(.85); }
-  .tip { position: absolute; bottom: calc(100% + 10px); left: 50%; translate: -50% 6px; padding: 6px 10px; border-radius: 10px; font-size: 12px;
+  .ib svg { color: var(--muted); transition: color .2s; }
+  .ib:hover svg, .ib.is-hover svg { color: var(--white); }
+    .tip { position: absolute; bottom: calc(100% + 10px); left: 50%; translate: -50% 6px; padding: 6px 10px; border-radius: 10px; font-size: 12px;
     background: var(--white); color: #000; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .2s, translate .3s cubic-bezier(.34,1.56,.64,1); }
   .tip kbd { font: inherit; font-size: 11px; margin-left: 6px; padding: 1px 6px; border-radius: 99px; background: rgba(0,0,0,.08); }
   .ib:hover .tip, .ib.is-hover .tip, .ib:focus-visible .tip { opacity: 1; translate: -50% 0; }
@@ -275,7 +276,6 @@
   @media (prefers-reduced-motion: reduce) {
     .b, .b .label, .b kbd, .ib svg, .tip, .seg2 .thumb, .sw2::after { transition-duration: .01s !important; }
     .b::before, .b .spin, .b.is-done { animation: none; }
-    .b:hover, .b.is-hover, .b:active, .b.is-active { transform: none; }
     .ripple { display: none; }
   }
 </style>
@@ -285,7 +285,7 @@
   <section class="intro">
     <p class="kicker">Mockup · not built yet</p>
     <h1>Host setup, <span class="glow-text">reimagined as an app</span></h1>
-    <p style="margin-top:18px"><span class="try glass">✦ Move your cursor over any screen below: the glow follows you, cards catch the light, and the main button leans in.</span></p>
+    <p style="margin-top:18px"><span class="try glass">✦ Move your cursor over any screen below: the glow follows you and cards catch the light.</span></p>
     <p>Setup becomes a studio instead of a long form. Who's playing is the main stage. Everything else (settings, readiness, a live preview of the shared screen, and the one big action) sits in a sticky side panel. On a phone the same pieces stack, and the action stays pinned at the bottom.</p>
   </section>
 
@@ -297,8 +297,8 @@
       <div class="glass"><h3>A live preview</h3><p>A mini shared screen shows what everyone will see, so the settings feel concrete.</p></div>
       <div class="glass"><h3>One action, always visible</h3><p>A readiness meter ("6 of 8 ready") and a big "Open lobby" pill. Nothing to scroll down to.</p></div>
       <div class="glass"><h3>A calmer privacy note</h3><p>A small pill in the top bar ("Private · don't share your screen yet") replaces the long yellow banner.</p></div>
-      <div class="glass"><h3>Reacts to your cursor</h3><p>The glow trails the pointer, the blobs shift in parallax, glass cards and buttons light up under the cursor, and the main action leans toward it. Off on touch devices and with reduced motion.</p></div>
-      <div class="glass"><h3>Livelier buttons</h3><p>Hover: a lift, a light sweep and a rotating gradient ring. Press: a squeeze with a ripple. Busy: a spinner. Done: a gradient check. Option toggles slide a pill, and switches spring.</p></div>
+      <div class="glass"><h3>Reacts to your cursor</h3><p>The glow trails the pointer, the blobs shift in parallax, and glass cards and buttons light up under the cursor. Nothing moves position. Off on touch devices and with reduced motion.</p></div>
+      <div class="glass"><h3>Livelier buttons</h3><p>Hover: a light sweep and a rotating gradient ring. Press: a darker fill with a ripple. Buttons never move. Busy: a spinner. Done: a gradient check. Option toggles slide a pill, and switches spring.</p></div>
       <div class="glass"><h3>A friendlier empty state</h3><p>Three big choices to start (Paste a list, Add one by one, Players add their own), plus "Try sample stories".</p></div>
     </div>
   </section>
@@ -353,7 +353,7 @@
             <div class="hello"><h1>Who's <span class="glow-text">playing?</span></h1></div>
             <div class="composer glass">
               <input class="field" value="Ravi Thistle" aria-label="Name"/>
-              <textarea class="field focus" rows="1" aria-label="Story">I was an extra in a cereal commercial. My only line was 'Crunchy!'</textarea>
+              <textarea class="field focus" aria-label="Story">I was an extra in a cereal commercial. My only line was 'Crunchy!'</textarea>
               <button class="btn primary">Add <kbd>Enter</kbd></button>
             </div>
             <div class="toolbar">
@@ -506,15 +506,8 @@ I can whistle in two keys at once.</textarea>
           const b = el.getBoundingClientRect(); const k = el.offsetWidth / b.width || 1;
           el.style.setProperty('--mx', (e.clientX - b.left) * k + 'px'); el.style.setProperty('--my', (e.clientY - b.top) * k + 'px');
         });
-        // Magnetic primary buttons: lean up to 6px toward a nearby pointer.
-        vp.querySelectorAll('.btn.primary').forEach((btn) => {
-          const b = btn.getBoundingClientRect(); const cx = b.left + b.width / 2, cy = b.top + b.height / 2;
-          const dx = e.clientX - cx, dy = e.clientY - cy, d = Math.hypot(dx, dy), reach = b.width;
-          const pull = d < reach ? (1 - d / reach) * 6 : 0;
-          btn.style.setProperty('--tx', (d ? (dx / d) * pull : 0) + 'px'); btn.style.setProperty('--ty', (d ? (dy / d) * pull : 0) + 'px');
-        });
       });
-      vp.addEventListener('pointerleave', () => { vp.classList.remove('live'); vp.querySelectorAll('.btn.primary').forEach((b) => { b.style.setProperty('--tx', '0px'); b.style.setProperty('--ty', '0px'); }); });
+      vp.addEventListener('pointerleave', () => vp.classList.remove('live'));
     });
   }
 

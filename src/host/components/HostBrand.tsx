@@ -5,7 +5,7 @@ import styles from './HostBrand.module.css';
 export function HostBrand() {
   return (
     <span className={styles.brand}>
-      <FueledWordmark size="stage" />
+      <FueledWordmark size="stage" className="vt-brand" />
       <span className={styles.rule} aria-hidden="true" />
       <BuiltBy size="stage" />
     </span>

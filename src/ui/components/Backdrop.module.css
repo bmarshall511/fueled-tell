@@ -6,6 +6,8 @@
   overflow: hidden;
   pointer-events: none;
   background: var(--color-bg);
+  /* Stays continuous through page and screen transitions. */
+  view-transition-name: backdrop;
 }
 
 .backdrop i {

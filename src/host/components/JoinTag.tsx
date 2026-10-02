@@ -9,7 +9,7 @@ export function JoinTag({ code }: { code: string }) {
       <span className={styles.text}>
         {UI_COPY.lobby.joinAt} <span className={styles.url}>{displayUrl(joinUrl(code))}</span>
       </span>
-      <span className={styles.code} role="img" aria-label={`${UI_COPY.roomCode} ${code.split('').join(' ')}`}>
+      <span className={`vt-room-code ${styles.code}`} role="img" aria-label={`${UI_COPY.roomCode} ${code.split('').join(' ')}`}>
         {code}
       </span>
     </p>

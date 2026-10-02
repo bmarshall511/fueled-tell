@@ -47,11 +47,19 @@
   text-decoration: none;
   transition:
     background-color var(--duration-fast) var(--easing-standard),
-    transform var(--duration-fast) var(--easing-standard);
+    box-shadow var(--duration-fast) var(--easing-standard);
 }
 
 a.card:hover {
-  transform: translateY(calc(var(--space-1) * -1));
+  background: var(--color-border);
+  box-shadow: inset 0 0 0 var(--border-width-hairline) var(--color-border-strong);
+}
+
+a.primary:hover {
+  background: var(--color-text);
+  box-shadow:
+    0 0 0 var(--border-width-base) var(--color-bg),
+    0 0 0 calc(var(--border-width-base) * 2) var(--color-accent);
 }
 
 /* The main way in is white, like the primary buttons. */
@@ -124,9 +132,5 @@ a.card:hover {
   margin-top: var(--space-5);
   font-size: var(--font-size-phone-display);
   line-height: 1;
-  transition: transform var(--duration-fast) var(--easing-standard);
 }
 
-a.card:hover .arrow {
-  transform: translateX(var(--space-2));
-}

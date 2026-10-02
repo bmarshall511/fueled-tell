@@ -16,6 +16,8 @@
 
 - The repo is public (github.com/bmarshall511/fueled-tell) so others at Fueled can use it, and it includes everything the app needs, including the Aeonik web fonts in `assets/fonts/` (CoType EULA alongside). Don't add secrets or personal data.
 - Page width: every page uses the `.page` utility (`size.content` max width, one gutter); never set a page's own max-width. The host stage is full-screen by design.
+- Interaction feedback is light and color only (glow, ring, sweep, a darker press). Controls never move, lift or resize under the pointer.
+- Transitions: pages opt in to cross-document View Transitions (`ui/styles/transitions.css`). In-app screen changes go through `withViewTransition` / `transitioned` (`ui/lib/viewTransition.ts`). Shared elements use the `.vt-*` classes in `base.css`, one per page.
 - Look (matches fueled.com): rounded everywhere via `radius.*` tokens (pills for controls, soft cards); glass surfaces (`color.surface-raised` + `blur.glass` backdrop blur, hairline `color.border`); white pill for the main action, glass pills for the rest; the `Backdrop` glow is vivid on landing, lobby and finale, calm during rounds and on phones. Gradient text (`text-glow`) and fills (`glow-fill`) drift slowly; use them for large display moments only. The host bar shows one white action; secondary controls are round icon buttons with the shortcut in the tooltip.
 - Brand: Fueled is primary, DOM lab is the "built by" endorsement. "Fueled" always has a capital F. Never stack the lockup vertically, recolor the logo with secondaries, or skew/stretch it. Nebula is for large text/accents only (about 4.2:1 on black).
 - Screen-share first: big type, high contrast, nothing that depends on fine detail or high frame rates.

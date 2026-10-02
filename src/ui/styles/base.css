@@ -135,6 +135,15 @@ label:has(> input:focus-visible) {
   }
 }
 
+/* Shared elements that morph between pages and screens (see transitions.css). One per page. */
+.vt-brand {
+  view-transition-name: brand;
+}
+
+.vt-room-code {
+  view-transition-name: room-code;
+}
+
 .visually-hidden {
   position: absolute !important;
   width: 1px;

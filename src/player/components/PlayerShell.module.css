@@ -74,10 +74,7 @@
   }
 }
 
-/* Screen changes animate natively; taps during one go to the real page, never the snapshot. */
-:global(::view-transition) {
-  pointer-events: none;
-}
+/* Screen changes animate natively (see ui/styles/transitions.css); the main area slides. */
 
 ::view-transition-old(play-main) {
   animation: screen-out var(--duration-base) var(--easing-standard) both;

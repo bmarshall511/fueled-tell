@@ -10,11 +10,12 @@
   transition:
     background-color var(--duration-fast) var(--easing-standard),
     box-shadow var(--duration-fast) var(--easing-standard),
-    transform var(--duration-fast) var(--easing-standard);
+    filter var(--duration-fast) var(--easing-standard);
 }
 
-.button:active {
-  transform: scale(0.97);
+/* Feedback is light and color only: controls never move or resize under the pointer. */
+.button:active:not(:disabled) {
+  filter: brightness(0.86);
 }
 
 .button:disabled {
