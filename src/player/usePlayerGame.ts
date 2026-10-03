@@ -5,7 +5,7 @@ import { normalizeRoomCode } from '../engine/roomCode';
 import type { PlayerId } from '../engine/types';
 import { parseHostMsg, type ClientMsg } from '../transport/protocol';
 import { joinRoom, type ClientStatus, type ClientTransport } from '../transport/Transport';
-import { loadIdentity, saveIdentity, type Identity } from './identity';
+import { freshSeat, loadIdentity, saveIdentity, type Identity } from './identity';
 
 /**
  * Phone side: connect to a room, keep a stable playerId (so a refresh rejoins
@@ -60,7 +60,16 @@ export function usePlayerGame() {
           setReceivedAt(Date.now());
           if (msg.view.players.some((p) => p.id === msg.view.me)) setError(null);
         }
-        if (msg.type === 'error') setError(msg.code);
+        if (msg.type === 'error') {
+          setError(msg.code);
+          // This seat belongs to another device: take a seat of our own and ask again, which shows the join screen.
+          if (msg.code === 'notYou') {
+            const fresh = { ...identityRef.current, ...freshSeat() };
+            identityRef.current = fresh;
+            setIdentity(fresh);
+            hello();
+          }
+        }
       });
       setStatus('connecting');
       // The local adapter may already be open by now.

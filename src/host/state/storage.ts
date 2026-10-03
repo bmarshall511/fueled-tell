@@ -47,5 +47,13 @@ export async function readJsonFile(file: File): Promise<unknown> {
 
 export function asSession(v: unknown): HostSession | null {
   const s = v as Partial<HostSession> | null;
-  return s && s.version === 1 && typeof s.roomCode === 'string' && s.state && Array.isArray(s.state.players) ? (s as HostSession) : null;
+  const ok =
+    s?.version === 1 &&
+    typeof s.roomCode === 'string' &&
+    !!s.state &&
+    typeof s.state.phase === 'string' &&
+    Array.isArray(s.state.players) &&
+    Array.isArray(s.state.entries) &&
+    Array.isArray(s.state.order);
+  return ok ? (s as HostSession) : null;
 }

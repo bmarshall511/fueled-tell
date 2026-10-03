@@ -17,6 +17,14 @@ export const identityKey = (seat = new URLSearchParams(window.location.search).g
 
 const newKey = () => (typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `${makeId('k')}${makeId('k')}`);
 
+/** A brand-new seat: new player id and key, not joined anywhere. */
+export const freshSeat = (): Pick<Identity, 'playerId' | 'key' | 'name' | 'joinedRoom'> => ({
+  playerId: makeId('u'),
+  key: newKey(),
+  name: '',
+  joinedRoom: null,
+});
+
 export function loadIdentity(): Identity {
   try {
     const raw = localStorage.getItem(identityKey());
@@ -27,7 +35,7 @@ export function loadIdentity(): Identity {
   } catch {
     /* fall through */
   }
-  return { playerId: makeId('u'), room: null, name: '', key: newKey() };
+  return { room: null, ...freshSeat() };
 }
 
 export function saveIdentity(id: Identity) {

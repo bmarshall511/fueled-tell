@@ -40,7 +40,8 @@ export function useHostSession() {
   }, []);
 
   const end = useCallback(() => setSession(null), []);
-  const replace = useCallback((s: HostSession) => setSession(s), []);
+  // A restored backup was saved with people attached; nobody is until their device reconnects (same as a reload).
+  const replace = useCallback((s: HostSession) => setSession({ ...s, state: markAllDisconnected(s.state) }), []);
 
   /** The room is hosted elsewhere: stop saving until this tab takes a code of its own. */
   const blockSaving = useCallback(() => {
