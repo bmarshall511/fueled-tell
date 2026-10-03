@@ -19,3 +19,6 @@ dist-ssr/
 !.vscode/extensions.json
 *.log
 npm-debug.log*
+
+# QA harness output
+scripts/qa/audit/

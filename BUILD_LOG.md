@@ -812,3 +812,18 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **Try the eggs on a real call:** the moment lines' wording, whether Bolt Rain reads on a screen share, and whether the Konami retro mode is fun or too subtle.
 
 **Approximate time:** about 35 min of wall-clock AI time (≈18:50–19:25 CT).
+
+## 2026-10-02 (Fri): Session 1s, handoff
+
+**Goal:** hand off to a new session, which will run a full audit of everything: easter eggs, functionality and UI/UX.
+
+**What got done:**
+
+- **The QA harness moved into the repo** (`scripts/qa/`, with a README). It was in a temporary per-session folder before. The move covers the screenshot runners, axe scans, overflow, layout, width and transition probes, the easter-egg checker, the full local and PeerJS games, contact sheets and the dead-code scan.
+  - Paths are now portable (`CHROME` override, `/tmp/tell-qa/` profiles).
+  - Every run gets a fresh browser profile and kills its Chrome on exit. That prevents the "stale host answers" problem.
+  - Output goes to `scripts/qa/audit/` (gitignored).
+  - The setup steps in `audit1.mjs` are updated for the studio.
+- **`docs/HANDOFF.md`:** state, how to run and verify, conventions and lessons, open items, and an audit checklist.
+
+**Approximate time:** about 10 min.
