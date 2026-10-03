@@ -5,7 +5,8 @@ import { tokens } from '../../tokens/tokens';
 import { enigma } from '../../engine/moments';
 import { FueledBolt } from '../../ui/components/Logo';
 import { UI_COPY } from '../../ui/copy';
-import { formatScore, ordinal, plural } from '../../ui/lib/format';
+import { useFitToHeight } from '../../ui/hooks/useFitToHeight';
+import { formatScore, listNames, ordinal, plural } from '../../ui/lib/format';
 import { playerColorVar } from '../../ui/lib/playerColor';
 import type { SeatedPlayer } from '../../ui/lib/types';
 import styles from './Finale.module.css';
@@ -23,27 +24,32 @@ const PODIUM = [
   { rank: 2, rise: 0 },
 ] as const;
 
+/** The smallest the standings shrink to fit the screen (below this they scroll). */
+const MIN_FIT = 0.6;
+
 const delay = (step: number): CSSProperties => ({ animationDelay: `${step * tokens.duration.stagger * 2}ms` });
 
 /** Game over: the winner, a podium for the top three, then everyone else in ranked rows. */
 export function Finale({ standings, players, copy }: FinaleProps) {
   const byId = (id: PlayerId) => players.find((p) => p.id === id);
 
-  const winners = standings
-    .filter((s) => s.place === 1)
-    .map((s) => byId(s.playerId)?.name)
-    .filter(Boolean);
+  const names = (ids: readonly PlayerId[]) => listNames(ids.map((id) => byId(id)?.name ?? '').filter(Boolean));
+
+  // Podium order (standings order), so the winner line and the cards read the same way round.
+  const winners = names(standings.filter((s) => s.place === 1).map((s) => s.playerId));
   const rest = standings.slice(3);
   const theEnigma = enigma(standings);
+  const { box, content, fit } = useFitToHeight<HTMLElement, HTMLDivElement>(MIN_FIT);
 
   return (
-    <section className={styles.finale} aria-labelledby="finale-title">
+    <section ref={box} className={styles.finale} aria-labelledby="finale-title">
       <BoltRain />
+      <div ref={content} className={styles.content} style={{ zoom: fit }}>
       <header className={styles.head}>
         <p className={`t-label ${styles.kicker}`}>{copy.finale}</p>
         <h1 id="finale-title" className={`t-title ${styles.winner}`} style={delay(3)}>
           <span className={`t-label ${styles.winnerLabel}`}>{copy.winner}</span>
-          <span className={styles.winnerName}>{winners.join(' & ')}</span>
+          <span className={styles.winnerName}>{winners}</span>
         </h1>
       </header>
 
@@ -72,7 +78,7 @@ export function Finale({ standings, players, copy }: FinaleProps) {
         <p className={`${styles.enigma} ${styles.rise}`} style={delay(3.5)}>
           <span className={`t-label ${styles.enigmaLabel}`}>{UI_COPY.eggs.enigma}</span>
           <span className="t-body">
-            {theEnigma.playerIds.map((id) => byId(id)?.name).join(' & ')} {UI_COPY.eggs.enigmaFooled}{' '}
+            {names(theEnigma.playerIds)} {UI_COPY.eggs.enigmaFooled}{' '}
             {plural(theEnigma.fooled, UI_COPY.eggs.enigmaPeople)}
           </span>
         </p>
@@ -98,6 +104,7 @@ export function Finale({ standings, players, copy }: FinaleProps) {
           })}
         </ol>
       )}
+      </div>
     </section>
   );
 }

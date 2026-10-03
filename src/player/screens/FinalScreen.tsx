@@ -1,11 +1,10 @@
 import { enigma } from '../../engine/moments';
 import type { PlayerView } from '../../engine/redact';
 import type { Standing } from '../../engine/scoring';
-import { plural } from '../../ui/lib/format';
 import { PlayerChip } from '../../ui/components/PlayerChip';
 import { GAME } from '../../content';
 import { UI_COPY } from '../../ui/copy';
-import { formatScore, ordinal } from '../../ui/lib/format';
+import { formatScore, listNames, ordinal, plural } from '../../ui/lib/format';
 import { Heading, Split } from '../components/Layout';
 import type { ScreenProps } from './types';
 import styles from './FinalScreen.module.css';
@@ -15,7 +14,7 @@ export function FinalScreen({ view }: Pick<ScreenProps, 'view'>) {
   const finale = GAME.copy.finale;
   const standings = view.standings ?? [];
   const mine = standings.find((s) => s.playerId === view.me);
-  const winners = standings.filter((s) => s.place === 1).map((s) => nameOf(view, s.playerId));
+  const winners = standings.flatMap((s) => (s.place === 1 ? (nameOf(view, s.playerId) ?? []) : []));
   const enigmaIds = enigma(standings)?.playerIds ?? [];
   return (
     <Split actionsFirst aside={<Standings view={view} />}>
@@ -32,7 +31,7 @@ export function FinalScreen({ view }: Pick<ScreenProps, 'view'>) {
       {winners.length > 0 && (
         <div className={styles.winner}>
           <span className={styles.winnerLabel}>{UI_COPY.winnerIs}</span>
-          <span className={styles.winnerName}>{winners.join(' & ')}</span>
+          <span className={styles.winnerName}>{listNames(winners)}</span>
         </div>
       )}
     </Split>
