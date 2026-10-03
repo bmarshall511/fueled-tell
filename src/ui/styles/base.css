@@ -52,6 +52,18 @@ body {
   --stage: 1;
 }
 
+/* No one-word last lines in running text; headings balance their lines. */
+p,
+li,
+dd {
+  text-wrap: pretty;
+}
+
+h1,
+h2 {
+  text-wrap: balance;
+}
+
 button {
   font: inherit;
   color: inherit;
@@ -121,6 +133,26 @@ label:has(> input:focus-visible) {
   .glow-fill {
     background: Canvas;
     border: var(--border-width-base) solid CanvasText;
+  }
+
+  /*
+   * Controls are drawn with backgrounds and shadows, which forced colors drop: give every one a
+   * system-colored edge. An inset outline, so nothing changes size; zero specificity, so focus rings still win.
+   */
+  :where(button, input:not(.visually-hidden), textarea, select, a[class], label:has(> input.visually-hidden)) {
+    outline: var(--border-width-hairline) solid ButtonText;
+    outline-offset: calc(var(--border-width-hairline) * -1);
+  }
+
+  :where(button:disabled) {
+    outline-color: GrayText;
+  }
+
+  /* Components draw their own focus rings with gradients and shadows, which vanish here: use the system one. */
+  :focus-visible,
+  label:has(> input:focus-visible) {
+    outline: var(--border-width-strong) solid Highlight !important;
+    outline-offset: var(--border-width-strong) !important;
   }
 }
 

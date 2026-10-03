@@ -112,6 +112,8 @@ a.primary:hover {
 
 .step {
   display: grid;
+  /* Top-aligned, so a step that wraps to more lines doesn't push its neighbours' text down. */
+  align-content: start;
   gap: var(--space-2);
   font-size: var(--font-size-phone-body);
   color: var(--color-text-muted);

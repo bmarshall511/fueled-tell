@@ -22,3 +22,11 @@
   max-width: 80%;
   margin-top: calc(var(--space-4) * var(--stage));
 }
+
+/* The card is drawn in WebGL, which forced colors can't recolor: keep its text in the card's own colors. */
+@media (forced-colors: active) {
+  .front,
+  .back {
+    forced-color-adjust: none;
+  }
+}
