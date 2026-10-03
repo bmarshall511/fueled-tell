@@ -1,6 +1,7 @@
 import type { RevealSummary } from '../../engine/scoring';
 import type { Entry, GameState, GameCopy, Player } from '../../engine/types';
 import { UI_COPY } from '../../ui/copy';
+import { plural } from '../../ui/lib/format';
 
 interface RoundContext {
   state: GameState;
@@ -19,7 +20,7 @@ export function describeRound({ state, copy, progress, entry, revealed }: RoundC
     case 'guessing':
       return state.settings.hostOnly ? `${copy.question} ${UI_COPY.game.shout}` : copy.question;
     case 'locked':
-      return `${UI_COPY.lock}. ${state.guesses.length} ${UI_COPY.guesses}.`;
+      return `${UI_COPY.play.locked} ${plural(state.guesses.length, UI_COPY.guessWords)}.`;
     case 'reveal':
       return revealed
         ? `${copy.reveal} ${revealed.owner.name}. ${Math.round(revealed.summary.ratioCorrect * 100)}% ${UI_COPY.guessedRight}.`

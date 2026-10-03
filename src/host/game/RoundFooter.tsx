@@ -43,7 +43,6 @@ export function RoundFooter({ state, copy, drumroll, revealed, sceneShowsOwner, 
         correctPlayers={playersById(state.players, summary.correctPlayerIds)}
         showName={!sceneShowsOwner}
         guessedLabel={UI_COPY.guessedRight}
-        nobodyLabel={UI_COPY.nobody}
       >
         {hostOnly ? (
           <HostTally

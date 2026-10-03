@@ -54,13 +54,10 @@
   max-width: none;
 }
 
-.nobody {
-  color: var(--color-text-muted);
-}
-
+/* Sized against the stage (not the inherited 1em, which is far smaller than the chip text), so names show in full. */
 .chips > span {
   min-width: 0;
-  max-width: 14em;
+  max-width: calc(var(--size-stage-width) * 0.3 * var(--stage));
 }
 
 .more {

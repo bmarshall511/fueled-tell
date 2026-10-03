@@ -108,7 +108,14 @@ export function GameScreen({ host }: { host: HostGame }) {
       {finale && <Finale standings={standings} players={s.players} copy={copy} />}
 
       <div className={`${styles.hud} ${styles.top}`}>
-        {finale ? <HostBrand /> : <RoundHeader progress={progress} deadline={s.deadline} durationMs={s.settings.timerSec * 1000} />}
+        {finale ? <HostBrand /> : (
+          <RoundHeader
+            progress={progress}
+            deadline={s.deadline}
+            durationMs={s.settings.timerSec * 1000}
+            over={s.phase === 'locked' || reveal}
+          />
+        )}
       </div>
 
       {!finale && host.link === 'error' && !s.settings.hostOnly && (

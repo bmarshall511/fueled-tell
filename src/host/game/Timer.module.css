@@ -9,6 +9,11 @@
   opacity: var(--opacity-dim);
 }
 
+/* Guessing has closed: the clock steps aside (it keeps its space, so nothing shifts). */
+.over {
+  visibility: hidden;
+}
+
 .seconds {
   font-variant-numeric: tabular-nums;
 }
@@ -41,5 +46,5 @@
   height: 100%;
   background: linear-gradient(90deg, var(--color-fueled-cryo), var(--color-fueled-nebula));
   transform-origin: left;
-  transition: transform 250ms linear;
+  transition: transform var(--duration-base) linear;
 }

@@ -34,15 +34,16 @@ export function BootScreen({ ready, title = UI_COPY.appName }: BootScreenProps) 
 
   if (state === 'gone') return null;
   return (
-    <div className={`${styles.boot} ${state === 'leaving' ? styles.leaving : ''}`} role="status" aria-live="polite">
+    <div className={`${styles.boot} ${state === 'leaving' ? styles.leaving : ''}`}>
       <div className={styles.deck} aria-hidden="true">
         <span className={`${styles.card} ${styles.c3}`} />
         <span className={`${styles.card} ${styles.c2}`} />
         <span className={`${styles.card} ${styles.c1}`} />
       </div>
       <h1 className={`t-display ${styles.title}`}>{title}</h1>
-      <p className={`t-label ${styles.status}`}>
-        {state === 'leaving' ? title : UI_COPY.loading}
+      {/* Only the status line is announced (not the title and logos around it). */}
+      <p className={`t-label ${styles.status}`} role="status">
+        {UI_COPY.loading}
         <span className={styles.dots} aria-hidden="true">
           <span>.</span>
           <span>.</span>

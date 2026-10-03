@@ -14,7 +14,6 @@ interface RevealPanelProps {
   /** Hide the big name when the scene already renders it (e.g. Signal). */
   showName?: boolean;
   guessedLabel: string;
-  nobodyLabel: string;
   /** Replaces the list of correct guessers (host-only mode puts the tally toggles here). */
   children?: ReactNode;
   /** Correct guessers who were lightning fast: their chips get a bolt. */
@@ -28,7 +27,6 @@ export function RevealPanel({
   correctPlayers,
   showName = true,
   guessedLabel,
-  nobodyLabel,
   children,
   lightningIds = [],
 }: RevealPanelProps) {
@@ -44,14 +42,10 @@ export function RevealPanel({
         <p className={`t-title ${styles.pct}`}>
           {Math.round(ratioCorrect * 100)}% <span className="t-label">{guessedLabel}</span>
         </p>
-        <div className={styles.chips}>
-          {children ??
-            (correctPlayers.length === 0 ? (
-              <span className={`t-label ${styles.nobody}`}>{nobodyLabel}</span>
-            ) : (
-              <CorrectList players={correctPlayers} lightningIds={lightningIds} />
-            ))}
-        </div>
+        {/* Nobody right: "0% guessed right" already says it. */}
+        {(children || correctPlayers.length > 0) && (
+          <div className={styles.chips}>{children ?? <CorrectList players={correctPlayers} lightningIds={lightningIds} />}</div>
+        )}
       </div>
     </section>
   );

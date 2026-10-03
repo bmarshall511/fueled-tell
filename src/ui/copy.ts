@@ -7,8 +7,9 @@ export const UI_COPY = {
   tagline: 'Everyone has a story. Can you tell whose?',
   loading: 'Shuffling the deck',
   guesses: 'guesses in',
+  /** Screen-reader count after locking: "3 guesses in". */
+  guessWords: ['guess in', 'guesses in'] as const,
   guessedRight: 'guessed right',
-  nobody: 'Nobody got it',
   lock: 'Lock in',
   reveal: 'Reveal',
   next: 'Next',
@@ -17,8 +18,9 @@ export const UI_COPY = {
   fullscreen: 'Full screen',
   exitFullscreen: 'Exit full screen',
   sound: 'Sound',
-  soundOn: 'Sound on',
-  soundOff: 'Sound off',
+  /** Menu actions (the label says what pressing does). */
+  soundOn: 'Turn sound on',
+  soundOff: 'Mute sound',
   menu: 'Menu',
   close: 'Close',
   of: 'of',
@@ -29,7 +31,8 @@ export const UI_COPY = {
   winnerIs: 'Winner',
   standings: 'Standings',
   hostControls: 'Host controls',
-  shortcuts: 'Space next · L lock · R reveal · M sound · F full screen',
+  /** Shown in the host menu; each pair stays on one line. */
+  shortcuts: ['Space next', 'L lock', 'R reveal', 'M sound', 'F full screen'] as const,
   drumroll: 'Revealing in',
 
   crash: {

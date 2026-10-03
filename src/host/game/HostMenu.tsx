@@ -35,12 +35,19 @@ export const HostMenu = forwardRef<HTMLDialogElement, HostMenuProps>(function Ho
       onClick={(e) => e.target === e.currentTarget && e.currentTarget.close()}
     >
       <h2 className={styles.title}>{UI_COPY.menu}</h2>
-      <p className={styles.hint}>{UI_COPY.shortcuts}</p>
+      <p className={styles.hint}>
+        {UI_COPY.shortcuts.map((pair, i) => (
+          <span key={pair} className={styles.pair}>
+            {i > 0 && ' · '}
+            {pair}
+          </span>
+        ))}
+      </p>
       {roomCode && <JoinInfo code={roomCode} />}
-      <Button size="host" variant="outline" onClick={onToggleMute} aria-pressed={!muted}>
-        {muted ? UI_COPY.soundOff : UI_COPY.soundOn}
+      <Button size="host" variant="outline" onClick={onToggleMute}>
+        {muted ? UI_COPY.soundOn : UI_COPY.soundOff}
       </Button>
-      <Button size="host" variant="outline" onClick={onToggleFullscreen} aria-pressed={fullscreen} data-desktop-only>
+      <Button size="host" variant="outline" onClick={onToggleFullscreen} data-desktop-only>
         {fullscreen ? UI_COPY.exitFullscreen : UI_COPY.fullscreen}
       </Button>
       <Button size="host" variant="outline" onClick={onBackup}>

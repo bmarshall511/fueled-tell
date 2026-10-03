@@ -52,6 +52,10 @@
   color: var(--color-text-muted);
 }
 
+.pair {
+  white-space: nowrap;
+}
+
 .join {
   display: flex;
   flex-wrap: wrap;
