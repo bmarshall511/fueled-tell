@@ -827,3 +827,81 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **`docs/HANDOFF.md`:** state, how to run and verify, conventions and lessons, open items, and an audit checklist.
 
 **Approximate time:** about 10 min.
+
+## 2026-10-02 (Fri): Session 1t, full audit and fixes
+
+**Goal:** audit everything (functionality, UI/UX, easter eggs) with the QA harness and by eye, then fix what was found.
+
+**How:** `npm run check`, `vite build`, every script in `scripts/qa`, contact-sheet review of each screen and state (1920×1080, 1280×720, 910×520, 1024×768, 390×844 and player desktop widths), plus new end-to-end and display-mode scripts.
+
+**Findings, by severity, and what was done**
+
+1. **High: the finale hid standings under the controls.** With long names or a big tie, the rest of the standings ran behind the controls bar at 1280×720 and shorter windows, and the overflow could only be scrolled, which nobody does on a shared screen. **Fixed:** the finale content now shrinks to fit (`useFitToHeight`, CSS `zoom`, never below 0.6), so it fits at all 11 probed sizes.
+2. **Medium: a seat-takeover attempt hung on "Connecting to the room…" forever.** The host answered only with an error, and the phone never got a view. **Fixed:** the phone takes a fresh seat and asks again, which lands on the join screen with the "That seat belongs to another device" message.
+3. **Medium: restoring a backup kept everyone marked as connected.** That inflated "guesses in" and could stop auto-lock. **Fixed:** a restored game starts with nobody attached (as after a reload). The backup check also now requires `phase`, `entries` and `order`.
+4. **Medium: correct-guesser chips on the reveal were cut off.** Names like "Juniper V…" were truncated even on a 1920 screen: the cap was 14em of the 16px parent, not of the chip. **Fixed:** the cap is now sized against the stage.
+5. **Medium: forced colors (Windows high contrast) lost every control edge.** Buttons, inputs and cards had no edges, so controls read as plain text. Custom focus rings also vanished, and the 3D card's text got black backplates. **Fixed:**
+   - Inset system-colored outlines on controls.
+   - A system Highlight focus ring in forced-colors mode.
+   - `forced-color-adjust: none` on the WebGL card's text layers.
+6. **Medium: the timer showed a full "45" after lock and during the reveal.** It read as time left. **Fixed:** the timer hides once guessing closes and keeps its space, so nothing shifts.
+7. **Low: names were joined "A & B & C" and in a different order from the podium.** **Fixed:** they now read "A, B & C" (`listNames`, tested) in standings order, on the host and the phone. The Enigma card is also no wider than the podium, and its lines are balanced.
+8. **Low: the menu's shortcut line orphaned "· F full screen".** **Fixed:** shortcut pairs no longer break.
+9. **Low: the menu's sound toggle read "Sound on" and was also `aria-pressed`.** That said the state twice. **Fixed:** it's action-labelled now ("Mute sound" / "Turn sound on"), and the full-screen item has no `aria-pressed` either.
+10. **Low: screen-reader wording.**
+    - The locked state announced "Lock in. 1 guesses in." It now says "Guesses are locked. 1 guess in."
+    - The boot screen announced its title and logos. Only its status line is live now.
+    - The boot status no longer swaps to a second "Tell" under the title.
+11. **Low: the reveal with no right guesses said "0% guessed right · Nobody got it".** **Fixed:** it now shows only "0% guessed right".
+12. **Low: text and layout polish.**
+    - One-word last lines (the host-only lobby's "it."): `text-wrap: pretty` on running text and `balance` on headings.
+    - Landing steps weren't top-aligned when one wrapped.
+13. **Low: build warning.** `sample-entries.json` was imported both dynamically and statically. It's static now, and the warning is gone.
+
+**Checked and fine**
+
+- **Games:**
+  - A full 8-round local game and a PeerJS game on the real broker.
+  - A host refresh mid-round and a phone refresh, both rejoining as themselves.
+  - Host-only mode, live intake, and claim and new-name joins.
+  - Backup, end game, restore, and a bad file being rejected.
+  - Space, L, R and M; `?` and every easter egg.
+- **Reduced motion:** no rain and no looping animations.
+- **Axe:** 0 violations on every page and every game state.
+- **Overflow and width probes:** clean. The old "no .page at 1920" was a first-load timing issue; the probe now waits.
+- **Easter eggs can't hint at owners:**
+  - Moments, lightning and the Enigma are computed only at reveal or the finale.
+  - "Act natural" tips show on the owner's own device only, with no sound or haptics.
+  - Guess dots and tokens are uniform until the reveal.
+  - Phone views never carry another entry's owner.
+
+**Harness changes**
+
+- New `func.mjs` (end-to-end flows) and `modes.mjs` (forced colors and reduced motion), and an `emu()` media-emulation helper.
+- Phone shots wait longer.
+- `full` and `peer` screenshots now go to `audit/`.
+- The README now covers three gotchas:
+  - Run one script at a time: parallel Chromes starve the CPU and make phones look stuck.
+  - Software WebGL delays host timers, so use `?scene=flat` for timing-sensitive flows.
+  - The room-code alphabet.
+
+**Decisions the AI made on its own**
+
+- Finale fit uses CSS `zoom` rather than restructuring the layout.
+- The timer hides after lock instead of showing 0.
+- "Nobody got it" was removed instead of the percentage.
+- The menu toggles are action labels.
+- Not changed:
+  - The player app's narrower main button on desktop (consistent across screens).
+  - Uneven card heights in setup when one entry is very long.
+  - 32-character names breaking mid-word in portrait podium cards.
+
+**Process note:** fixes were made as findings were confirmed. The ranked list was not shown to the user before fixing, as asked.
+
+**What you need to verify by hand**
+
+- Forced colors on a real Windows high-contrast theme.
+- The finale with a real big tie on a screen share.
+- The seat-takeover message on two real phones.
+
+**Approximate time:** about 60 min of wall-clock AI time (≈19:34–20:35 CT).

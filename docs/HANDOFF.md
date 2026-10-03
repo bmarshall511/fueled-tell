@@ -58,7 +58,6 @@ overflow and layout probes, width and transition checks, an easter-egg checker, 
 
 ## Open items to look at
 
-- **Width probe:** `scripts/qa/widths.mjs` once reported "no .page" for `/host` at 1920. That's probably a timing issue (the lazy route had not rendered yet), but confirm it.
 - **Real devices:**
   - iOS Safari: backdrop-filter blur, glow performance and heat over a full game, and View Transitions (Safari 18.2+).
   - Cursor effects with a real mouse.
