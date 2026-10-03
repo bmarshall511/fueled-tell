@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import sampleEntries from '../content/sample-entries.json';
 import { transitioned, withViewTransition } from '../ui/lib/viewTransition';
 import { HostEggs } from './components/HostEggs';
 import { GameScreen } from './game/GameScreen';
@@ -24,7 +25,7 @@ export default function Host() {
   const { state, create } = host;
   useEffect(() => {
     if (state || !new URLSearchParams(window.location.search).has('sample')) return;
-    void import('../content/sample-entries.json').then((m) => create(m.default, { timerSec: 30 }));
+    create(sampleEntries, { timerSec: 30 });
   }, [state, create]);
 
   // Actions that move between setup, lobby and the game animate the whole screen (round steps don't).
