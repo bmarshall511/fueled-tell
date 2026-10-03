@@ -35,6 +35,8 @@ export async function browser(port, dir) {
         shot: async (f, full = false) => { const p = full ? { format: 'png', captureBeyondViewport: true } : { format: 'png' }; if (full) { const m = await send('Page.getLayoutMetrics', {}, s); p.clip = { x: 0, y: 0, width: m.result.cssContentSize.width, height: Math.min(m.result.cssContentSize.height, 4000), scale: 1 }; } const { result } = await send('Page.captureScreenshot', p, s); mkdirSync('audit', { recursive: true }); writeFileSync('audit/' + f, Buffer.from(result.data, 'base64')); },
         mouse: async (x, y) => { await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y, pointerType: 'mouse' }, s); },
         hoverSel: async (sel) => { const r = await send('Runtime.evaluate', { expression: `(() => { const e = document.querySelector(${JSON.stringify(sel)}); if (!e) return null; const b = e.getBoundingClientRect(); return [b.left + b.width / 2, b.top + b.height / 2]; })()`, returnByValue: true }, s); const p = r.result?.result?.value; if (p) await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: p[0], y: p[1], pointerType: 'mouse' }, s); return !!p; },
+        /** Emulate media features, e.g. [{ name: 'forced-colors', value: 'active' }] or prefers-reduced-motion. */
+        emu: (features) => send('Emulation.setEmulatedMedia', { features }, s),
         key: (k, code) => send('Runtime.evaluate', { expression: `window.dispatchEvent(new KeyboardEvent('keydown',{key:'${k}',code:'${code}'}))` }, s),
       };
     },

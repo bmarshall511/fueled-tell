@@ -25,11 +25,20 @@ node --experimental-websocket full.mjs        # full 8-round local game, host + 
 node --experimental-websocket peer-e2e.mjs    # real PeerJS broker game (flaky if the public broker is slow: rerun)
 node --experimental-websocket review.mjs      # setup review shots incl. hover, edit and live modes (audit/rv-*)
 node --experimental-websocket review2.mjs     # easter-egg review shots, host + phone (audit/rv-*)
+node --experimental-websocket func.mjs        # end-to-end flows: refreshes, seat keys, shortcuts, backup and restore
+node --experimental-websocket modes.mjs       # forced colors + reduced motion screenshots (audit/m-*)
 node deadcode.mjs                             # unused CSS classes, exports, tokens, copy keys (some are dynamic: check)
 python3 sheet.py out.png 640 2 a.png b.png    # contact sheet of audit/ screenshots for review (needs Pillow)
 ```
 
 Notes from building these:
+
+- **Run one script at a time.** Several headless Chromes at once starve the CPU: the host sits on its boot screen,
+  phones stay on "Connecting" and the shots look broken when the app is fine. Also don't edit `src/` mid-run (hot reloads
+  restart the pages and break full/peer games).
+- **Software WebGL is slow.** Headless Chrome renders the 3D deck on the CPU, which delays the host's timers (a 3.5 s
+  timer once fired after 9.7 s). Timing-sensitive flows use `?scene=flat` (as `func.mjs` does).
+- **Room codes** only use `ACDEFGHJKMNPQRTUVWXY34679`; a forced `?room=` with other letters is ignored.
 
 - **False positives:** the layout probe flags the 3D card's front/back DOM layers, the boot screen mid-wipe, and clipped
   scroll content. The overflow probe skips the glow backdrop. Always confirm against a screenshot.

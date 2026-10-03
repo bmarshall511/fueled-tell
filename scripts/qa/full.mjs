@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 const chrome = spawn('/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', ['--headless=new','--remote-debugging-port=9338','--use-angle=swiftshader','--enable-unsafe-swiftshader','--hide-scrollbars','--user-data-dir=/tmp/tell-qa/wii-chrome6','about:blank'], { stdio: 'ignore' });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let ver; for (let i = 0; i < 50; i++) { try { ver = await (await fetch('http://127.0.0.1:9338/json/version')).json(); break; } catch { await sleep(200); } }
@@ -9,7 +9,7 @@ ws.onmessage = (m) => { const d = JSON.parse(m.data); if (d.id && pending.has(d.
 const send = (method, params = {}, sessionId) => new Promise((r) => { const i = ++id; pending.set(i, r); ws.send(JSON.stringify({ id: i, method, params, ...(sessionId ? { sessionId } : {}) })); });
 async function tab(url, w, h, mobile) { const { result } = await send('Target.createTarget', { url: 'about:blank' }); const { result: att } = await send('Target.attachToTarget', { targetId: result.targetId, flatten: true }); const s = att.sessionId; await send('Runtime.enable', {}, s); await send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 1, mobile }, s); await send('Emulation.setFocusEmulationEnabled', { enabled: true }, s); await send('Page.navigate', { url }, s); return s; }
 const ev = async (s, expr) => { const r = await send('Runtime.evaluate', { expression: `(async()=>{${expr}})()`, returnByValue: true, awaitPromise: true }, s); return r.result?.result?.value ?? r.result?.exceptionDetails?.exception?.description; };
-const shot = async (s, f) => { const { result } = await send('Page.captureScreenshot', { format: 'png' }, s); writeFileSync(f, Buffer.from(result.data, 'base64')); };
+const shot = async (s, f) => { const { result } = await send('Page.captureScreenshot', { format: 'png' }, s); mkdirSync('audit', { recursive: true }); writeFileSync('audit/' + f, Buffer.from(result.data, 'base64')); };
 const H = `const btn=(t)=>[...document.querySelectorAll('button')].find(b=>b.textContent.includes(t)); const setVal=(el,v)=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(el,v); el.dispatchEvent(new Event('input',{bubbles:true}));}; const wait=(ms)=>new Promise(r=>setTimeout(r,ms));`;
 const R = 'HJKM';
 const host = await tab(`http://localhost:5173/host?transport=local&room=${R}&sample=1&bots=1`, 1920, 1080, false);
@@ -37,5 +37,5 @@ console.log('phone screens seen:', [...seen].join(' | '));
 console.log('host finale:', await ev(host, `return [document.title, document.querySelector('[class*=winner]')?.textContent]`));
 console.log('phone final:', await ev(phone, `return document.querySelector('h1')?.textContent`));
 await shot(host, 'full-finale.png'); await shot(phone, 'full-phone-final.png');
-console.log('restart:', await ev(host, `${H} btn('Play again')?.click(); await wait(800); return document.querySelector('h1')?.textContent`));
+console.log('restart:', await ev(host, `${H} btn('Back to lobby')?.click(); await wait(1500); return document.body.innerText.includes('JOIN AT') || document.body.innerText.includes('Join at') ? 'lobby' : document.title`));
 console.log(logs.slice(0,10).join('\n') || 'no errors'); ws.close(); chrome.kill();

@@ -11,7 +11,7 @@ const text = (sel) => `return [...document.querySelectorAll('${sel}')].map(e => 
 
 // lobby: lucky code + "tell" + "?"
 await seed(roster);
-console.log('lucky tag      ', await host.ev(`return document.body.innerText.includes('Lucky code')`));
+console.log('lucky tag      ', await host.ev(`for (let i = 0; i < 30 && !document.body.innerText.includes('Lucky code'); i++) await wait(200); return document.body.innerText.includes('Lucky code')`));
 console.log('tell wave      ', await host.ev(`for (const k of 'tell') window.dispatchEvent(new KeyboardEvent('keydown',{key:k})); await wait(100); return document.documentElement.classList.contains('egg-tell')`));
 console.log('? dialog       ', await host.ev(`window.dispatchEvent(new KeyboardEvent('keydown',{key:'?'})); await wait(200); const d=[...document.querySelectorAll('dialog')].find(d=>d.open); const t=d?.textContent; d?.close(); return t?.includes('find') ?? false`));
 

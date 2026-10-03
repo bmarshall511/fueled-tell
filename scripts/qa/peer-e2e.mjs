@@ -1,5 +1,5 @@
 import { spawn } from 'node:child_process';
-import { writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 const chrome = spawn(process.env.CHROME ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', ['--headless=new','--remote-debugging-port=9336','--use-angle=swiftshader','--enable-unsafe-swiftshader','--hide-scrollbars',`--user-data-dir=/tmp/tell-qa/peer-${Date.now()}`,'about:blank'], { stdio: 'ignore' });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let ver; for (let i = 0; i < 50; i++) { try { ver = await (await fetch('http://127.0.0.1:9336/json/version')).json(); break; } catch { await sleep(200); } }
@@ -17,7 +17,7 @@ async function tab(url, w, h, mobile) {
   return s;
 }
 const ev = async (s, expr) => { const r = await send('Runtime.evaluate', { expression: `(async()=>{${expr}})()`, returnByValue: true, awaitPromise: true }, s); return r.result?.result?.value ?? r.result?.exceptionDetails?.exception?.description; };
-const shot = async (s, f) => { const { result } = await send('Page.captureScreenshot', { format: 'png' }, s); writeFileSync(f, Buffer.from(result.data, 'base64')); };
+const shot = async (s, f) => { const { result } = await send('Page.captureScreenshot', { format: 'png' }, s); mkdirSync('audit', { recursive: true }); writeFileSync('audit/' + f, Buffer.from(result.data, 'base64')); };
 const H = `const btn=(t)=>[...document.querySelectorAll('button')].find(b=>b.textContent.includes(t)); const setVal=(el,v)=>{Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set.call(el,v); el.dispatchEvent(new Event('input',{bubbles:true}));}; const wait=(ms)=>new Promise(r=>setTimeout(r,ms));`;
 const host = await tab('http://localhost:5173/host?sample=1&bots=1', 1920, 1080, false);
 await sleep(9000);

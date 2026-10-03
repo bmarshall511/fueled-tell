@@ -14,7 +14,7 @@ const host = await b.tab('/', 1280, 720);
 const phone = await b.tab('/', 390, 844, true);
 const idFor = (pid) => `localStorage.setItem('tell:playerme', JSON.stringify({ playerId: '${pid}', room: '${R}', name: 'Ben Marshall', key: 'k-test-${pid}', joinedRoom: '${pid}' === 'u_new' ? null : '${R}' })); return 1`;
 
-async function state(name, body, { pid = 'u_me', wait = 2500, desktop = true } = {}) {
+async function state(name, body, { pid = 'u_me', wait = 4000, desktop = true } = {}) {
   await host.nav('/play?seed=1'); await sleep(500);
   await host.ev(seedHost(R, body));
   await host.nav(H); await sleep(2500);
