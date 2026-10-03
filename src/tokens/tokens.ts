@@ -168,7 +168,8 @@ export const tokens = {
     "glow": 0.85,
     "glowCalm": 0.32,
     "ripple": 0.28,
-    "spot": 0.09
+    "spot": 0.09,
+    "rain": 0.16
   },
   "scene": {
     "lightIntensity": 1.4,

@@ -61,3 +61,13 @@ export function BuiltBy({ size, className }: LogoProps) {
     </span>
   );
 }
+
+/** The bolt from the Fueled emblem, in currentColor (keep it white or text color; never a secondary). */
+export function FueledBolt({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="70 78 125 109" width="1em" height="1em" fill="currentColor" aria-hidden="true" focusable="false">
+      <path d="M92.186 78.16h58.676l-22.003 52.274H70.184L92.186 78.16Z" />
+      <path d="M135.572 114.187h59.029l-88.984 72.229 29.955-72.229Z" />
+    </svg>
+  );
+}

@@ -42,9 +42,10 @@
   animation: waiting calc(var(--duration-entrance) * 2) var(--easing-standard) infinite alternate;
 }
 
+/* Breathes between two readable colors (fading its opacity would drop below contrast). */
 @keyframes waiting {
   to {
-    opacity: var(--opacity-dim);
+    color: var(--color-fueled-lilac);
   }
 }
 
@@ -83,7 +84,10 @@
   border-radius: var(--radius-pill);
 }
 
-.away .name,
+.away .name {
+  color: var(--color-text-muted);
+}
+
 .away .dot {
   opacity: var(--opacity-dim);
 }

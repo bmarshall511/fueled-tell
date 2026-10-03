@@ -128,3 +128,18 @@
     display: none;
   }
 }
+
+/* Easter egg (five clicks on the Fueled mark): the glow surges, then settles. */
+:global(.egg-charge) .backdrop .pink,
+:global(.egg-charge) .backdrop .violet,
+:global(.egg-charge) .backdrop .lilac {
+  animation: surge var(--duration-reveal) var(--easing-emphasized);
+}
+
+@keyframes surge {
+  40% {
+    opacity: 1;
+    scale: 1.25;
+    filter: blur(var(--blur-glass)) saturate(1.4);
+  }
+}

@@ -753,3 +753,62 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - **The entry-send done state** was captured on a phone viewport.
 
 **Approximate time:** about 15 min.
+
+## 2026-10-02 (Fri): Session 1r, easter eggs (+ UI fixes from a careful review)
+
+**Goal:** build the brainstormed easter eggs (all approved), and fix the setup panel issues reported along the way (a wrapped "Save and return to lobby" label, oversized text, and a misleading full bar).
+
+**Easter eggs**
+
+- **Round moments,** shown on the revealed card under the owner's name, and on phones under the headline:
+  - **Mind Meld:** everyone right.
+  - **Master of Disguise:** nobody right.
+  - **The Herd:** everyone picked the same wrong person ("Sorry, X. Apparently it sounded like you.").
+- **Speed Demon:** a correct guess within 2 s of guessing opening gets a white Fueled bolt on the host's chip and a "Lightning fast" tag on the phone. The host stamps `at` on each guess, and `openedAt` is new in state.
+- **The Enigma:** on the finale, a lilac card under the podium for whoever fooled the most people (ties share it).
+- **Bolt Rain:** nine white bolts drifting slowly behind the finale at 16% opacity, hidden with reduced motion.
+- **Highlight Reel:** each phone's final screen shows one personal line ("You're the Enigma…", "You fooled N people", "You spotted N stories").
+- **"Act natural" tips:** they rotate quietly on the owner's own screen. There's no sound or vibration, and nothing shows on the shared screen.
+- **Room Code Bingo:** lucky codes spelled from the code alphabet (GAME, CAFE, DECK…) shimmer, with a "Lucky code" tag. A blocklist now stops the alphabet from generating offensive words. That was a real gap.
+- **Hidden inputs:**
+  - **Bolt Charge:** five quick clicks on the landing logo make the glow surge and light the title. The logo itself never changes.
+  - **"tell":** in the lobby or finale, a gradient wave across the code tiles or the winner's name.
+  - **Konami code:** during rounds, retro pixel mode for the 3D deck (render scale 0.1, pixelated); the code again turns it off.
+  - **`?`:** the shortcuts dialog, ending "…and a few you'll have to find."
+- **Meta:**
+  - A styled console hello with the repo link.
+  - A 404 "round": "Whose page is it?" flips to "Nobody's. It was never here." Unknown paths no longer fall through to the landing page.
+- **Office legends:** typing "DOM lab" as a name in setup's quick add with no entry, then Enter, adds 8 clearly fictional office legends.
+- **Engine, tests and copy:** `engine/moments.ts` is pure and has 8 new tests (53 total). The strings are in `UI_COPY.eggs`, `UI_COPY.notFound` and `copy.actNatural` / `copy.items` in `game.json`.
+
+**Fixes from a careful screenshot review** (host, phone, portrait, editing, live mode, hover)
+
+- **Setup panel:**
+  - "Save changes" (was "Save and return to lobby") stays on one line at body size.
+  - In live mode the meter no longer shows a full bar next to "0 ready": it shows the status only.
+- **Setup on phones:**
+  - Calmer intro size, and a 2×2 toolbar instead of ragged wrapping.
+  - Timer options are equal-width segments, so they never wrap.
+  - The paste sheet has a smaller title, with its main action full width on top.
+- **The moment line:** it was first placed in the reveal row, where it collided with the 3D card, then squeezed into one letter per line. It now lives on the card itself.
+- **Accessibility:**
+  - Unjoined lobby names use a muted color instead of opacity, for contrast.
+  - "Waiting for players…" breathes between two readable colors.
+  - The 404 page gets an h1 and no longer overflows on phones.
+- **Tooltips:** they take no space until shown (one had widened the phone layout earlier in 1p).
+
+**Verification done by the AI**
+
+- `npm run check`: 53/53 tests.
+- `vite build` is clean.
+- **Every egg triggered and confirmed in a live browser** (`eggs.mjs`).
+- **axe-core:** 0 violations on all pages, setup states, live game states, the lobby with a lucky code, the shortcuts dialog and the 404 page at both sizes.
+- **Overflow probe:** clean.
+- **Full 8-round game:** passes.
+- **Reviewed contact sheets:** reveal moments in landscape and portrait, the finale with Enigma and rain, retro mode, phone screens, setup on phone and desktop, edit and live modes.
+
+**What you need to verify by hand**
+
+- **Try the eggs on a real call:** the moment lines' wording, whether Bolt Rain reads on a screen share, and whether the Konami retro mode is fun or too subtle.
+
+**Approximate time:** about 90 min of wall-clock AI time (≈18:50–20:20 CT).

@@ -1,5 +1,7 @@
 import { currentEntry, guessersForReveal } from '../engine/game';
+import { revealMoments } from '../engine/moments';
 import { summarizeReveal } from '../engine/scoring';
+import { momentLine } from '../ui/lib/momentCopy';
 import type { GameState, GameCopy, RoundPhase } from '../engine/types';
 import type { SceneProps } from './Scene';
 
@@ -17,7 +19,12 @@ export function toSceneProps(s: GameState, copy: GameCopy, reducedMotion: boolea
     item: { id: entry.id, text: entry.text, index: s.index, total: s.order.length },
     players: s.players,
     guesses: s.guesses.map((g) => (revealed ? { playerId: g.playerId, ownerId: g.ownerId } : { playerId: g.playerId })),
-    reveal: revealed ? summarizeReveal(entry, s.guesses, guessersForReveal(s)) : null,
+    reveal: revealed
+      ? {
+          ...summarizeReveal(entry, s.guesses, guessersForReveal(s)),
+          moment: momentLine(revealMoments(s)?.moment ?? null, (id) => s.players.find((p) => p.id === id)?.name),
+        }
+      : null,
     copy,
     reducedMotion,
   };

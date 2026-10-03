@@ -30,6 +30,8 @@ export interface Guess {
   playerId: PlayerId;
   entryId: EntryId;
   ownerId: PlayerId;
+  /** Host clock when the guess arrived (for "lightning fast" calls). Absent for host-only tallies. */
+  at?: number;
 }
 
 /** Everything game-specific lives in src/content/game.json, not in code. */
@@ -46,6 +48,8 @@ export interface GameContent {
 export interface GameCopy {
   /** Short noun for one entry, e.g. "Story". */
   item: string;
+  /** Plural of `item`, e.g. "Stories". */
+  items: string;
   /** Headline while guessing. */
   question: string;
   /** Lead-in before the owner's name on reveal. */
@@ -58,6 +62,8 @@ export interface GameCopy {
   finale: string;
   /** Lead-in before the winner's name. */
   winner: string;
+  /** Phone: quiet tips shown to the owner of the current entry, one at a time. */
+  actNatural: string[];
 }
 
 export type Intake = 'host' | 'live';
@@ -93,4 +99,6 @@ export interface GameState {
   deadline: number | null;
   /** Epoch ms (host clock) when the current reveal started (drumroll sync). */
   revealedAt: number | null;
+  /** When guessing opened for the current entry (for "lightning fast" calls). Older saved games lack it. */
+  openedAt?: number | null;
 }

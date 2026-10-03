@@ -10,11 +10,20 @@
   },
   "copy": {
     "item": "Story",
+    "items": "Stories",
     "question": "Whose story is it?",
     "reveal": "It was…",
     "yours": "This one's yours. Act natural.",
     "waiting": "Guess locked in. Eyes on the shared screen.",
     "finale": "Final standings",
-    "winner": "Winner"
+    "winner": "Winner",
+    "actNatural": [
+      "Blink normally.",
+      "Look mildly curious.",
+      "Squint at the screen like everyone else.",
+      "Pretend to think hard.",
+      "Maybe name a suspect out loud.",
+      "Whatever you do, don’t smile."
+    ]
   }
 }

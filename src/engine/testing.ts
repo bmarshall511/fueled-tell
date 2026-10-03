@@ -9,12 +9,14 @@ export const TEST_CONTENT: GameContent = {
   points: { correct: 100, fooled: 50 },
   copy: {
     item: 'Item',
+    items: 'Items',
     question: 'q',
     reveal: 'r',
     yours: 'y',
     waiting: 'w',
     finale: 'f',
     winner: 'win',
+    actNatural: ['act'],
   },
 };
 

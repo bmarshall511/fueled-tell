@@ -280,6 +280,7 @@ export default function DeckScene(props: SceneProps) {
           <div className={`fade-in ${styles.back}`} style={revealDelay}>
             <p className="t-label">{copy.reveal}</p>
             <p className="t-hero">{owner.name}</p>
+            {reveal?.moment && <p className={`t-title ${styles.moment}`}>{reveal.moment}</p>}
           </div>
         )}
       </SceneOverlay>

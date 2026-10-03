@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { isLuckyCode } from '../../engine/roomCode';
 import { CodeChip } from '../../ui/components/CodeChip';
 import { QrCode } from '../../ui/components/qr/QrCode';
 import { UI_COPY } from '../../ui/copy';
@@ -18,6 +19,7 @@ export function JoinPanel({ code, prompt, status }: { code: string; prompt: stri
           {L.joinAt} <span className={styles.url}>{shown}</span>
         </h1>
         <CodeChip code={code} size="hero" className="vt-room-code" />
+        {isLuckyCode(code) && <span className={`t-label ${styles.lucky}`}>✦ {UI_COPY.eggs.luckyCode}</span>}
         <p className={`t-body ${styles.prompt}`}>{prompt}</p>
         {status}
       </div>

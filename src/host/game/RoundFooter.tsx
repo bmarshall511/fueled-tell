@@ -1,4 +1,5 @@
 import { expectedGuessers } from '../../engine/game';
+import { revealMoments } from '../../engine/moments';
 import type { RevealSummary } from '../../engine/scoring';
 import type { GameState, GameCopy, Player, PlayerId } from '../../engine/types';
 import { UI_COPY } from '../../ui/copy';
@@ -32,8 +33,10 @@ export function RoundFooter({ state, copy, drumroll, revealed, sceneShowsOwner, 
 
   if (revealed) {
     const { owner, summary } = revealed;
+    const moments = revealMoments(state);
     return (
       <RevealPanel
+        lightningIds={moments?.lightning ?? []}
         leadIn={copy.reveal}
         owner={owner}
         ratioCorrect={summary.ratioCorrect}

@@ -1,0 +1,85 @@
+.page {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  padding-block: max(var(--space-6), env(safe-area-inset-top)) var(--space-8);
+}
+
+.stage {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  min-width: 0;
+  gap: var(--space-6);
+  text-align: center;
+}
+
+/* The round card: white front (the question), the glow on the back (the answer). */
+.card {
+  display: grid;
+  width: 100%;
+  max-width: calc(var(--size-phone-width) * 1.3);
+  aspect-ratio: 16 / 10;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  perspective: calc(var(--size-play-wide) * 2);
+  cursor: pointer;
+}
+
+.front,
+.back {
+  grid-area: 1 / 1;
+  display: grid;
+  place-items: center;
+  padding: var(--space-6);
+  border-radius: var(--radius-card);
+  font-size: clamp(var(--font-size-phone-title), 7vw, var(--font-size-phone-display));
+  line-height: var(--font-line-height-tight);
+  backface-visibility: hidden;
+  transition: transform var(--duration-reveal) var(--easing-emphasized);
+}
+
+.front {
+  background: var(--color-fueled-perfect-white);
+  color: var(--color-text-inverse);
+  box-shadow: 0 var(--space-6) var(--space-9) calc(var(--space-5) * -1) var(--color-accent);
+}
+
+.back {
+  color: var(--color-text);
+  transform: rotateY(180deg);
+}
+
+.flipped .front {
+  transform: rotateY(-180deg);
+}
+
+.flipped .back {
+  transform: rotateY(0deg);
+}
+
+.card:focus-visible {
+  outline: var(--border-width-strong) solid var(--color-highlight);
+  outline-offset: var(--space-2);
+  border-radius: var(--radius-card);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .front,
+  .back {
+    transform: none !important;
+    transition: opacity var(--duration-fast) linear;
+  }
+
+  .back,
+  .flipped .front {
+    opacity: 0;
+  }
+
+  .flipped .back {
+    opacity: 1;
+  }
+}

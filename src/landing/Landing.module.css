@@ -133,3 +133,16 @@ a.primary:hover {
   font-size: var(--font-size-phone-display);
   line-height: 1;
 }
+
+/* Easter egg (five clicks on the Fueled mark): the title lights up with the glow. */
+:global(.egg-charge) .title {
+  animation: charged var(--duration-reveal) var(--easing-emphasized);
+}
+
+@keyframes charged {
+  40% {
+    text-shadow:
+      0 0 var(--space-5) var(--color-fueled-solar),
+      0 0 var(--space-8) var(--color-fueled-nebula);
+  }
+}

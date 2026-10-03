@@ -2,6 +2,8 @@
 export const UI_COPY = {
   /** The app's name. One place to rename it. */
   appName: 'Tell',
+  /** The public source, linked from the console hello. */
+  repo: 'https://github.com/bmarshall511/fueled-tell',
   tagline: 'Everyone has a story. Can you tell whose?',
   loading: 'Shuffling the deck',
   guesses: 'guesses in',
@@ -76,7 +78,7 @@ export const UI_COPY = {
     hostOnly: 'Host-only mode',
     hostOnlyHint: 'Nobody joins; you read entries out and tick who got it. Works on any network.',
     open: 'Open lobby',
-    save: 'Save and return to lobby',
+    save: 'Save changes',
     loadFile: 'Load a saved game',
     loadError: 'That file isn’t a saved Tell game.',
     meter: {
@@ -117,6 +119,49 @@ export const UI_COPY = {
       tooLong: 'Too long',
       duplicateName: 'Same name as another person',
     },
+  },
+
+  /** Easter eggs. All short; none can hint at whose entry is whose. */
+  eggs: {
+    mindMeld: 'Collective consciousness achieved.',
+    disguise: 'Master of disguise. Nobody saw that coming.',
+    herdBefore: 'Sorry, ',
+    herdAfter: '. Apparently it sounded like you.',
+    lightning: 'Lightning fast',
+    enigma: 'The Enigma',
+    enigmaFooled: 'fooled',
+    enigmaPeople: ['person', 'people'] as const,
+    highlight: {
+      enigma: 'You’re the Enigma. You fooled',
+      fooled: 'You fooled',
+      spotted: 'You spotted',
+      none: 'You played it close to the chest.',
+    },
+    luckyCode: 'Lucky code',
+    charged: 'Fully charged.',
+    found: 'You found a secret.',
+    retroOn: 'Retro mode on',
+    retroOff: 'Retro mode off',
+    shortcutsTitle: 'Keyboard shortcuts',
+    shortcuts: [
+      ['Space', 'Next step'],
+      ['L', 'Lock guesses'],
+      ['R', 'Reveal'],
+      ['M', 'Sound on or off'],
+      ['F', 'Full screen'],
+      ['?', 'This list'],
+    ] as const,
+    shortcutsMore: '…and a few you’ll have to find.',
+    legendsKey: 'dom lab',
+  },
+
+  notFound: {
+    title: 'Page not found',
+    kicker: '404',
+    question: 'Whose page is it?',
+    answer: 'Nobody’s. It was never here.',
+    flip: 'Reveal',
+    back: 'Guess again',
   },
 
   roomCode: 'Room code',

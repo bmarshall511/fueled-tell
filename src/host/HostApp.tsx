@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { transitioned, withViewTransition } from '../ui/lib/viewTransition';
+import { HostEggs } from './components/HostEggs';
 import { GameScreen } from './game/GameScreen';
 import { Lobby } from './lobby/Lobby';
 import { Setup } from './setup/Setup';
@@ -41,7 +42,18 @@ export default function Host() {
   // Only editing an open lobby needs its own transition; a new game already animates via `create`.
   const doneEditing = () => editing && withViewTransition(() => setEditing(false));
 
-  if (!state || editing) return <Setup host={screens} onDone={doneEditing} />;
-  if (state.phase === 'lobby') return <Lobby host={screens} onEdit={edit} />;
-  return <GameScreen host={screens} />;
+  const screen =
+    !state || editing ? (
+      <Setup host={screens} onDone={doneEditing} />
+    ) : state.phase === 'lobby' ? (
+      <Lobby host={screens} onEdit={edit} />
+    ) : (
+      <GameScreen host={screens} />
+    );
+  return (
+    <>
+      {screen}
+      <HostEggs phase={editing ? null : (state?.phase ?? null)} />
+    </>
+  );
 }

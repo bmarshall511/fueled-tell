@@ -35,7 +35,8 @@ function handleMessage(msg: ClientMsg, peer: Peer, s: GameState, dispatch: (a: G
   }
   if (!peer.playerId) return;
   if (msg.type === 'submit') dispatch({ type: 'submit', playerId: peer.playerId, text: msg.text });
-  if (msg.type === 'guess') dispatch({ type: 'guess', playerId: peer.playerId, entryId: msg.entryId, ownerId: msg.ownerId });
+  if (msg.type === 'guess')
+    dispatch({ type: 'guess', playerId: peer.playerId, entryId: msg.entryId, ownerId: msg.ownerId, at: Date.now() });
 }
 
 /**

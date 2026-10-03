@@ -62,3 +62,7 @@
 [data-orientation='portrait'] .join {
   justify-items: center;
 }
+
+.lucky {
+  color: var(--color-fueled-lilac);
+}

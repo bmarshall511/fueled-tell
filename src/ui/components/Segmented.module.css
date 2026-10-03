@@ -19,10 +19,8 @@
 /* One glass track; the white thumb slides to the checked option. */
 .segmented {
   position: relative;
-  display: inline-flex;
-  flex-wrap: wrap;
-  justify-self: start;
-  max-width: 100%;
+  display: flex;
+  width: 100%;
   padding: var(--space-1);
   border-radius: var(--radius-field);
   background: var(--color-surface-raised);
@@ -47,10 +45,13 @@
 .seg {
   position: relative;
   z-index: 1;
+  flex: 1;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: calc(var(--size-tap-target) - var(--space-2));
-  padding: 0 var(--space-4);
+  padding: 0 var(--space-2);
+  white-space: nowrap;
   border-radius: var(--radius-pill);
   font-size: var(--font-size-phone-body);
   color: var(--color-text-muted);

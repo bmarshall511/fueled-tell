@@ -2,8 +2,10 @@ import type { CSSProperties } from 'react';
 import type { Standing } from '../../engine/scoring';
 import type { GameCopy, PlayerId } from '../../engine/types';
 import { tokens } from '../../tokens/tokens';
+import { enigma } from '../../engine/moments';
+import { FueledBolt } from '../../ui/components/Logo';
 import { UI_COPY } from '../../ui/copy';
-import { formatScore, ordinal } from '../../ui/lib/format';
+import { formatScore, ordinal, plural } from '../../ui/lib/format';
 import { playerColorVar } from '../../ui/lib/playerColor';
 import type { SeatedPlayer } from '../../ui/lib/types';
 import styles from './Finale.module.css';
@@ -32,9 +34,11 @@ export function Finale({ standings, players, copy }: FinaleProps) {
     .map((s) => byId(s.playerId)?.name)
     .filter(Boolean);
   const rest = standings.slice(3);
+  const theEnigma = enigma(standings);
 
   return (
     <section className={styles.finale} aria-labelledby="finale-title">
+      <BoltRain />
       <header className={styles.head}>
         <p className={`t-label ${styles.kicker}`}>{copy.finale}</p>
         <h1 id="finale-title" className={`t-title ${styles.winner}`} style={delay(3)}>
@@ -64,6 +68,16 @@ export function Finale({ standings, players, copy }: FinaleProps) {
         })}
       </ol>
 
+      {theEnigma && (
+        <p className={`${styles.enigma} ${styles.rise}`} style={delay(3.5)}>
+          <span className={`t-label ${styles.enigmaLabel}`}>{UI_COPY.eggs.enigma}</span>
+          <span className="t-body">
+            {theEnigma.playerIds.map((id) => byId(id)?.name).join(' & ')} {UI_COPY.eggs.enigmaFooled}{' '}
+            {plural(theEnigma.fooled, UI_COPY.eggs.enigmaPeople)}
+          </span>
+        </p>
+      )}
+
       {rest.length > 0 && (
         <ol className={styles.rest} aria-label={UI_COPY.standings}>
           {rest.map((s, i) => {
@@ -85,5 +99,21 @@ export function Finale({ standings, players, copy }: FinaleProps) {
         </ol>
       )}
     </section>
+  );
+}
+
+/** How many bolts drift down behind the podium (few and slow, so a screen share stays smooth). */
+const BOLTS = 9;
+
+/** Bolt Rain: white Fueled bolts drifting down behind the finale. Decorative; hidden with reduced motion. */
+function BoltRain() {
+  return (
+    <div className={styles.rain} aria-hidden="true">
+      {Array.from({ length: BOLTS }, (_, i) => (
+        <span key={i} className={styles.drop} style={{ ['--i' as string]: i } as CSSProperties}>
+          <FueledBolt />
+        </span>
+      ))}
+    </div>
   );
 }

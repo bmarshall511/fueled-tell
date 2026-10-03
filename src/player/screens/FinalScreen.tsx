@@ -1,4 +1,7 @@
+import { enigma } from '../../engine/moments';
 import type { PlayerView } from '../../engine/redact';
+import type { Standing } from '../../engine/scoring';
+import { plural } from '../../ui/lib/format';
 import { PlayerChip } from '../../ui/components/PlayerChip';
 import { GAME } from '../../content';
 import { UI_COPY } from '../../ui/copy';
@@ -13,6 +16,7 @@ export function FinalScreen({ view }: Pick<ScreenProps, 'view'>) {
   const standings = view.standings ?? [];
   const mine = standings.find((s) => s.playerId === view.me);
   const winners = standings.filter((s) => s.place === 1).map((s) => nameOf(view, s.playerId));
+  const enigmaIds = enigma(standings)?.playerIds ?? [];
   return (
     <Split actionsFirst aside={<Standings view={view} />}>
       <p className="text-label">{finale}</p>
@@ -24,6 +28,7 @@ export function FinalScreen({ view }: Pick<ScreenProps, 'view'>) {
           </p>
         </>
       )}
+      {mine && <Highlight mine={mine} isEnigma={enigmaIds.includes(view.me)} />}
       {winners.length > 0 && (
         <div className={styles.winner}>
           <span className={styles.winnerLabel}>{UI_COPY.winnerIs}</span>
@@ -57,4 +62,18 @@ function Standings({ view }: { view: PlayerView }) {
       </ol>
     </section>
   );
+}
+
+const H = UI_COPY.eggs.highlight;
+
+/** Your one-line highlight of the game: the Enigma, people fooled, or correct guesses. */
+function Highlight({ mine, isEnigma }: { mine: Standing; isEnigma: boolean }) {
+  const line = isEnigma
+    ? `${H.enigma} ${plural(mine.fooled, UI_COPY.eggs.enigmaPeople)}.`
+    : mine.fooled >= mine.correct && mine.fooled > 0
+      ? `${H.fooled} ${plural(mine.fooled, UI_COPY.eggs.enigmaPeople)}.`
+      : mine.correct > 0
+        ? `${H.spotted} ${plural(mine.correct, [GAME.copy.item.toLowerCase(), GAME.copy.items.toLowerCase()])}.`
+        : H.none;
+  return <p className={styles.highlight}>{line}</p>;
 }

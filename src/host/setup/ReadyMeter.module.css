@@ -11,6 +11,10 @@
   font-size: var(--font-size-phone-body);
 }
 
+.solo {
+  justify-content: center;
+}
+
 .bar {
   height: var(--space-2);
   border-radius: var(--radius-pill);

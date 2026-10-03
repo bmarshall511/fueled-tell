@@ -33,7 +33,7 @@ export function useBots(state: GameState | null, dispatch: (a: GameAction) => vo
         const others = state.players.filter((o) => o.id !== p.id && o.id !== entry.ownerId);
         const ownerId = rand() < 0.5 ? entry.ownerId : (others[Math.floor(rand() * others.length)]?.id ?? entry.ownerId);
         const at = (0.1 + rand() * 0.45) * state.settings.timerSec * 1000;
-        return window.setTimeout(() => dispatch({ type: 'guess', playerId: p.id, entryId: entry.id, ownerId }), at);
+        return window.setTimeout(() => dispatch({ type: 'guess', playerId: p.id, entryId: entry.id, ownerId, at: Date.now() }), at);
       });
     return () => timers.forEach((t) => window.clearTimeout(t));
   }, [on, phase, index]);

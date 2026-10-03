@@ -1,4 +1,5 @@
 import { currentEntry, expectedGuessers, guessersForReveal } from './game';
+import { revealMoments, type RoundMoment } from './moments';
 import { computeStandings, summarizeReveal, type RevealSummary, type Standing } from './scoring';
 import type { EntryId, GameState, Phase, PlayerId, Settings } from './types';
 
@@ -34,6 +35,10 @@ export interface PlayerView {
   /** Ms since the reveal started on the host, for the shared drumroll. */
   revealElapsedMs: number | null;
   reveal: RevealSummary | null;
+  /** At reveal: an easter-egg moment for the room (everyone right, nobody right, the herd). */
+  moment: RoundMoment | null;
+  /** At reveal: whether my correct guess was lightning fast. */
+  lightning: boolean;
   standings: Standing[] | null;
 }
 
@@ -41,6 +46,7 @@ export function redactFor(s: GameState, me: PlayerId, now: number, points?: { co
   const entry = s.phase === 'lobby' || s.phase === 'finale' ? undefined : currentEntry(s);
   const revealed = s.phase === 'reveal';
   const mine = s.entries.find((e) => e.ownerId === me);
+  const moments = revealMoments(s);
   return {
     phase: s.phase,
     settings: {
@@ -62,6 +68,8 @@ export function redactFor(s: GameState, me: PlayerId, now: number, points?: { co
     remainingMs: s.deadline === null ? null : Math.max(0, s.deadline - now),
     revealElapsedMs: s.revealedAt === null ? null : Math.max(0, now - s.revealedAt),
     reveal: revealed && entry ? summarizeReveal(entry, s.guesses, guessersForReveal(s)) : null,
+    moment: moments?.moment ?? null,
+    lightning: moments?.lightning.includes(me) ?? false,
     standings:
       s.phase === 'finale'
         ? computeStandings(

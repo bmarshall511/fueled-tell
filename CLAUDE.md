@@ -38,7 +38,11 @@ Organized by feature; each component owns its `*.module.css` next to it. Keep fi
   - `screenFor.ts` (pure, tested) picks the screen; each screen is a file in `screens/`.
   - Layout pieces (`PlayerShell`, `Split`, `Heading`, `PrimaryAction`, `StoryCard`, `RoundStatus`) are in `components/`.
   - `usePlayerGame` is the connection and state. `identity.ts` handles the persisted seat, and `haptics.ts` the vibration.
-- `src/landing/`, `src/demo/`: the `/` and `/demo` pages.
+- `src/landing/`, `src/demo/`, `src/notfound/`: the `/` and `/demo` pages, and the 404 "round" for any other path.
+- Easter eggs (keep them short, announced via `announce()`, calm under reduced motion, and never able to hint whose entry is whose):
+  - **Round moments:** pure detectors in `engine/moments.ts` (`revealMoments`, `enigma`), with lines in `ui/lib/momentCopy.ts`.
+  - **Shared plumbing:** `ui/lib/eggs.ts` (`flash` / `toggle` classes on `<html>`, `useEgg`, `useKeySequence`, `useClickCombo`, the console hello). Hidden host inputs are in `host/components/HostEggs.tsx`.
+  - **Content:** room-code lucky words and the blocklist are in `engine/roomCode.ts`, and the fictional "office legends" are in `content/legends.json`.
 - `src/ui/`: shared building blocks.
   - `components/`: Button, IconButton (+ Icon), TextInput/TextArea, Notice, Segmented, Switch, NameGrid, PlayerChip, CodeChip, RoomTag, Logo, BrandHeader, Backdrop, QR.
   - `hooks/`: keyboard shortcuts, screen transitions, drumroll, wake lock, and so on.

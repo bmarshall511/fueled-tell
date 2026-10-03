@@ -194,3 +194,82 @@
 [data-orientation='portrait'] .step {
   min-height: calc(var(--item-h) * 0.36);
 }
+
+/* The Enigma: whoever fooled the most people, celebrated under the podium. */
+.enigma {
+  margin: 0;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: calc(var(--space-3) * var(--stage));
+  padding: max(var(--space-2), calc(var(--space-3) * var(--stage))) max(var(--space-4), calc(var(--space-6) * var(--stage)));
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-raised);
+  -webkit-backdrop-filter: blur(var(--blur-glass));
+  backdrop-filter: blur(var(--blur-glass));
+  box-shadow: inset 0 0 0 var(--border-width-hairline) color-mix(in srgb, var(--color-fueled-lilac) 60%, transparent);
+  text-align: center;
+}
+
+.enigmaLabel {
+  color: var(--color-fueled-lilac);
+}
+
+/* Bolt Rain: a few slow, soft bolts behind everything. */
+.rain {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.drop {
+  position: absolute;
+  top: -10%;
+  left: calc(4% + var(--i) * 10%);
+  color: var(--color-text);
+  opacity: 0;
+  font-size: calc((var(--font-size-host-title) + var(--i) * var(--space-1)) * var(--stage));
+  animation: bolt-fall calc(var(--duration-drift) * 0.6 + var(--i) * var(--duration-slow)) linear calc(var(--i) * var(--duration-slow))
+    infinite;
+}
+
+@keyframes bolt-fall {
+  10% {
+    opacity: var(--opacity-rain);
+  }
+  80% {
+    opacity: var(--opacity-rain);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(120vh) rotate(calc(var(--i) * 9deg - 36deg));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rain {
+    display: none;
+  }
+}
+
+/* Easter egg ("tell"): the winner's name catches the glow once. */
+:global(.egg-tell) .winnerName {
+  background: var(--gradient-text);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: winner-glow var(--duration-reveal) var(--easing-standard);
+}
+
+@keyframes winner-glow {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}

@@ -34,6 +34,7 @@ export default function FlatScene({ phase, item, copy, reveal, players, guesses,
                 <>
                   <p className="t-label">{copy.reveal}</p>
                   <p className="t-hero">{owner.name}</p>
+                  {reveal?.moment && <p className="t-title">{reveal.moment}</p>}
                 </>
               )}
             </div>

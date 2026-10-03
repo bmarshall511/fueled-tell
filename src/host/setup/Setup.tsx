@@ -2,7 +2,9 @@ import { useRef, useState } from 'react';
 import { GAME } from '../../content';
 import { validateRows } from '../../engine/intake';
 import { RULES } from '../../engine/rules';
+import legends from '../../content/legends.json';
 import sampleEntries from '../../content/sample-entries.json';
+import { announce } from '../../ui/lib/eggs';
 import { Backdrop } from '../../ui/components/Backdrop';
 import { Button } from '../../ui/components/Button';
 import { UI_COPY } from '../../ui/copy';
@@ -125,7 +127,15 @@ export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void })
           ) : (
             <>
               {live && <p className={styles.liveInfo}>{S.liveInfo}</p>}
-              <Composer ref={nameRef} onPaste={onPaste} onAdd={(name, text) => setRows([...filledRows(draft.rows), newRow(name, text)])} />
+              <Composer
+                ref={nameRef}
+                onPaste={onPaste}
+                onAdd={(name, text) => setRows([...filledRows(draft.rows), newRow(name, text)])}
+                onSecret={() => {
+                  setRows([...filledRows(draft.rows), ...legends.map((l) => newRow(l.name, l.text))]);
+                  announce(UI_COPY.eggs.found);
+                }}
+              />
               <div className={styles.toolbar}>
                 <Button variant="secondary" onClick={() => setPasting('')}>
                   {E.paste}

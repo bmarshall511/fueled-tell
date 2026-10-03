@@ -16,3 +16,9 @@
 .back :global(.t-label) {
   color: var(--color-text);
 }
+
+/* The room's moment, under the owner's name on the card back. */
+.back .moment {
+  max-width: 80%;
+  margin-top: calc(var(--space-4) * var(--stage));
+}

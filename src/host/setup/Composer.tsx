@@ -10,13 +10,15 @@ const E = UI_COPY.editor;
 interface ComposerProps {
   onAdd: (name: string, text: string) => void;
   onPaste: (e: ClipboardEvent) => void;
+  /** Easter egg: the secret name with no entry, then Enter. */
+  onSecret: () => void;
 }
 
 /**
  * Quick add: a name, their entry, Enter. Enter in the name moves to the entry; Enter in the
  * entry adds the person (Shift+Enter for a new line) and returns to the name for the next one.
  */
-export const Composer = forwardRef<HTMLInputElement, ComposerProps>(function Composer({ onAdd, onPaste }, nameRef) {
+export const Composer = forwardRef<HTMLInputElement, ComposerProps>(function Composer({ onAdd, onPaste, onSecret }, nameRef) {
   const [name, setName] = useState('');
   const [text, setText] = useState('');
   const textRef = useRef<HTMLTextAreaElement>(null);
@@ -49,6 +51,10 @@ export const Composer = forwardRef<HTMLInputElement, ComposerProps>(function Com
         onKeyDown={(e) => {
           if (e.key !== 'Enter') return;
           e.preventDefault();
+          if (name.trim().toLowerCase() === UI_COPY.eggs.legendsKey && !text.trim()) {
+            setName('');
+            return onSecret();
+          }
           textRef.current?.focus();
         }}
       />

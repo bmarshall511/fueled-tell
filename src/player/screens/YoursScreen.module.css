@@ -1,0 +1,13 @@
+.tip {
+  margin: 0;
+  font-size: var(--font-size-phone-body);
+  color: var(--color-text-muted);
+  font-style: italic;
+  animation: tip-in var(--duration-slow) var(--easing-standard);
+}
+
+@keyframes tip-in {
+  from {
+    opacity: 0;
+  }
+}

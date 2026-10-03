@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
 import type { PlayerView } from '../../engine/redact';
+import { FueledBolt } from '../../ui/components/Logo';
 import { PlayerChip } from '../../ui/components/PlayerChip';
+import { momentLine } from '../../ui/lib/momentCopy';
 import { GAME } from '../../content';
 import { UI_COPY } from '../../ui/copy';
 import { useDrumroll } from '../../ui/hooks/useDrumroll';
@@ -25,6 +27,7 @@ export function ResultScreen({ view, game }: ScreenProps) {
   }, [drum.done, right]);
 
   const fooled = view.guessedCount - (reveal?.correctPlayerIds.length ?? 0);
+  const moment = momentLine(view.moment, (id) => view.players.find((p) => p.id === id)?.name);
   const headline = mine
     ? `${P.youFooled} ${fooled} ${UI_COPY.of} ${view.guessedCount}`
     : !view.myGuess
@@ -55,6 +58,12 @@ export function ResultScreen({ view, game }: ScreenProps) {
       ) : (
         <>
           <Heading accent={right || mine}>{headline}</Heading>
+          {view.lightning && (
+            <p className={styles.lightning}>
+              <FueledBolt /> {UI_COPY.eggs.lightning}
+            </p>
+          )}
+          {moment && <p className="text-body text-glow">{moment}</p>}
           {owner && (
             <Labelled label={P.itWas}>
               <PlayerChip player={owner} size="phone" />

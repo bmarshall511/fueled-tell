@@ -1,5 +1,7 @@
 import { useId, useState } from 'react';
 import { normalizeRoomCode, ROOM_CODE_LENGTH } from '../engine/roomCode';
+import { tokens } from '../tokens/tokens';
+import { announce, flash, useClickCombo } from '../ui/lib/eggs';
 import { Backdrop } from '../ui/components/Backdrop';
 import { BrandHeader } from '../ui/components/BrandHeader';
 import { Button } from '../ui/components/Button';
@@ -10,16 +12,24 @@ import { useInstallPrompt } from '../ui/hooks/useInstallPrompt';
 import styles from './Landing.module.css';
 
 const L = UI_COPY.landing;
+const CHARGE_CLICKS = 5;
 
 export default function Landing() {
   const [code, setCode] = useState('');
   const codeId = useId();
   const { canInstall, install } = useInstallPrompt();
   useDocumentTitle();
+  const chargeClick = useClickCombo(CHARGE_CLICKS, tokens.duration.entrance * 2, () => {
+    flash('charge', tokens.duration.reveal);
+    announce(UI_COPY.eggs.charged);
+  });
   return (
     <main className={`page ${styles.landing}`}>
       <Backdrop />
-      <BrandHeader />
+      {/* Easter egg: click the Fueled mark five times quickly to charge the glow. */}
+      <div onClick={chargeClick}>
+        <BrandHeader />
+      </div>
 
       <section className={styles.hero}>
         <h1 className={styles.title}>{UI_COPY.appName}</h1>

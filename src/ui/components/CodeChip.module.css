@@ -38,3 +38,27 @@
   font-size: max(var(--font-size-phone-title), calc(var(--font-size-host-display) * var(--stage)));
   border-radius: max(var(--radius-tile), calc(var(--radius-card) * var(--stage)));
 }
+
+/* Easter eggs: a lucky code shimmers on its own; typing "tell" sends a wave across the tiles. */
+.lucky .tile {
+  animation: lucky calc(var(--duration-shimmer) / 2) var(--easing-standard) calc(var(--i) * var(--duration-stagger) * 2) infinite alternate;
+}
+
+@keyframes lucky {
+  to {
+    box-shadow:
+      inset 0 0 0 var(--border-width-base) var(--color-fueled-lilac),
+      0 0 var(--space-5) color-mix(in srgb, var(--color-fueled-solar) 45%, transparent);
+  }
+}
+
+:global(.egg-tell) .tile {
+  animation: tell-wave var(--duration-slow) var(--easing-spring) calc(var(--i) * var(--duration-stagger) * 2);
+}
+
+@keyframes tell-wave {
+  50% {
+    background: var(--gradient-glow);
+    color: var(--color-text);
+  }
+}

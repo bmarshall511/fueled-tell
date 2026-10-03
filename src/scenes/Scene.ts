@@ -19,6 +19,8 @@ export interface SceneReveal {
   ownerId: PlayerId;
   correctPlayerIds: PlayerId[];
   ratioCorrect: number;
+  /** An easter-egg line for the room (everyone right, nobody right, the herd), shown under the owner's name. */
+  moment: string | null;
 }
 
 /**

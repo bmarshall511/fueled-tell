@@ -19,7 +19,7 @@ export type GameAction =
   | { type: 'updateSettings'; settings: Partial<Settings> }
   | { type: 'start'; seed: number }
   | { type: 'beginGuessing'; now: number }
-  | { type: 'guess'; playerId: PlayerId; entryId: EntryId; ownerId: PlayerId }
+  | { type: 'guess'; playerId: PlayerId; entryId: EntryId; ownerId: PlayerId; at?: number }
   /** Host-only mode: who got the current entry right. */
   | { type: 'tally'; playerIds: PlayerId[] }
   | { type: 'lock' }
@@ -216,7 +216,7 @@ export function gameReducer(s: GameState, a: GameAction): GameState {
 
     case 'beginGuessing':
       if (s.phase !== 'showing') return s;
-      return { ...s, phase: 'guessing', deadline: a.now + s.settings.timerSec * 1000 };
+      return { ...s, phase: 'guessing', deadline: a.now + s.settings.timerSec * 1000, openedAt: a.now };
 
     case 'guess': {
       if (s.phase !== 'guessing' || s.settings.hostOnly) return s;
@@ -226,7 +226,8 @@ export function gameReducer(s: GameState, a: GameAction): GameState {
       if (entry.ownerId === a.playerId) return s; // can't guess your own entry
       if (a.ownerId === a.playerId) return s; // can't name yourself
       const others = s.guesses.filter((g) => g.playerId !== a.playerId);
-      return { ...s, guesses: [...others, { playerId: a.playerId, entryId: a.entryId, ownerId: a.ownerId }] };
+      const guess: Guess = { playerId: a.playerId, entryId: a.entryId, ownerId: a.ownerId, ...(a.at === undefined ? {} : { at: a.at }) };
+      return { ...s, guesses: [...others, guess] };
     }
 
     case 'tally': {
