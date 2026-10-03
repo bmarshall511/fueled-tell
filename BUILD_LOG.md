@@ -811,4 +811,4 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 
 - **Try the eggs on a real call:** the moment lines' wording, whether Bolt Rain reads on a screen share, and whether the Konami retro mode is fun or too subtle.
 
-**Approximate time:** about 90 min of wall-clock AI time (≈18:50–20:20 CT).
+**Approximate time:** about 35 min of wall-clock AI time (≈18:50–19:25 CT).
