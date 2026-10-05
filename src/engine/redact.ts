@@ -18,7 +18,7 @@ export interface PublicPlayer {
  */
 export interface PlayerView {
   phase: Phase;
-  settings: Pick<Settings, 'timerSec' | 'hostOnly' | 'intake' | 'maxLength'>;
+  settings: Pick<Settings, 'timerSec' | 'hostOnly' | 'intake' | 'maxLength' | 'topic' | 'customPrompt'>;
   me: PlayerId;
   players: PublicPlayer[];
   /** Lobby, live intake: whether my entry is in, and its text (mine only). */
@@ -54,6 +54,8 @@ export function redactFor(s: GameState, me: PlayerId, now: number, points?: { co
       hostOnly: s.settings.hostOnly,
       intake: s.settings.intake,
       maxLength: s.settings.maxLength,
+      topic: s.settings.topic,
+      customPrompt: s.settings.customPrompt,
     },
     me,
     players: s.players.map(({ id, name, colorIndex, connected, claimed }) => ({ id, name, colorIndex, connected, claimed })),

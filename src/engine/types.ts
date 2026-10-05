@@ -34,16 +34,37 @@ export interface Guess {
   at?: number;
 }
 
-/** Everything game-specific lives in src/content/game.json, not in code. */
-export interface GameContent {
+/** What everyone shares this game (a true story, a favorite movie, ...), and the words that go with it. */
+export interface Topic {
+  id: string;
+  /** Short name for the setup picker, e.g. "Movie". */
+  label: string;
   /** What players are asked to write. */
   prompt: string;
+  /** Short noun for one entry, e.g. "Story". */
+  item: string;
+  /** Plural of `item`, e.g. "Stories". */
+  items: string;
+  /** Headline while guessing. */
+  question: string;
+  /** The host writes the prompt (the topic's `prompt` is the fallback). */
+  custom?: boolean;
+}
+
+/** Everything game-specific lives in src/content/game.json, not in code. */
+export interface GameContent {
+  /** The first is the default. */
+  topics: Topic[];
   entry: { maxLength: number };
   timerSec: number;
   /** Points per correct guess, and per player an owner's entry fools. */
   points?: { correct: number; fooled: number };
-  copy: GameCopy;
+  /** Lines that don't depend on the topic. */
+  copy: Omit<GameCopy, TopicWords>;
 }
+
+/** The parts of the game's copy that come from the topic. */
+export type TopicWords = 'item' | 'items' | 'question';
 
 export interface GameCopy {
   /** Short noun for one entry, e.g. "Story". */
@@ -70,6 +91,10 @@ export type Intake = 'host' | 'live';
 
 export interface Settings {
   timerSec: number;
+  /** Which topic (GameContent.topics id). Missing in older saves: the default topic. */
+  topic?: string;
+  /** The host's own prompt, for a custom topic. */
+  customPrompt?: string;
   /** No phones: players shout guesses and the host tallies who got it. */
   hostOnly: boolean;
   /** Host imports entries, or players submit them from the lobby. */

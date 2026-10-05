@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef } from 'react';
-import { GAME } from '../../content';
+import { GAME, gameCopy } from '../../content';
 import { currentEntry, guessersForReveal, isLastEntry } from '../../engine/game';
 import { computeStandings, summarizeReveal } from '../../engine/scoring';
 import type { PlayerId } from '../../engine/types';
@@ -35,7 +35,7 @@ import styles from './GameScreen.module.css';
 /** The shared screen from the first entry to the finale. */
 export function GameScreen({ host }: { host: HostGame }) {
   const s = host.state!;
-  const copy = GAME.copy;
+  const copy = gameCopy(s.settings);
   const reducedMotion = usePrefersReducedMotion();
   const [fullscreen, toggleFullscreen] = useFullscreen();
   const [muted, toggleMute] = useMuted();

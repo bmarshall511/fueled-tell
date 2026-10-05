@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { GAME } from '../../content';
+import { gameCopy } from '../../content';
 import { tokens } from '../../tokens/tokens';
 import { GuessProgress } from '../components/RoundStatus';
 import { Heading, Split } from '../components/Layout';
@@ -23,10 +23,10 @@ function useTip(tips: readonly string[]) {
 
 /** It's your entry: sit tight, act natural, and watch the guesses come in. */
 export function YoursScreen({ view }: Pick<ScreenProps, 'view'>) {
-  const tip = useTip(GAME.copy.actNatural);
+  const tip = useTip(gameCopy(view.settings).actNatural);
   return (
-    <Split aside={<StoryCard view={view} itemNoun={GAME.copy.item} />}>
-      <Heading accent>{GAME.copy.yours}</Heading>
+    <Split aside={<StoryCard view={view} itemNoun={gameCopy(view.settings).item} />}>
+      <Heading accent>{gameCopy(view.settings).yours}</Heading>
       {tip && (
         <p key={tip} className={styles.tip}>
           {tip}

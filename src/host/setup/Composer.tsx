@@ -1,5 +1,4 @@
 import { forwardRef, useId, useRef, useState, type ClipboardEvent } from 'react';
-import { GAME } from '../../content';
 import { Button } from '../../ui/components/Button';
 import { TextArea, TextInput } from '../../ui/components/TextField';
 import { UI_COPY } from '../../ui/copy';
@@ -8,6 +7,8 @@ import styles from './Composer.module.css';
 const E = UI_COPY.editor;
 
 interface ComposerProps {
+  /** The topic's noun for one entry ("Story", "Movie"). */
+  itemNoun: string;
   onAdd: (name: string, text: string) => void;
   onPaste: (e: ClipboardEvent) => void;
   /** Easter egg: the secret name with no entry, then Enter. */
@@ -18,7 +19,7 @@ interface ComposerProps {
  * Quick add: a name, their entry, Enter. Enter in the name moves to the entry; Enter in the
  * entry adds the person (Shift+Enter for a new line) and returns to the name for the next one.
  */
-export const Composer = forwardRef<HTMLInputElement, ComposerProps>(function Composer({ onAdd, onPaste, onSecret }, nameRef) {
+export const Composer = forwardRef<HTMLInputElement, ComposerProps>(function Composer({ itemNoun, onAdd, onPaste, onSecret }, nameRef) {
   const [name, setName] = useState('');
   const [text, setText] = useState('');
   const textRef = useRef<HTMLTextAreaElement>(null);
@@ -59,7 +60,7 @@ export const Composer = forwardRef<HTMLInputElement, ComposerProps>(function Com
         }}
       />
       <label htmlFor={ids.text} className="visually-hidden">
-        {GAME.copy.item}
+        {itemNoun}
       </label>
       <TextArea
         id={ids.text}
@@ -69,7 +70,7 @@ export const Composer = forwardRef<HTMLInputElement, ComposerProps>(function Com
         autoGrow
         className={styles.text}
         value={text}
-        placeholder={GAME.copy.item}
+        placeholder={itemNoun}
         onChange={(e) => setText(e.target.value)}
         onPaste={onPaste}
         onKeyDown={(e) => {

@@ -3,14 +3,11 @@ import type { GameContent, GameState } from './types';
 
 /** Test helpers (imported by *.test.ts only). */
 export const TEST_CONTENT: GameContent = {
-  prompt: 'p',
+  topics: [{ id: 't', label: 'T', prompt: 'p', item: 'Item', items: 'Items', question: 'q' }],
   entry: { maxLength: 50 },
   timerSec: 30,
   points: { correct: 100, fooled: 50 },
   copy: {
-    item: 'Item',
-    items: 'Items',
-    question: 'q',
     reveal: 'r',
     yours: 'y',
     waiting: 'w',

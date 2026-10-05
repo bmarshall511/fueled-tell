@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAck } from '../../ui/hooks/useAck';
 import type { PlayerId } from '../../engine/types';
 import { NameGrid } from '../../ui/components/NameGrid';
-import { GAME } from '../../content';
+import { gameCopy } from '../../content';
 import { UI_COPY } from '../../ui/copy';
 import { Countdown } from '../components/RoundStatus';
 import { Heading, PrimaryAction, Split } from '../components/Layout';
@@ -21,9 +21,9 @@ export function PickScreen({ view, game, onLocked }: ScreenProps & { onLocked: (
   useEffect(() => {
     if (lock.done) onLocked();
   }, [lock.done, onLocked]);
-  const question = GAME.copy.question;
+  const question = gameCopy(view.settings).question;
   return (
-    <Split aside={<StoryCard view={view} itemNoun={GAME.copy.item} />}>
+    <Split aside={<StoryCard view={view} itemNoun={gameCopy(view.settings).item} />}>
       <Countdown view={view} receivedAt={game.receivedAt} />
       <Heading>{question}</Heading>
       {!open && <p className="text-body text-muted">{P.opensSoon}</p>}

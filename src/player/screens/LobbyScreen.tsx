@@ -3,7 +3,7 @@ import { useAck } from '../../ui/hooks/useAck';
 import type { PlayerView } from '../../engine/redact';
 import { PlayerChip } from '../../ui/components/PlayerChip';
 import { TextArea } from '../../ui/components/TextField';
-import { GAME } from '../../content';
+import { gameCopy, gamePrompt } from '../../content';
 import { UI_COPY } from '../../ui/copy';
 import { Form, Heading, PrimaryAction, Split } from '../components/Layout';
 import { haptics } from '../haptics';
@@ -19,7 +19,7 @@ export function LobbyScreen({ view, game }: ScreenProps) {
       <Heading>{P.youreIn}</Heading>
       <p className="text-body text-muted">{P.lobbyWait}</p>
       {view.settings.intake === 'live' && (
-        <EntryForm view={view} onSubmit={game.submit} prompt={GAME.prompt} placeholder={GAME.copy.item} />
+        <EntryForm view={view} onSubmit={game.submit} prompt={gamePrompt(view.settings)} placeholder={gameCopy(view.settings).item} />
       )}
     </Split>
   );

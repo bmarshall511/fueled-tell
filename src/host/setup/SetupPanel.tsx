@@ -1,4 +1,7 @@
-import type { ReactNode } from 'react';
+import { useId, type ReactNode } from 'react';
+import { GAME } from '../../content';
+import type { GameCopy } from '../../engine/types';
+import { TextInput } from '../../ui/components/TextField';
 import { BuiltBy } from '../../ui/components/Logo';
 import { Segmented } from '../../ui/components/Segmented';
 import { Switch } from '../../ui/components/Switch';
@@ -8,10 +11,18 @@ import styles from './SetupPanel.module.css';
 
 const S = UI_COPY.setup;
 const TIMERS = [20, 30, 45, 60, 90] as const;
+/** A custom prompt is one line on the lobby screen. */
+const PROMPT_MAX = 120;
 
 interface SetupPanelProps {
   previewText: string | null;
   total: number;
+  /** This game's copy, with the chosen topic's words. */
+  copy: GameCopy;
+  topic: string;
+  onTopic: (id: string) => void;
+  customPrompt: string;
+  onCustomPrompt: (prompt: string) => void;
   timerSec: number;
   onTimer: (sec: number) => void;
   hostOnly: boolean;
@@ -23,10 +34,39 @@ interface SetupPanelProps {
 }
 
 /** The studio's side panel: a live preview, the game settings, and the way forward. Sticky on wide screens. */
-export function SetupPanel({ previewText, total, timerSec, onTimer, hostOnly, onHostOnly, go, secondary }: SetupPanelProps) {
+export function SetupPanel(props: SetupPanelProps) {
+  const { previewText, total, copy, topic, onTopic, customPrompt, onCustomPrompt, timerSec, onTimer, hostOnly, onHostOnly, go, secondary } =
+    props;
+  const promptId = useId();
+  const chosen = GAME.topics.find((t) => t.id === topic) ?? GAME.topics[0]!;
   return (
     <aside className={`spot ${styles.panel}`}>
-      <MiniStage text={previewText} total={total} timerSec={timerSec} />
+      <MiniStage text={previewText} total={total} timerSec={timerSec} copy={copy} />
+      <div className={styles.topic}>
+        <Segmented
+          label={S.topic}
+          showLabel
+          options={GAME.topics.map((t) => ({ value: t.id, label: t.label }))}
+          value={chosen.id}
+          onChange={onTopic}
+        />
+        {chosen.custom && (
+          <>
+            <label htmlFor={promptId} className="visually-hidden">
+              {S.customPrompt}
+            </label>
+            <TextInput
+              id={promptId}
+              tone="sunken"
+              value={customPrompt}
+              onChange={(e) => onCustomPrompt(e.target.value)}
+              placeholder={S.customPlaceholder}
+              maxLength={PROMPT_MAX}
+              autoComplete="off"
+            />
+          </>
+        )}
+      </div>
       <Segmented
         label={S.timer}
         showLabel

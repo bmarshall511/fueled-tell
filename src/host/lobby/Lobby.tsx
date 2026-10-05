@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { GAME } from '../../content';
+import { gamePrompt } from '../../content';
 import { canStart, playableEntries } from '../../engine/game';
 import { RULES } from '../../engine/rules';
 import { Button } from '../../ui/components/Button';
@@ -50,7 +50,7 @@ export function Lobby({ host, onEdit }: { host: HostGame; onEdit: () => void }) 
       ) : (
         <JoinPanel
           code={code}
-          prompt={GAME.prompt}
+          prompt={gamePrompt(s.settings)}
           status={
             host.link === 'opening' ? <p className="t-label">{L.opening}</p> : host.link === 'error' ? <RoomProblem host={host} /> : null
           }

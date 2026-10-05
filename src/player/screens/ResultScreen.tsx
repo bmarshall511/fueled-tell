@@ -3,7 +3,7 @@ import type { PlayerView } from '../../engine/redact';
 import { FueledBolt } from '../../ui/components/Logo';
 import { PlayerChip } from '../../ui/components/PlayerChip';
 import { momentLine } from '../../ui/lib/momentCopy';
-import { GAME } from '../../content';
+import { gameCopy } from '../../content';
 import { UI_COPY } from '../../ui/copy';
 import { useDrumroll } from '../../ui/hooks/useDrumroll';
 import { BigNumber } from '../components/RoundStatus';
@@ -41,7 +41,7 @@ export function ResultScreen({ view, game }: ScreenProps) {
       aside={
         <div className={`${styles.flip} ${drum.done ? styles.flipped : ''}`}>
           <div className={styles.front}>
-            <StoryCard view={view} itemNoun={GAME.copy.item} />
+            <StoryCard view={view} itemNoun={gameCopy(view.settings).item} />
           </div>
           <div className={`glow-fill ${styles.back}`} aria-hidden={!drum.done}>
             <span className={styles.backLabel}>{P.itWas}</span>

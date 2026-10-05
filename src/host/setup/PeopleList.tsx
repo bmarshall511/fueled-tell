@@ -12,13 +12,15 @@ const E = UI_COPY.editor;
 interface PeopleListProps {
   rows: readonly ValidatedRow<DraftRow>[];
   maxLength: number;
+  /** The topic's noun for one entry ("Story", "Movie"). */
+  itemNoun: string;
   onUpdate: (key: string, patch: Partial<DraftRow>) => void;
   onRemove: (key: string) => void;
   onPaste: (e: ClipboardEvent) => void;
 }
 
 /** Everyone added so far, as cards in a responsive grid, with a count and a jump to the first problem. */
-export function PeopleList({ rows, maxLength, onUpdate, onRemove, onPaste }: PeopleListProps) {
+export function PeopleList({ rows, maxLength, itemNoun, onUpdate, onRemove, onPaste }: PeopleListProps) {
   const list = useRef<HTMLOListElement>(null);
   const filled = rows.filter(isFilled);
   const problems = filled.filter((r) => r.issues.length > 0);
@@ -49,6 +51,7 @@ export function PeopleList({ rows, maxLength, onUpdate, onRemove, onPaste }: Peo
             index={i}
             issues={r.issues}
             maxLength={maxLength}
+            itemNoun={itemNoun}
             onChange={(patch) => onUpdate(r.key, patch)}
             onRemove={() => onRemove(r.key)}
             onPaste={onPaste}

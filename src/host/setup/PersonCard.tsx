@@ -1,6 +1,5 @@
 import { useId, type ClipboardEvent } from 'react';
 import type { RowIssue } from '../../engine/intake';
-import { GAME } from '../../content';
 import { IconButton } from '../../ui/components/IconButton';
 import { TextArea, TextInput } from '../../ui/components/TextField';
 import { UI_COPY } from '../../ui/copy';
@@ -15,13 +14,15 @@ interface PersonCardProps {
   index: number;
   issues: RowIssue[];
   maxLength: number;
+  /** The topic's noun for one entry ("Story", "Movie"). */
+  itemNoun: string;
   onChange: (patch: Partial<DraftRow>) => void;
   onRemove: () => void;
   onPaste: (e: ClipboardEvent) => void;
 }
 
 /** One person, edited in place: avatar, name, their entry with a live count, and any problem with the exact fix. */
-export function PersonCard({ row, index, issues, maxLength, onChange, onRemove, onPaste }: PersonCardProps) {
+export function PersonCard({ row, index, issues, maxLength, itemNoun, onChange, onRemove, onPaste }: PersonCardProps) {
   const ids = { name: useId(), text: useId(), problem: useId(), count: useId() };
   const touched = isFilled(row);
   const problems = touched ? [...nameIssues(issues), ...textIssues(issues)] : [];
@@ -52,7 +53,7 @@ export function PersonCard({ row, index, issues, maxLength, onChange, onRemove, 
           onPaste={onPaste}
         />
         <label htmlFor={ids.text} className="visually-hidden">
-          {GAME.copy.item}, {label}
+          {itemNoun}, {label}
         </label>
         <TextArea
           id={ids.text}
@@ -61,7 +62,7 @@ export function PersonCard({ row, index, issues, maxLength, onChange, onRemove, 
           autoGrow
           className={styles.text}
           value={row.text}
-          placeholder={GAME.copy.item}
+          placeholder={itemNoun}
           aria-invalid={textIssues(problems).length > 0}
           aria-describedby={`${ids.count}${problems.length ? ` ${ids.problem}` : ''}`}
           onChange={(e) => onChange({ text: e.target.value })}

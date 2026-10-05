@@ -8,14 +8,19 @@ export interface SetupDraft {
   rows: DraftRow[];
   timerSec: number;
   hostOnly: boolean;
+  /** Which topic (see game.json), and the host's own prompt for a custom one. */
+  topic: string;
+  customPrompt: string;
 }
 
 const KEY = 'tell:setup-draft';
+const DEFAULT_TOPIC = GAME.topics[0]!.id;
 
 function loadSaved(): SetupDraft | null {
   try {
     const d = JSON.parse(localStorage.getItem(KEY) ?? 'null') as SetupDraft | null;
-    return d && Array.isArray(d.rows) ? { ...d, rows: d.rows.map((r) => newRow(r.name, r.text)) } : null;
+    // Older drafts have no topic: fill in today's defaults.
+    return d && Array.isArray(d.rows) ? { ...fresh(), ...d, rows: d.rows.map((r) => newRow(r.name, r.text)) } : null;
   } catch {
     return null;
   }
@@ -28,11 +33,13 @@ function fromGame(s: GameState): SetupDraft {
     rows: s.entries.map((e) => newRow(s.players.find((p) => p.id === e.ownerId)?.name ?? '', e.text)),
     timerSec: s.settings.timerSec,
     hostOnly: s.settings.hostOnly,
+    topic: s.settings.topic ?? DEFAULT_TOPIC,
+    customPrompt: s.settings.customPrompt ?? '',
   };
 }
 
 function fresh(): SetupDraft {
-  return { intake: 'host', rows: [], timerSec: GAME.timerSec, hostOnly: false };
+  return { intake: 'host', rows: [], timerSec: GAME.timerSec, hostOnly: false, topic: DEFAULT_TOPIC, customPrompt: '' };
 }
 
 /**

@@ -1,5 +1,39 @@
 {
-  "prompt": "A short, true story from your life. Weird, funny, or 'wait, really?'",
+  "topics": [
+    {
+      "id": "story",
+      "label": "Story",
+      "prompt": "A short, true story from your life. Weird, funny, or 'wait, really?'",
+      "item": "Story",
+      "items": "Stories",
+      "question": "Whose story is it?"
+    },
+    {
+      "id": "movie",
+      "label": "Movie",
+      "prompt": "Your favorite movie of all time. Add a line on why, if you like.",
+      "item": "Movie",
+      "items": "Movies",
+      "question": "Whose favorite movie is it?"
+    },
+    {
+      "id": "show",
+      "label": "TV",
+      "prompt": "A TV show you love, or can't stop rewatching. Add a line on why, if you like.",
+      "item": "Show",
+      "items": "Shows",
+      "question": "Whose TV show is it?"
+    },
+    {
+      "id": "custom",
+      "label": "Custom",
+      "prompt": "Something about you the others could guess.",
+      "item": "Answer",
+      "items": "Answers",
+      "question": "Whose answer is it?",
+      "custom": true
+    }
+  ],
   "entry": {
     "maxLength": 280
   },
@@ -9,9 +43,6 @@
     "fooled": 50
   },
   "copy": {
-    "item": "Story",
-    "items": "Stories",
-    "question": "Whose story is it?",
     "reveal": "It was…",
     "yours": "This one's yours. Act natural.",
     "waiting": "Guess locked in. Eyes on the shared screen.",

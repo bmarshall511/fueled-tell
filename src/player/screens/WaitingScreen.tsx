@@ -1,6 +1,6 @@
 import { Button } from '../../ui/components/Button';
 import { PlayerChip } from '../../ui/components/PlayerChip';
-import { GAME } from '../../content';
+import { gameCopy } from '../../content';
 import { UI_COPY } from '../../ui/copy';
 import { GuessProgress } from '../components/RoundStatus';
 import { Heading, Labelled, Pulse, Split } from '../components/Layout';
@@ -13,9 +13,9 @@ const P = UI_COPY.play;
 export function WaitingScreen({ view, onChange }: Pick<ScreenProps, 'view'> & { onChange: () => void }) {
   const picked = view.players.find((p) => p.id === view.myGuess);
   return (
-    <Split aside={<StoryCard view={view} itemNoun={GAME.copy.item} compact />}>
+    <Split aside={<StoryCard view={view} itemNoun={gameCopy(view.settings).item} compact />}>
       <Pulse />
-      <Heading>{view.phase === 'locked' ? P.locked : GAME.copy.waiting}</Heading>
+      <Heading>{view.phase === 'locked' ? P.locked : gameCopy(view.settings).waiting}</Heading>
       {picked && (
         <Labelled label={P.yourGuess}>
           <PlayerChip player={picked} size="phone" />

@@ -27,6 +27,7 @@ node --experimental-websocket review.mjs      # setup review shots incl. hover, 
 node --experimental-websocket review2.mjs     # easter-egg review shots, host + phone (audit/rv-*)
 node --experimental-websocket func.mjs        # end-to-end flows: refreshes, seat keys, shortcuts, backup and restore
 node --experimental-websocket modes.mjs       # forced colors + reduced motion screenshots (audit/m-*)
+node --experimental-websocket topics.mjs      # topic picker and topic wording in setup, lobby, round and phones (audit/t-*)
 node deadcode.mjs                             # unused CSS classes, exports, tokens, copy keys (some are dynamic: check)
 python3 sheet.py out.png 640 2 a.png b.png    # contact sheet of audit/ screenshots for review (needs Pillow)
 ```

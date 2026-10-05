@@ -2,7 +2,7 @@ import { enigma } from '../../engine/moments';
 import type { PlayerView } from '../../engine/redact';
 import type { Standing } from '../../engine/scoring';
 import { PlayerChip } from '../../ui/components/PlayerChip';
-import { GAME } from '../../content';
+import { gameCopy } from '../../content';
 import { UI_COPY } from '../../ui/copy';
 import { formatScore, listNames, ordinal, plural } from '../../ui/lib/format';
 import { Heading, Split } from '../components/Layout';
@@ -11,7 +11,8 @@ import styles from './FinalScreen.module.css';
 
 /** Game over: your place, the winner, and the full standings. */
 export function FinalScreen({ view }: Pick<ScreenProps, 'view'>) {
-  const finale = GAME.copy.finale;
+  const copy = gameCopy(view.settings);
+  const finale = copy.finale;
   const standings = view.standings ?? [];
   const mine = standings.find((s) => s.playerId === view.me);
   const winners = standings.flatMap((s) => (s.place === 1 ? (nameOf(view, s.playerId) ?? []) : []));
@@ -27,7 +28,7 @@ export function FinalScreen({ view }: Pick<ScreenProps, 'view'>) {
           </p>
         </>
       )}
-      {mine && <Highlight mine={mine} isEnigma={enigmaIds.includes(view.me)} />}
+      {mine && <Highlight mine={mine} isEnigma={enigmaIds.includes(view.me)} nouns={[copy.item, copy.items]} />}
       {winners.length > 0 && (
         <div className={styles.winner}>
           <span className={styles.winnerLabel}>{UI_COPY.winnerIs}</span>
@@ -66,13 +67,13 @@ function Standings({ view }: { view: PlayerView }) {
 const H = UI_COPY.eggs.highlight;
 
 /** Your one-line highlight of the game: the Enigma, people fooled, or correct guesses. */
-function Highlight({ mine, isEnigma }: { mine: Standing; isEnigma: boolean }) {
+function Highlight({ mine, isEnigma, nouns }: { mine: Standing; isEnigma: boolean; nouns: readonly [string, string] }) {
   const line = isEnigma
     ? `${H.enigma} ${plural(mine.fooled, UI_COPY.eggs.enigmaPeople)}.`
     : mine.fooled >= mine.correct && mine.fooled > 0
       ? `${H.fooled} ${plural(mine.fooled, UI_COPY.eggs.enigmaPeople)}.`
       : mine.correct > 0
-        ? `${H.spotted} ${plural(mine.correct, [GAME.copy.item.toLowerCase(), GAME.copy.items.toLowerCase()])}.`
+        ? `${H.spotted} ${plural(mine.correct, [nouns[0].toLowerCase(), nouns[1].toLowerCase()])}.`
         : H.none;
   return <p className={styles.highlight}>{line}</p>;
 }

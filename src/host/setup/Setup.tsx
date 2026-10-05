@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { GAME } from '../../content';
+import { GAME, gameCopy } from '../../content';
 import { validateRows } from '../../engine/intake';
 import { RULES } from '../../engine/rules';
 import legends from '../../content/legends.json';
@@ -47,6 +47,7 @@ export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void })
   const live = draft.intake === 'live' && !draft.hostOnly;
   const canOpen = (live || people.length >= RULES.minEntries) && problems.length === 0;
   const empty = draft.rows.length === 0;
+  const copy = gameCopy(draft);
 
   const setRows = (rows: DraftRow[]) => set('rows', rows);
   const onPaste = pasteListInto(setPasting);
@@ -63,6 +64,8 @@ export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void })
       hostOnly: draft.hostOnly,
       intake: live ? ('live' as const) : ('host' as const),
       maxLength: MAX,
+      topic: draft.topic,
+      customPrompt: draft.customPrompt.trim(),
     };
     if (editing) {
       host.dispatch({ type: 'updateSettings', settings });
@@ -129,6 +132,7 @@ export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void })
               {live && <p className={styles.liveInfo}>{S.liveInfo}</p>}
               <Composer
                 ref={nameRef}
+                itemNoun={copy.item}
                 onPaste={onPaste}
                 onAdd={(name, text) => setRows([...filledRows(draft.rows), newRow(name, text)])}
                 onSecret={() => {
@@ -160,6 +164,7 @@ export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void })
               <PeopleList
                 rows={validated}
                 maxLength={MAX}
+                itemNoun={copy.item}
                 onPaste={onPaste}
                 onUpdate={(key, patch) => setRows(draft.rows.map((r) => (r.key === key ? { ...r, ...patch } : r)))}
                 onRemove={(key) => setRows(draft.rows.filter((r) => r.key !== key))}
@@ -171,6 +176,11 @@ export function Setup({ host, onDone }: { host: HostGame; onDone?: () => void })
         <SetupPanel
           previewText={people[0]?.text ?? null}
           total={people.length}
+          copy={copy}
+          topic={draft.topic}
+          onTopic={(t) => set('topic', t)}
+          customPrompt={draft.customPrompt}
+          onCustomPrompt={(p) => set('customPrompt', p)}
           timerSec={draft.timerSec}
           onTimer={(t) => set('timerSec', t)}
           hostOnly={draft.hostOnly}

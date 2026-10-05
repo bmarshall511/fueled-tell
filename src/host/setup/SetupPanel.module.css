@@ -11,6 +11,11 @@
   box-shadow: inset 0 0 0 var(--border-width-hairline) var(--color-border);
 }
 
+.topic {
+  display: grid;
+  gap: var(--space-3);
+}
+
 .rule {
   width: 100%;
   height: var(--border-width-hairline);
