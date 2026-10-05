@@ -905,3 +905,44 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - The seat-takeover message on two real phones.
 
 **Approximate time:** about 60 min of wall-clock AI time (≈19:34–20:35 CT).
+
+## 2026-10-05 (Mon): Session 1u, topics
+
+**Goal:** let the host choose what everyone shares, so the game works for a favorite movie, a TV show or any prompt as well as a true story. Before this, a player typing their own entry was always asked for "a short, true story".
+
+**What got done**
+
+- **Topics in `game.json`:** Story (the default), Movie, TV show, and Custom.
+  - Each has its own prompt and words ("Movie 1 of 8", "Whose favorite movie is it?", "You spotted 2 movies").
+  - Custom uses the host's own prompt (up to 120 characters). Left blank, it falls back to "Something about you the others could guess."
+- **Setup:** an **Everyone shares** picker in the side panel, with a prompt field for Custom.
+  - The live preview, the quick-add placeholder and the person cards follow the topic.
+  - Editing an open lobby keeps the topic. Older saves and drafts get the default.
+- **Everywhere else:** the topic travels in the game settings, so phones get it too.
+  - The lobby prompt, the phone's entry form, the round header and question, phone cards, the finale highlight and screen-reader lines all use it.
+  - New helpers `gameCopy(settings)` and `gamePrompt(settings)` (`engine/content.ts`), with 4 new tests (59 total).
+- **Landing:** the "how it works" steps no longer say "story".
+- **Docs:** README, CLAUDE.md, and a new `scripts/qa/topics.mjs`.
+
+**Decisions the AI made on its own**
+
+- The four topics, and their prompts and wording.
+- The picker label is "TV" (not "TV show") so the four options fit the panel evenly. The prompt and question still say "TV show".
+- No mockup: this is one more segmented control in the existing panel, in the existing style.
+- The sample entries are still stories, whatever the topic.
+
+**Verification done by the AI**
+
+- `npm run check`: 59/59 tests. `vite build` is clean.
+- **axe-core:** 0 violations on setup (empty, people, paste, at 1440 and 390) and on the custom-topic state.
+- **Overflow probe:** clean.
+- **Screenshots reviewed:**
+  - The picker for each topic, including the custom prompt (empty and filled) at desktop and phone width.
+  - The custom prompt in the lobby and on the phone's entry form.
+  - A Movie round on the shared screen and the phone's pick screen.
+
+**What you need to verify by hand**
+
+- Pick a topic and play a short game with real phones.
+
+**Approximate time:** about 15 min (≈08:27–08:41 CT).
