@@ -993,4 +993,4 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - On real phones, end a game from the host menu and check every phone switches to the ended screen.
 - Open an old code and check you land on "No game with that code".
 
-**Approximate time:** about 25 min (≈08:00–08:27 CT).
+**Approximate time:** about 30 min (≈08:05–08:36 CT).
