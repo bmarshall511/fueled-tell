@@ -946,3 +946,51 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - Pick a topic and play a short game with real phones.
 
 **Approximate time:** about 15 min (≈08:27–08:41 CT).
+
+## 2026-10-06 (Tue): Session 1v, menu overflow and ending a game
+
+**Goal:** fix three bugs the user found on the live site.
+
+1. The host menu overflowed sideways.
+2. Phones weren't told when the host ended the game.
+3. Opening an ended room hung on "Connecting to the room…".
+
+**What got done**
+
+- **Menu (a regression from session 1t):**
+  - The shortcut separators had been put inside the no-wrap pairs, which left the line no place to break. With the join info showing, it pushed the buttons past the dialog's edge and added a sideways scrollbar.
+  - The line now breaks between pairs, and the menu is one column that can't grow past the dialog.
+  - Checked at 5 sizes with the new `menu.mjs`.
+- **Ending a game:**
+  - The host now sends phones an `ended` message and keeps the room open for 400 ms (`END_FLUSH_MS`) so it gets out.
+  - Phones show a new **"The host ended the game. Thanks for playing!"** screen with **Join another game**, and leave the room instead of trying to reconnect.
+- **Ended or unknown rooms:**
+  - Before, the PeerJS phone reported "not found" only if its very first attempt got the broker's "no such room" answer. A timeout or slow broker left it "reconnecting" forever, which shows as "Connecting…".
+  - Now any failed attempt reports not found. A phone that already has a game keeps showing it with the "Reconnecting…" note (a host refresh still works), and retries continue, so a room that opens later still connects.
+  - Attempts no longer overlap.
+- **Not-found screen:** a short heading ("No game with that code.") with the hint underneath, instead of a whole sentence as the headline.
+- **Tests and harness:**
+  - `screenFor` tests for the ended screen, and for keeping the game on screen while the host is briefly gone (60 tests).
+  - New `menu.mjs` and `ended.mjs`. Harness fixes: the lucky-code check (the label is uppercased on screen), the full-game restart check, and axe loading in `topics.mjs`.
+
+**Decisions the AI made on its own**
+
+- The ended screen's copy, and its "Join another game" action.
+- After **End game**, phones leave for good. A restored backup isn't rejoined automatically; players re-enter the code.
+- On PeerJS, a never-reachable room still takes about 10–14 s to show "not found". The public broker doesn't answer "no such room" for a just-closed host, so the phone waits out one connection timeout.
+
+**Verification done by the AI**
+
+- `npm run check`: 60/60 tests. `vite build` is clean.
+- **Ending a game, local and on the real PeerJS broker:** a joined phone shows the ended screen. A new phone on the ended code shows "No game with that code" (about 4 s local, 12–14 s PeerJS).
+- **axe-core:** 0 violations on the ended and not-found screens, and through a whole game.
+- **Regression runs pass:**
+  - Full 8-round game, PeerJS game, and end-to-end flows.
+  - Eggs, topics, and the menu at 5 sizes.
+
+**What you need to verify by hand**
+
+- On real phones, end a game from the host menu and check every phone switches to the ended screen.
+- Open an old code and check you land on "No game with that code".
+
+**Approximate time:** about 25 min (≈08:00–08:27 CT).
