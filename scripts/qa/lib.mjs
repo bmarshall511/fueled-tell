@@ -2,6 +2,8 @@ import { spawn } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 /** Chrome binary (override with CHROME=/path/to/chrome). */
+/** The app under test (set BASE=https://fueled-tell.vercel.app to test production). */
+export const BASE = process.env.BASE ?? 'http://localhost:5173';
 export const CHROME = process.env.CHROME ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
 /**
@@ -26,10 +28,10 @@ export async function browser(port, dir) {
       await send('Runtime.enable', {}, s);
       await send('Emulation.setDeviceMetricsOverride', { width: w, height: h, deviceScaleFactor: 1, mobile }, s);
       await send('Emulation.setFocusEmulationEnabled', { enabled: true }, s);
-      if (url) await send('Page.navigate', { url: 'http://localhost:5173' + url }, s);
+      if (url) await send('Page.navigate', { url: (url.startsWith('http') ? '' : BASE) + url }, s);
       return {
         s,
-        nav: (u) => send('Page.navigate', { url: 'http://localhost:5173' + u }, s),
+        nav: (u) => send('Page.navigate', { url: (u.startsWith('http') ? '' : BASE) + u }, s),
         size: (w2, h2, m = false) => send('Emulation.setDeviceMetricsOverride', { width: w2, height: h2, deviceScaleFactor: 1, mobile: m }, s),
         ev: async (expr) => { const r = await send('Runtime.evaluate', { expression: `(async()=>{const btn=(t)=>[...document.querySelectorAll('button')].find(b=>b.textContent.includes(t)); const setVal=(el,v)=>{const p=el.tagName==='TEXTAREA'?HTMLTextAreaElement.prototype:HTMLInputElement.prototype; Object.getOwnPropertyDescriptor(p,'value').set.call(el,v); el.dispatchEvent(new Event('input',{bubbles:true}));}; const wait=(ms)=>new Promise(r=>setTimeout(r,ms)); ${expr}})()`, returnByValue: true, awaitPromise: true }, s); return r.result?.result?.value ?? r.result?.exceptionDetails?.exception?.description; },
         shot: async (f, full = false) => { const p = full ? { format: 'png', captureBeyondViewport: true } : { format: 'png' }; if (full) { const m = await send('Page.getLayoutMetrics', {}, s); p.clip = { x: 0, y: 0, width: m.result.cssContentSize.width, height: Math.min(m.result.cssContentSize.height, 4000), scale: 1 }; } const { result } = await send('Page.captureScreenshot', p, s); mkdirSync('audit', { recursive: true }); writeFileSync('audit/' + f, Buffer.from(result.data, 'base64')); },

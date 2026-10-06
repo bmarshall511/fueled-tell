@@ -25,8 +25,8 @@ for (const peer of process.argv[2] === "local" ? [false] : [false, true]) {
   await phone.shot(`ended-${peer ? 'peer' : 'local'}.png`);
   if (!peer) console.log('axe ended:', JSON.stringify(await axe(phone)));
   const late = await b.tab('/', 390, 844, true);
-  await late.nav(`/play?${tr}room=${code}&seat=late`);
-  for (let s = 0; s < (peer ? 30 : 10); s += 2) { await sleep(2000); const tx = await text(late); if (!tx.startsWith('Connecting')) { console.log(peer ? 'peer' : 'local', `| late phone after ${s + 2}s:`, tx); break; } if (s + 2 >= (peer ? 30 : 10)) console.log('late phone STILL:', tx); }
+  const tLate = Date.now(); await late.nav(`/play?${tr}room=${code}&seat=late`);
+  for (let s = 0; s < (peer ? 30 : 10); s += 1) { await sleep(1000); const tx = await text(late); if (!tx.startsWith('Connecting')) { console.log(peer ? 'peer' : 'local', `| late phone after ${Math.round((Date.now() - tLate) / 1000)}s:`, tx); break; } if (s + 1 >= (peer ? 30 : 10)) console.log('late phone STILL:', tx); }
   await late.shot(`ended-late-${peer ? 'peer' : 'local'}.png`);
   if (!peer) { console.log('axe not found:', JSON.stringify(await axe(late))); await late.size(1440, 900); await sleep(600); await late.shot('ended-late-local-d.png'); }
 }

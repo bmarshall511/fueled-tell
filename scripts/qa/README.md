@@ -30,6 +30,7 @@ node --experimental-websocket modes.mjs       # forced colors + reduced motion s
 node --experimental-websocket topics.mjs      # topic picker and topic wording in setup, lobby, round and phones (audit/t-*)
 node --experimental-websocket menu.mjs        # host menu with join info at 5 sizes: no sideways overflow (audit/menu-*)
 node --experimental-websocket ended.mjs       # ending a game updates phones; an ended room shows "not found" (local + PeerJS)
+BASE=https://fueled-tell.vercel.app node --experimental-websocket ended.mjs   # any script can target another server (e.g. production, or `vite preview` on :4173)
 node deadcode.mjs                             # unused CSS classes, exports, tokens, copy keys (some are dynamic: check)
 python3 sheet.py out.png 640 2 a.png b.png    # contact sheet of audit/ screenshots for review (needs Pillow)
 ```

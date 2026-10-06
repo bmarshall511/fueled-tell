@@ -1,5 +1,5 @@
 import Peer, { type DataConnection, type PeerError } from 'peerjs';
-import { HEARTBEAT_MS, LINK_TIMEOUT_MS } from './protocol';
+import { CONNECT_TIMEOUT_MS, HEARTBEAT_MS, LINK_TIMEOUT_MS } from './protocol';
 import { Emitter, RoomTakenError, type ClientStatus, type ClientTransport, type Connection, type HostTransport } from './Transport';
 
 /**
@@ -116,7 +116,7 @@ export async function joinPeer(code: string): Promise<ClientTransport> {
           p.off('error', onErr);
           conn.close();
           reject(new Error('timeout'));
-        }, LINK_TIMEOUT_MS);
+        }, CONNECT_TIMEOUT_MS);
         p.once('error', onErr);
         conn.once('open', () => {
           window.clearTimeout(giveUp);

@@ -21,6 +21,11 @@ export type HostMsg =
 export const HEARTBEAT_MS = 3000;
 /** No message from the other side for this long means the link is dead. */
 export const LINK_TIMEOUT_MS = 10_000;
+/**
+ * How long one attempt to reach a room may take. The public broker never says "no such room", so this
+ * is how fast a phone learns a code is wrong or the game is over (it keeps retrying in the background).
+ */
+export const CONNECT_TIMEOUT_MS = 5000;
 /** After telling phones the game ended, keep the room open this long so the message gets out. */
 export const END_FLUSH_MS = 400;
 

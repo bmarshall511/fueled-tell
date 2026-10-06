@@ -215,6 +215,7 @@ export const UI_COPY = {
     go: 'Join',
     hostInstead: 'Hosting? Start a game',
     connecting: 'Connecting to the room…',
+    slow: 'Taking a while? Check the code on the shared screen. The game may have ended.',
     notFound: 'No game with that code.',
     notFoundHint: 'Check the code on the shared screen, or wait for the host to open the lobby.',
     reconnecting: 'Reconnecting…',
