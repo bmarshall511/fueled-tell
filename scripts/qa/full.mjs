@@ -37,5 +37,5 @@ console.log('phone screens seen:', [...seen].join(' | '));
 console.log('host finale:', await ev(host, `return [document.title, document.querySelector('[class*=winner]')?.textContent]`));
 console.log('phone final:', await ev(phone, `return document.querySelector('h1')?.textContent`));
 await shot(host, 'full-finale.png'); await shot(phone, 'full-phone-final.png');
-console.log('restart:', await ev(host, `${H} btn('Back to lobby')?.click(); await wait(1500); return document.body.innerText.includes('JOIN AT') || document.body.innerText.includes('Join at') ? 'lobby' : document.title`));
+console.log('restart:', await ev(host, `${H} const back = btn('Back to lobby'); if (!back) return 'no Back to lobby button'; back.click(); await wait(1500); return btn('Start game') ? 'lobby' : document.title`));
 console.log(logs.slice(0,10).join('\n') || 'no errors'); ws.close(); chrome.kill();

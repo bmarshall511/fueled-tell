@@ -1,4 +1,6 @@
+import { readFileSync } from 'node:fs';
 import { browser, seedHost, sleep } from './lib.mjs';
+const AXE = readFileSync('axe3.js', 'utf8');
 // Topics: the setup picker (each topic, custom prompt), and the topic's words in the lobby, round and on phones (audit/t-*).
 const b = await browser(9463, '/tmp/tell-qa/topics');
 const R = 'TPCK', H = `/host?transport=local&room=${R}`;
@@ -13,7 +15,7 @@ await t.ev(pick('Custom')); await t.shot('t-setup-custom-empty-d.png');
 await t.ev(`const i=document.querySelector('aside input[type=text], aside input:not([type])'); i.focus(); setVal(i, 'Your dream job as a kid'); await wait(200); return 1`); await t.shot('t-setup-custom-d.png');
 await t.size(390, 844, true); await sleep(500); await t.shot('t-setup-custom-m.png', true);
 await t.size(1440, 1000);
-console.log('axe custom:', await t.ev(`if(!window.axe){const s=document.createElement('script'); s.src='https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js'; document.head.append(s); await new Promise(r=>s.onload=r);} const r=await axe.run(document,{runOnly:['wcag2a','wcag2aa','wcag21aa','wcag22aa']}); return r.violations.map(v=>v.id+':'+v.nodes.length)`));
+console.log('axe custom:', JSON.stringify(await t.ev(`return (${AXE.trim().replace(/;$/, '')})`)));
 // open the lobby with live intake for the custom topic
 await t.ev(`[...document.querySelectorAll('button')].find(b=>b.textContent.includes('Players add their own'))?.click(); await wait(300); [...document.querySelectorAll('button')].find(b=>b.textContent.trim()==='Open lobby')?.click(); await wait(2500); return 1`);
 await t.size(1920, 1080); await sleep(1500); await t.shot('t-lobby-custom.png');

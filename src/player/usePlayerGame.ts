@@ -20,6 +20,8 @@ export function usePlayerGame() {
   const [status, setStatus] = useState<ClientStatus | 'idle'>('idle');
   const [view, setView] = useState<PlayerView | null>(null);
   const [error, setError] = useState<JoinError | null>(null);
+  /** The host ended the game: we've left the room, and say so until the player moves on. */
+  const [ended, setEnded] = useState(false);
   /** Local time when the latest snapshot arrived, for countdowns without clock skew. */
   const [receivedAt, setReceivedAt] = useState(0);
   const transport = useRef<ClientTransport | null>(null);
@@ -60,6 +62,12 @@ export function usePlayerGame() {
           setReceivedAt(Date.now());
           if (msg.view.players.some((p) => p.id === msg.view.me)) setError(null);
         }
+        if (msg.type === 'ended') {
+          // The view stays until the player moves on, so the screen changes straight to "ended" (no blank frame).
+          setEnded(true);
+          setIdentity((i) => ({ ...i, room: null, joinedRoom: null }));
+          return;
+        }
         if (msg.type === 'error') {
           setError(msg.code);
           // This seat belongs to another device: take a seat of our own and ask again, which shows the join screen.
@@ -87,7 +95,16 @@ export function usePlayerGame() {
     if (joined && identity.joinedRoom !== room) setIdentity((i) => ({ ...i, joinedRoom: room }));
   }, [joined, room, identity.joinedRoom]);
 
-  const setRoom = useCallback((code: string) => setIdentity((i) => ({ ...i, room: normalizeRoomCode(code) || null })), []);
+  const setRoom = useCallback((code: string) => {
+    setEnded(false);
+    setView(null);
+    setIdentity((i) => ({ ...i, room: normalizeRoomCode(code) || null }));
+  }, []);
+  /** Leave the "game ended" screen for the code screen. */
+  const dismissEnded = useCallback(() => {
+    setEnded(false);
+    setView(null);
+  }, []);
   const leaveRoom = useCallback(() => {
     setIdentity((i) => ({ ...i, room: null }));
     setStatus('idle');
@@ -111,7 +128,7 @@ export function usePlayerGame() {
     [send, view?.item],
   );
 
-  return { identity, status, view, joined, error, receivedAt, setRoom, leaveRoom, join, submit, guess };
+  return { identity, status, view, joined, error, ended, receivedAt, setRoom, leaveRoom, dismissEnded, join, submit, guess };
 }
 
 export type PlayerGame = ReturnType<typeof usePlayerGame>;

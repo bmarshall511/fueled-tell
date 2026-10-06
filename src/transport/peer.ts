@@ -96,17 +96,24 @@ export async function joinPeer(code: string): Promise<ClientTransport> {
     }
   };
 
+  let inFlight = false;
   const connect = async () => {
-    if (closed) return;
+    // One attempt at a time: the watchdog ticks faster than a failing attempt times out.
+    if (closed || inFlight) return;
+    inFlight = true;
     try {
       if (!peer || peer.destroyed) peer = await openPeer();
       else if (peer.disconnected) peer.reconnect();
       const p = peer;
       await new Promise<void>((resolve, reject) => {
         const conn = p.connect(peerIdFor(code), { reliable: true });
-        const onErr = (err: PeerError<string>) => reject(err);
+        const onErr = (err: PeerError<string>) => {
+          window.clearTimeout(giveUp);
+          reject(err);
+        };
         // A connection that never opens (strict NAT, no TURN) must not hang in "connecting" forever.
         const giveUp = window.setTimeout(() => {
+          p.off('error', onErr);
           conn.close();
           reject(new Error('timeout'));
         }, LINK_TIMEOUT_MS);
@@ -125,9 +132,13 @@ export async function joinPeer(code: string): Promise<ClientTransport> {
           resolve();
         });
       });
-    } catch (err) {
-      const type = (err as PeerError<string>).type;
-      setStatus(type === 'peer-unavailable' && state !== 'reconnecting' ? 'not-found' : 'reconnecting');
+    } catch {
+      // Couldn't reach the room ("no such room", or no answer in time): report it as not found. A phone that
+      // already has a game keeps showing it with a reconnecting note (the host may be refreshing), and the
+      // watchdog keeps retrying either way, so a room that opens later still connects.
+      setStatus('not-found');
+    } finally {
+      inFlight = false;
     }
   };
 

@@ -4,6 +4,7 @@ import { useScreenTransition } from '../ui/hooks/useScreenTransition';
 import { PlayerShell } from './components/PlayerShell';
 import { kindOf, screenFor, type ScreenKind } from './screenFor';
 import { CodeScreen } from './screens/CodeScreen';
+import { EndedScreen } from './screens/EndedScreen';
 import { ConnectingScreen } from './screens/ConnectingScreen';
 import { FinalScreen } from './screens/FinalScreen';
 import { JoinScreen } from './screens/JoinScreen';
@@ -26,12 +27,13 @@ export default function PlayerApp() {
   useEffect(() => setChanging(false), [itemId]);
   useDocumentTitle(identity.room ?? undefined);
 
-  const target = screenFor({ room: identity.room, status: game.status, view, joined: game.joined, changing });
+  const target = screenFor({ room: identity.room, status: game.status, view, joined: game.joined, changing, ended: game.ended });
   // The transition only delays the swap: render whichever screen is currently showing.
   const shownKey = useScreenTransition(target.key);
   const kind = kindOf(shownKey);
 
   const renderScreen = () => {
+    if (kind === 'ended') return <EndedScreen onDone={game.dismissEnded} />;
     if (kind === 'code') return <CodeScreen onSubmit={game.setRoom} />;
     if (!view || kind === 'connecting' || kind === 'notFound')
       return <ConnectingScreen room={identity.room ?? ''} notFound={kind === 'notFound'} onChangeCode={game.leaveRoom} />;
@@ -59,7 +61,8 @@ export default function PlayerApp() {
       screenKey={shownKey}
       me={view?.players.find((p) => p.id === view.me)}
       room={identity.room}
-      reconnecting={game.status === 'reconnecting' && !!view}
+      // Lost the host mid-game (e.g. it's refreshing): keep the game on screen with a note while we retry.
+      reconnecting={(game.status === 'reconnecting' || game.status === 'not-found') && !!view}
       backdrop={VIVID.includes(kind) ? 'vivid' : 'calm'}
     >
       {renderScreen()}

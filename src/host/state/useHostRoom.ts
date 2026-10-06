@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { validateJoin, type GameAction } from '../../engine/game';
 import { redactFor } from '../../engine/redact';
 import type { GameState, PlayerId } from '../../engine/types';
 import { GAME } from '../../content';
-import { HEARTBEAT_MS, parseClientMsg, type ClientMsg, type HostMsg } from '../../transport/protocol';
+import { END_FLUSH_MS, HEARTBEAT_MS, parseClientMsg, type ClientMsg, type HostMsg } from '../../transport/protocol';
 import { hostRoom, RoomTakenError, type Connection, type HostTransport } from '../../transport/Transport';
 
 export type LinkStatus = 'idle' | 'opening' | 'live' | 'error';
@@ -48,10 +48,12 @@ export function useHostRoom(
   roomCode: string | null,
   dispatch: (a: GameAction) => void,
   onTaken: () => void,
-): { link: LinkStatus; linkError: LinkError | null } {
+): { link: LinkStatus; linkError: LinkError | null; announceEnd: () => void } {
   const [link, setLink] = useState<LinkStatus>('idle');
   const [linkError, setLinkError] = useState<LinkError | null>(null);
   const peers = useRef(new Map<string, Peer>());
+  /** Set when the host ends the game: the room closes a moment later, so phones hear about it. */
+  const ending = useRef(false);
   const stateRef = useRef(state);
   stateRef.current = state;
   const hostOnly = state?.settings.hostOnly ?? false;
@@ -93,7 +95,10 @@ export function useHostRoom(
     return () => {
       cancelled = true;
       window.clearInterval(beat);
-      transport?.close();
+      const t = transport;
+      if (ending.current) window.setTimeout(() => t?.close(), END_FLUSH_MS);
+      else t?.close();
+      ending.current = false;
       peers.current.clear();
       setLink('idle');
     };
@@ -105,5 +110,11 @@ export function useHostRoom(
     peers.current.forEach((p) => p.playerId && sendView(p, state));
   }, [state]);
 
-  return { link, linkError };
+  /** Tell every phone the game is over (call just before ending the session). */
+  const announceEnd = useCallback(() => {
+    ending.current = true;
+    peers.current.forEach((p) => send(p, { type: 'ended' }));
+  }, []);
+
+  return { link, linkError, announceEnd };
 }

@@ -13,12 +13,16 @@ export type ClientMsg =
 export type HostMsg =
   | { type: 'state'; view: PlayerView }
   | { type: 'error'; code: JoinError }
+  /** The host ended the game: phones leave the room and say so. */
+  | { type: 'ended' }
   /** Liveness ping so phones notice a vanished host quickly. */
   | { type: 'beat' };
 
 export const HEARTBEAT_MS = 3000;
 /** No message from the other side for this long means the link is dead. */
 export const LINK_TIMEOUT_MS = 10_000;
+/** After telling phones the game ended, keep the room open this long so the message gets out. */
+export const END_FLUSH_MS = 400;
 
 const isObj = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
 
@@ -46,5 +50,6 @@ export function parseHostMsg(v: unknown): HostMsg | null {
   if (v.type === 'state' && isObj(v.view)) return { type: 'state', view: v.view as unknown as PlayerView };
   if (v.type === 'error' && typeof v.code === 'string') return { type: 'error', code: v.code as JoinError };
   if (v.type === 'beat') return { type: 'beat' };
+  if (v.type === 'ended') return { type: 'ended' };
   return null;
 }

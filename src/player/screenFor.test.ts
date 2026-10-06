@@ -14,6 +14,11 @@ describe('screenFor', () => {
     expect(screenFor({ ...base, joined: false, view: view({}) }).kind).toBe('join');
   });
 
+  it('says the game ended, and keeps the game on screen while the host is briefly gone', () => {
+    expect(screenFor({ ...base, room: null, view: null, ended: true }).kind).toBe('ended');
+    expect(screenFor({ ...base, status: 'not-found', view: view({}) }).kind).toBe('pick');
+  });
+
   it('picks the round screen', () => {
     expect(screenFor({ ...base, view: view({ phase: 'lobby', item: null }) }).kind).toBe('lobby');
     expect(screenFor({ ...base, view: view({ phase: 'showing' }) }).kind).toBe('pick');

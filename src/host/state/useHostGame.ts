@@ -25,6 +25,12 @@ export function useHostGame() {
     if (action) session.dispatch(action);
   }, [session.dispatch]);
 
+  // Ending tells the phones first, so they can say the game is over instead of trying to reconnect.
+  const end = useCallback(() => {
+    room.announceEnd();
+    session.end();
+  }, [room, session]);
+
   return {
     session: session.session,
     state,
@@ -33,7 +39,7 @@ export function useHostGame() {
     linkError: room.linkError,
     dispatch: session.dispatch,
     create: session.create,
-    end: session.end,
+    end,
     replace: session.replace,
     newRoomCode: session.newRoomCode,
     advance,

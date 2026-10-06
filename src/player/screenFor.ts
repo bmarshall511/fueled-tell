@@ -1,7 +1,7 @@
 import type { PlayerView } from '../engine/redact';
 import type { ClientStatus } from '../transport/Transport';
 
-export type ScreenKind = 'code' | 'connecting' | 'notFound' | 'join' | 'lobby' | 'pick' | 'waiting' | 'yours' | 'result' | 'final';
+export type ScreenKind = 'ended' | 'code' | 'connecting' | 'notFound' | 'join' | 'lobby' | 'pick' | 'waiting' | 'yours' | 'result' | 'final';
 
 /** Which screen the phone shows; `key` changes whenever the screen should transition (new entry, new kind). */
 export interface Screen {
@@ -16,10 +16,13 @@ interface Inputs {
   joined: boolean;
   /** The player tapped "Change my guess". */
   changing: boolean;
+  /** The host ended the game (we've left the room). */
+  ended?: boolean;
 }
 
-export function screenFor({ room, status, view, joined, changing }: Inputs): Screen {
+export function screenFor({ room, status, view, joined, changing, ended }: Inputs): Screen {
   const s = (kind: ScreenKind, id = ''): Screen => ({ kind, key: id ? `${kind}:${id}` : kind });
+  if (ended) return s('ended');
   if (!room) return s('code');
   if (!view) return s(status === 'not-found' ? 'notFound' : 'connecting');
   if (!joined) return s('join');

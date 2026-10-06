@@ -55,6 +55,7 @@ log('restore:', await host.ev(`const f=new File([${JSON.stringify(backup)}], 'te
 log('restored live:', await live(host));
 log('restored connected flags:', await host.ev(`return JSON.parse(localStorage.getItem('tell:host-session:local')).state.players.filter(p=>p.connected).length`));
 await sleep(5000);
-log('after reconnect connected:', await host.ev(`return JSON.parse(localStorage.getItem('tell:host-session:local')).state.players.filter(p=>p.connected).map(p=>p.name).join(',')`));
+// Ending the game tells phones it's over, so they leave: nobody reconnects to the restored game on their own.
+log('after reconnect connected (expect none):', await host.ev(`return JSON.parse(localStorage.getItem('tell:host-session:local')).state.players.filter(p=>p.connected).map(p=>p.name).join(',')`));
 log('bad file:', await host.ev(`window.confirm=()=>true; [...document.querySelectorAll('button')].find(b=>b.getAttribute('aria-label')==='Menu')?.click(); await wait(300); [...document.querySelectorAll('button')].find(b=>b.textContent.includes('End game')).click(); await wait(1500); const f=new File(['{"version":1,"roomCode":"AAAA","state":{"players":[]}}'], 'x.json'); const inp=document.querySelector('input[type=file]'); const dt=new DataTransfer(); dt.items.add(f); inp.files=dt.files; inp.dispatchEvent(new Event('change',{bubbles:true})); await wait(800); return document.querySelector('[role=alert]')?.textContent`));
 console.log(b.logs.slice(0, 10).join('\n') || 'no errors'); b.close();

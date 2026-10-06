@@ -28,6 +28,8 @@ node --experimental-websocket review2.mjs     # easter-egg review shots, host + 
 node --experimental-websocket func.mjs        # end-to-end flows: refreshes, seat keys, shortcuts, backup and restore
 node --experimental-websocket modes.mjs       # forced colors + reduced motion screenshots (audit/m-*)
 node --experimental-websocket topics.mjs      # topic picker and topic wording in setup, lobby, round and phones (audit/t-*)
+node --experimental-websocket menu.mjs        # host menu with join info at 5 sizes: no sideways overflow (audit/menu-*)
+node --experimental-websocket ended.mjs       # ending a game updates phones; an ended room shows "not found" (local + PeerJS)
 node deadcode.mjs                             # unused CSS classes, exports, tokens, copy keys (some are dynamic: check)
 python3 sheet.py out.png 640 2 a.png b.png    # contact sheet of audit/ screenshots for review (needs Pillow)
 ```

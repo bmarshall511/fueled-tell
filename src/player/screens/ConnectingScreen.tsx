@@ -11,6 +11,7 @@ export function ConnectingScreen({ room, notFound, onChangeCode }: { room: strin
     <Centered>
       {!notFound && <Pulse />}
       <Heading>{notFound ? P.notFound : P.connecting}</Heading>
+      {notFound && <p className="text-body text-muted">{P.notFoundHint}</p>}
       <CodeChip code={room} />
       <Button variant="secondary" onClick={onChangeCode}>
         {P.changeCode}
