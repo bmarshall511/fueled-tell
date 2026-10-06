@@ -994,3 +994,41 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - Open an old code and check you land on "No game with that code".
 
 **Approximate time:** about 30 min (≈08:05–08:36 CT).
+
+## 2026-10-06 (Tue): Session 1w, "still stuck on Connecting" on the live site
+
+**Goal:** the user still saw "Connecting to the room…" for ended room FDC7 on fueled-tell.vercel.app after session 1v. Find out why, against production this time, and fix it.
+
+**What was found (tested against the live site and the production build)**
+
+1. **Old code from the offline cache.** The service worker updated in the background but never took over (no `skipWaiting`), so open browsers kept running the old build after a deploy.
+2. **The public PeerJS broker never says "no such room".** No error arrived even after 25 s, and registering a phone takes 2–8 s. Even with the new code, a fresh browser sat on "Connecting" for 16 s on production before "No game with that code".
+
+**What got done**
+
+- **Service worker:**
+  - It's now registered from `main.tsx` (`virtual:pwa-register`), with `skipWaiting` and `clientsClaim`.
+  - A new deploy takes over open pages and reloads them onto the new build. A game in progress survives the reload: the host's game is saved, and phones rejoin.
+  - Tested: changing `sw.js` on a running preview reloaded the open page, with no worker left waiting.
+- **Connecting:**
+  - One connection attempt now times out after 5 s (`CONNECT_TIMEOUT_MS`, was 10 s).
+  - After 5 s on "Connecting…" the screen adds "Taking a while? Check the code on the shared screen. The game may have ended." The "Use a different code" button stays as it was.
+- **Harness:** `lib.mjs` takes `BASE=` to test production or `vite preview`.
+
+**Verification done by the AI**
+
+- **Live site, before the fix:** confirmed the new build was deployed, and measured 16 s from opening FDC7 to "No game with that code" in a fresh browser.
+- **Production build (`vite preview`) with the real PeerJS broker:**
+  - **End game:** the joined phone shows "The host ended the game."
+  - **A new phone on the ended code:** "No game with that code" after 6–7 s.
+  - **A returning seat on FDC7:** the hint at about 6 s, and "not found" after 10–18 s depending on the broker.
+  - **Joining a live room:** still works.
+  - **Auto-update:** reloads the page onto a new version.
+- `npm run check`: 60/60 tests. `vite build` is clean. axe-core: 0 violations on the ended and not-found screens.
+
+**What you need to verify by hand**
+
+- Load the site once after this deploy, and the page should switch to the new version on its own. In Safari, if it's still old, close and reopen the tab.
+- Then open FDC7: the hint shows within about 5 s, and "No game with that code" shortly after.
+
+**Approximate time:** about 15 min (≈08:38–08:52 CT).
