@@ -37,6 +37,8 @@ export default defineConfig({
     // Installable app with an offline shell. Realtime play still needs a network.
     VitePWA({
       registerType: 'autoUpdate',
+      // Registered from main.tsx (virtual:pwa-register), which also reloads onto a new version.
+      injectRegister: false,
       includeAssets: ['icons/favicon.svg', 'icons/apple-touch-icon.png'],
       manifest: {
         id: '/',
@@ -95,6 +97,9 @@ export default defineConfig({
         ],
       },
       workbox: {
+        // A new version takes over open pages right away (main.tsx then reloads them onto it).
+        skipWaiting: true,
+        clientsClaim: true,
         globPatterns: ['**/*.{js,css,html,svg,png,woff,woff2}'],
         // Share card and install screenshots are only fetched by other apps: keep them out of the offline cache.
         globIgnores: ['og.png', 'screenshots/**'],

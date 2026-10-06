@@ -7,6 +7,7 @@ import { ErrorBoundary } from './ui/components/ErrorBoundary';
 import { UI_COPY } from './ui/copy';
 import { sayHello } from './ui/lib/eggs';
 import { startPointerFx } from './ui/lib/pointerFx';
+import { registerSW } from 'virtual:pwa-register';
 
 const Landing = lazy(() => import('./landing/Landing'));
 const Host = lazy(() => import('./host/HostApp'));
@@ -26,6 +27,9 @@ function Route() {
 
 startPointerFx();
 sayHello(UI_COPY.repo);
+// Offline cache: when a new version is deployed, switch to it as soon as it's downloaded (a reload),
+// so nobody keeps running an old build from the cache. A game in progress survives the reload.
+registerSW({ immediate: true });
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
