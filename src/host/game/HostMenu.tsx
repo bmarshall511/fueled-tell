@@ -36,10 +36,10 @@ export const HostMenu = forwardRef<HTMLDialogElement, HostMenuProps>(function Ho
     >
       <h2 className={styles.title}>{UI_COPY.menu}</h2>
       <p className={styles.hint}>
-        {/* Each pair stays whole; the line breaks only at the separators between them. */}
+        {/* Each pair stays whole; the line breaks only after a separator (a no-break space keeps the dot on the line before). */}
         {UI_COPY.shortcuts.map((pair, i) => (
           <Fragment key={pair}>
-            {i > 0 && ' · '}
+            {i > 0 && '\u00a0· '}
             <span className={styles.pair}>{pair}</span>
           </Fragment>
         ))}
