@@ -1032,3 +1032,10 @@ A factual, per-session record of building "Whose Is It?" with an AI coding assis
 - Then open FDC7: the hint shows within about 5 s, and "No game with that code" shortly after.
 
 **Approximate time:** about 15 min (≈08:38–08:52 CT).
+
+**Follow-up (same session):**
+
+- **Menu polish:** the line now breaks after a "·", never before it. The join address sits on its own line, so the code tiles stay beside the QR code on wide screens and stack under it on phones.
+- **Checked on the live site:** "no sideways overflow" at 4 sizes, before this last change.
+- **Checked on the identical production build** (`vite preview`, real PeerJS): the final version, at 1920, 1280, 910 and 390.
+- **Live checks stopped:** Vercel's bot protection began challenging this machine's automated requests (a 403 "Security Checkpoint"), so live checks stopped there. It's tied to the AI's automated traffic; normal visitors shouldn't see it.
