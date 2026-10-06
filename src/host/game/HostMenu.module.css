@@ -14,6 +14,8 @@
 
 .menu[open] {
   display: grid;
+  /* One column that never grows past the dialog, whatever its content. */
+  grid-template-columns: minmax(0, 1fr);
   animation: menu-in var(--duration-base) var(--easing-emphasized);
 }
 

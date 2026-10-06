@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { forwardRef, Fragment } from 'react';
 import { Button } from '../../ui/components/Button';
 import { CodeChip } from '../../ui/components/CodeChip';
 import { QrCode } from '../../ui/components/qr/QrCode';
@@ -36,11 +36,12 @@ export const HostMenu = forwardRef<HTMLDialogElement, HostMenuProps>(function Ho
     >
       <h2 className={styles.title}>{UI_COPY.menu}</h2>
       <p className={styles.hint}>
+        {/* Each pair stays whole; the line breaks only at the separators between them. */}
         {UI_COPY.shortcuts.map((pair, i) => (
-          <span key={pair} className={styles.pair}>
+          <Fragment key={pair}>
             {i > 0 && ' · '}
-            {pair}
-          </span>
+            <span className={styles.pair}>{pair}</span>
+          </Fragment>
         ))}
       </p>
       {roomCode && <JoinInfo code={roomCode} />}
